@@ -1,4 +1,4 @@
-package backend.src.main.java.com.example.Surisuri_Masuri.exception;
+package com.example.Surisuri_Masuri.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
