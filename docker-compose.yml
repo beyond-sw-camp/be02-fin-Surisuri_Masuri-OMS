@@ -1,0 +1,17 @@
+version: '3'
+services:
+  db:
+    image: mariadb:latest
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - db-vol:/var/lib/mysql
+    environment:
+        MARIADB_ROOT_PASSWORD: qwer1234
+        MARIADB_DATABASE: masuri
+        TZ: Asia/Seoul
+
+volumes:
+  db-vol:
+    driver: local
