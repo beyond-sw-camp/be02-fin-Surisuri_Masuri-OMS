@@ -20,4 +20,9 @@ public class ProductController {
     public ResponseEntity create(ProductCreateReq req) {
         return ResponseEntity.ok().body(productService.create(req));
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/search")
+    public ResponseEntity search(String productName) {
+        return ResponseEntity.ok().body(productService.search(productName));
+    }
 }
