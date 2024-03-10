@@ -69,4 +69,15 @@ public class ProductService {
 
         return BaseResponse.successResponse("상품 수정 성공", result);
     }
+
+    public BaseResponse delete(Long idx) {
+        Optional<Product> result = productRepository.findById(idx);
+
+        Product product = result.get();
+
+        productRepository.delete(product);
+
+        return BaseResponse.successResponse("상품 삭제 성공", product);
+
+    }
 }

@@ -36,4 +36,9 @@ public class ProductController {
     public ResponseEntity update(ProductUpdateReq req) {
         return ResponseEntity.ok().body(productService.update(req));
     }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
+    public ResponseEntity delete(Long idx) {
+        return ResponseEntity.ok().body(productService.delete(idx));
+    }
 }
