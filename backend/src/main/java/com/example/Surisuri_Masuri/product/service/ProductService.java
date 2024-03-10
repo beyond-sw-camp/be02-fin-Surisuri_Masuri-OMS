@@ -3,6 +3,7 @@ package com.example.Surisuri_Masuri.product.service;
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.product.model.Product;
 import com.example.Surisuri_Masuri.product.model.dto.request.ProductCreateReq;
+import com.example.Surisuri_Masuri.product.model.dto.request.ProductUpdateReq;
 import com.example.Surisuri_Masuri.product.model.dto.response.ProductSearchRes;
 import com.example.Surisuri_Masuri.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -50,5 +51,22 @@ public class ProductService {
 
         return BaseResponse.successResponse("상품 리스트 검색 성공", result);
 
+    }
+
+    public BaseResponse update(ProductUpdateReq req) {
+        Optional<Product> result = productRepository.findById(req.getIdx());
+
+        if (result.isPresent()) {
+            Product product = result.get();
+            if (req.getProductName() != null) {
+                product.setProductName(req.getProductName());
+            }
+            if (req.getPrice() != null) {
+                product.setPrice(req.getPrice());
+            }
+            productRepository.save(product);
+        }
+
+        return BaseResponse.successResponse("상품 수정 성공", result);
     }
 }

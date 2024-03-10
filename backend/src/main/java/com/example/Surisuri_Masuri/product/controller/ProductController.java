@@ -1,6 +1,7 @@
 package com.example.Surisuri_Masuri.product.controller;
 
 import com.example.Surisuri_Masuri.product.model.dto.request.ProductCreateReq;
+import com.example.Surisuri_Masuri.product.model.dto.request.ProductUpdateReq;
 import com.example.Surisuri_Masuri.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +30,10 @@ public class ProductController {
     @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ResponseEntity list(Integer page, Integer size) {
         return ResponseEntity.ok().body(productService.list(page, size));
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH, value = "/update")
+    public ResponseEntity update(ProductUpdateReq req) {
+        return ResponseEntity.ok().body(productService.update(req));
     }
 }
