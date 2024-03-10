@@ -43,4 +43,12 @@ public class ProductService {
 
         return BaseResponse.successResponse("검색과 일치하는 상품이 존재하지 않습니다", null);
     }
+
+    public BaseResponse list(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        List<Product> result = productRepository.findAll();
+
+        return BaseResponse.successResponse("상품 리스트 검색 성공", result);
+
+    }
 }

@@ -25,4 +25,9 @@ public class ProductController {
     public ResponseEntity search(String productName) {
         return ResponseEntity.ok().body(productService.search(productName));
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/list")
+    public ResponseEntity list(Integer page, Integer size) {
+        return ResponseEntity.ok().body(productService.list(page, size));
+    }
 }
