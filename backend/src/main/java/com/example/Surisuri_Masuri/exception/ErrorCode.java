@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     // Common
-    INTERNAL_SERVER_ERROR(1000,HttpStatus.INTERNAL_SERVER_ERROR, "서버에서 처리할 수 없는 경우"),
+    INTERNAL_SERVER_ERROR(1500,HttpStatus.INTERNAL_SERVER_ERROR, "서버에서 처리할 수 없는 경우"),
     CONSTRAINT_VIOLATION(2000,HttpStatus.NOT_FOUND, "잘못된 URL이 지정된 경우"),
 
     // User
