@@ -1,5 +1,4 @@
 *.yml
-.gitmessage.txt
 
 .DS_Store
 node_modules
