@@ -45,6 +45,8 @@ public class SecurityConfig {
                     .antMatchers("/user/confirm").permitAll()
                     .antMatchers("/user/findEmail").permitAll()
                     .antMatchers("/user/login").permitAll()
+                    .antMatchers("/user/findPassword").permitAll()
+                    .antMatchers("/user/resetPassword/{idx}").permitAll()
                     .anyRequest().authenticated();
             http.addFilterBefore(new JwtFilter(userService,managerService,secretKey), UsernamePasswordAuthenticationFilter.class);
             http.formLogin().disable();

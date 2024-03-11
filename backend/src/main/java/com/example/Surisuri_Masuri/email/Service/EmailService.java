@@ -43,6 +43,18 @@ public class EmailService {
         create(sendEmailReq.getEmail(),uuid,sendEmailReq.getAccessToken());
     }
 
+    // 이메일 전송 메소드 - 비밀번호 재설정용
+    public void sendEmail2(SendEmailReq sendEmailReq) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(sendEmailReq.getEmail());
+        message.setSubject("비밀번호 초기화용 이메일입니다.");
+
+        message.setText("http://localhost:8080/user/resetPassword/"
+                + sendEmailReq.getIdx()
+        );
+        emailSender.send(message);
+    }
+
     // 이메일 전송 후 인증 여부를 저장하기 위한 메소드
     public void create(String email,String uuid, String AccessToken)
     {

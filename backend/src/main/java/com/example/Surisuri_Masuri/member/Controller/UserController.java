@@ -2,10 +2,7 @@ package com.example.Surisuri_Masuri.member.Controller;
 
 import com.example.Surisuri_Masuri.email.Model.EmailConfirmReq;
 import com.example.Surisuri_Masuri.email.Service.EmailService;
-import com.example.Surisuri_Masuri.member.Model.ReqDtos.LoginReq;
-import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserFindEmailReq;
-import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserSignUpReq;
-import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserUpdateReq;
+import com.example.Surisuri_Masuri.member.Model.ReqDtos.*;
 import com.example.Surisuri_Masuri.member.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +49,20 @@ public class UserController {
     public ResponseEntity updateUser(@RequestHeader(value = "Authorization") String token, @RequestBody UserUpdateReq userUpdateReq)
     {
         return ResponseEntity.ok().body(userService.userUpdate(token,userUpdateReq));
+    }
+
+    // Password 재설정 이메일 발송
+    @PostMapping("/user/findPassword")
+    public ResponseEntity findPassword(@RequestBody FindUserPasswordReq findUserPasswordReq)
+    {
+        return ResponseEntity.ok().body(userService.findPassword(findUserPasswordReq));
+    }
+
+    // Password 재설정 페이지
+    @PatchMapping("/user/resetPassword/{idx}")
+    public ResponseEntity resetPassword(@PathVariable Long idx, ResetPasswordReq resetPasswordReq)
+    {
+        return ResponseEntity.ok().body(userService.resetPassword(idx,resetPasswordReq));
     }
 
     // 권한 테스트용

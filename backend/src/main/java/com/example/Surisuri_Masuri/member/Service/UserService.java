@@ -5,14 +5,8 @@ import com.example.Surisuri_Masuri.email.Model.SendEmailReq;
 import com.example.Surisuri_Masuri.email.Service.EmailService;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
-import com.example.Surisuri_Masuri.member.Model.ReqDtos.LoginReq;
-import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserFindEmailReq;
-import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserSignUpReq;
-import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserUpdateReq;
-import com.example.Surisuri_Masuri.member.Model.ResDtos.LoginRes;
-import com.example.Surisuri_Masuri.member.Model.ResDtos.UserFindEmailRes;
-import com.example.Surisuri_Masuri.member.Model.ResDtos.UserSignUpRes;
-import com.example.Surisuri_Masuri.member.Model.ResDtos.UserUpdateRes;
+import com.example.Surisuri_Masuri.member.Model.ReqDtos.*;
+import com.example.Surisuri_Masuri.member.Model.ResDtos.*;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import com.example.Surisuri_Masuri.store.Repository.StoreRepository;
@@ -52,6 +46,7 @@ public class UserService {
 
     UserSignUpRes userSignUpRes;
 
+    // 회원가입 기능
     public BaseResponse<UserSignUpRes> UserSignUp(UserSignUpReq userSignUpReq) {
 
         // 1. 이메일을 통해 이미 존재하는 회원인지 확인
@@ -123,14 +118,6 @@ public class UserService {
         }
         return BaseResponse.successResponse("이메일 인증 대기중...", userSignUpRes);
     }
-        public User getUserByUserEmail (String email){
-            Optional<User> user = userRepository.findByUserEmail(email);
-
-            if (user.isPresent()) {
-                return user.get();
-            }
-            return null;
-        }
 
     // 로그인 기능
     public BaseResponse<LoginRes> UserLogin(LoginReq userLoginReq) {
@@ -149,25 +136,23 @@ public class UserService {
     }
 
     // 이메일 찾기 기능
-    public BaseResponse<UserFindEmailRes> findEmail(UserFindEmailReq userFindEmailReq)
-    {
+    public BaseResponse<UserFindEmailRes> findEmail(UserFindEmailReq userFindEmailReq) {
         compare1 = userRepository.findByUserName(userFindEmailReq.getUserName()).get();
         compare2 = userRepository.findByUserPhoneNo(userFindEmailReq.getUserPhoneNo()).get();
 
-        if(compare1.equals(compare2))
-        {
+        if (compare1.equals(compare2)) {
             UserFindEmailRes userFindEmailRes = UserFindEmailRes
                     .builder()
                     .userEmail(compare1.getUserEmail())
                     .build();
 
             return BaseResponse.successResponse("요청하신 회원 정보입니다.", userFindEmailRes);
-        }
-        else
+        } else
             return BaseResponse.failResponse(7000, "잘못된 정보를 입력하셨습니다.");
     }
 
-    public BaseResponse userUpdate(String token,UserUpdateReq userUpdateReq) {
+    // 회원정보 수정 기능
+    public BaseResponse<UserUpdateRes> userUpdate(String token, UserUpdateReq userUpdateReq) {
         token = JwtUtils.replaceToken(token);
         String email = JwtUtils.getUserEmail(token, secretKey);
         Optional<User> user = userRepository.findByUserEmail(email);
@@ -198,7 +183,7 @@ public class UserService {
                     .userPhoneNo(userUpdateReq.getUserPhoneNo())
                     .storePhoneNo(userUpdateReq.getStorePhoneNo())
                     .build();
-            BaseResponse baseResponse = BaseResponse.successResponse("수정된 회원정보입니다.",userUpdateRes );
+            BaseResponse baseResponse = BaseResponse.successResponse("수정된 회원정보입니다.", userUpdateRes);
 
 
             return baseResponse;
@@ -207,6 +192,68 @@ public class UserService {
         }
     }
 
+    // 회원 비밀번호 찾기 기능
+    public BaseResponse<FindUserPasswordRes> findPassword(FindUserPasswordReq findUserPasswordReq) {
 
+        Optional<User> user = userRepository.findByUserEmail(findUserPasswordReq.getUserEmail());
+        if (user.isPresent()) {
+            User user2 = user.get();
+            Long idx = user2.getIdx();
+            String userEmail = user2.getUserEmail();
+            SendEmailReq sendEmailReq = SendEmailReq.builder()
+                    .idx(idx)
+                    .email(userEmail)
+                    .build();
+
+            // 5. 이메일 전송
+            emailService.sendEmail2(sendEmailReq);
+
+            FindUserPasswordRes findUserPasswordRes = FindUserPasswordRes.builder()
+                    .idx(idx)
+                    .build();
+
+            BaseResponse baseResponse = BaseResponse.successResponse("비밀번호 초기화 이메일 발송이 완료되었습니다.", findUserPasswordRes);
+
+            return baseResponse;
+
+        }
+
+        {
+            return BaseResponse.failResponse(7000, "요청실패");
+        }
+    }
+
+    // 비밀번호 재설정 기능
+    public BaseResponse<ResetPasswordRes> resetPassword(Long idx, ResetPasswordReq resetPasswordReq) {
+        Optional<User> user = userRepository.findById(idx);
+        if (user.isPresent()) {
+
+            User user2= user.get();
+            user2.setUserPassword(passwordEncoder.encode(resetPasswordReq.getUserPassword()));
+            userRepository.save(user2);
+
+            ResetPasswordRes resetPasswordRes = ResetPasswordRes
+                    .builder()
+                    .password(resetPasswordReq.getUserPassword())
+                    .build();
+
+            BaseResponse baseResponse = BaseResponse.successResponse("비밀번호가 재설정 되었습니다.", resetPasswordRes);
+
+            return baseResponse;
+        }
+
+        {
+            return BaseResponse.failResponse(7000, "요청실패");
+        }
+    }
+
+    public User getUserByUserEmail (String email){
+        Optional<User> user = userRepository.findByUserEmail(email);
+
+        if (user.isPresent()) {
+            return user.get();
+        }
+        return null;
+    }
 }
 
