@@ -6,8 +6,10 @@ import com.example.Surisuri_Masuri.email.Service.EmailService;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.LoginReq;
+import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserFindEmailReq;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserSignUpReq;
 import com.example.Surisuri_Masuri.member.Model.ResDtos.LoginRes;
+import com.example.Surisuri_Masuri.member.Model.ResDtos.UserFindEmailRes;
 import com.example.Surisuri_Masuri.member.Model.ResDtos.UserSignUpRes;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
@@ -15,6 +17,7 @@ import com.example.Surisuri_Masuri.store.Repository.StoreRepository;
 import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +38,9 @@ public class UserService {
     private final StoreRepository storeRepository;
 
     private final EmailService emailService;
+
+    User compare1;
+    User compare2;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -129,7 +135,7 @@ public class UserService {
         }
 
     // 로그인 기능
-    public BaseResponse<LoginRes> CustomerLogin(LoginReq userLoginReq) {
+    public BaseResponse<LoginRes> UserLogin(LoginReq userLoginReq) {
         LoginRes loginRes = null;
         Optional<User> user = userRepository.findByUserEmail(userLoginReq.getId());
         if (user.isEmpty()) {
@@ -140,11 +146,28 @@ public class UserService {
             loginRes = LoginRes.builder()
                     .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
                     .build();
-
         }
         return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
     }
 
+    // 이메일 찾기 기능
+    public BaseResponse<UserFindEmailRes> findEmail(UserFindEmailReq userFindEmailReq)
+    {
+        compare1 = userRepository.findByUserName(userFindEmailReq.getUserName()).get();
+        compare2 = userRepository.findByUserPhoneNo(userFindEmailReq.getUserPhoneNo()).get();
+
+        if(compare1.equals(compare2))
+        {
+            UserFindEmailRes userFindEmailRes = UserFindEmailRes
+                    .builder()
+                    .userEmail(compare1.getUserEmail())
+                    .build();
+
+            return BaseResponse.successResponse("요청하신 회원 정보입니다.", userFindEmailRes);
+        }
+        else
+            return BaseResponse.failResponse(7000, "잘못된 정보를 입력하셨습니다.");
+    }
 
 }
 
