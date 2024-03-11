@@ -36,8 +36,8 @@ public class QuestionController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
-    public ResponseEntity delete(Integer questionIdx) {
-        BaseResponse baseResponse = questionService.delete(questionIdx);
+    public ResponseEntity delete(Integer idx) {
+        BaseResponse baseResponse = questionService.delete(idx);
         return ResponseEntity.ok().body(baseResponse);
     }
 

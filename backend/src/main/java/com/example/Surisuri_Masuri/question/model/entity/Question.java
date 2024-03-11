@@ -22,7 +22,7 @@ public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer questionIdx;
+    private Integer idx;
 
     @Column(nullable = false, length = 50)
     private String category;

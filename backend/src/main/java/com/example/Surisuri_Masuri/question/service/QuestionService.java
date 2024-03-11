@@ -68,7 +68,7 @@ public class QuestionService {
 
 
     public BaseResponse update(PatchUpdateQuestionReq patchUpdateQuestionReq) {
-        Optional<Question> result = questionRepository.findById(patchUpdateQuestionReq.getQuestionIdx());
+        Optional<Question> result = questionRepository.findById(patchUpdateQuestionReq.getIdx());
 
         if (result.isPresent()) {
             Question question = result.get();
@@ -82,8 +82,8 @@ public class QuestionService {
     }
 
 
-    public BaseResponse delete(Integer questionIdx) {
-        Optional<Question> result = questionRepository.findById(questionIdx);
+    public BaseResponse delete(Integer idx) {
+        Optional<Question> result = questionRepository.findById(idx);
 
         if(result.isPresent()) {
             Question question = result.get();

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PatchUpdateQuestionReq {
 
-    private Integer questionIdx;
+    private Integer idx;
     private String category;
     private String title;
     private String content;
