@@ -39,7 +39,11 @@ public class SecurityConfig {
 
             http.csrf().disable()
                     .authorizeRequests()
-                    .antMatchers("/**").permitAll()
+                    .antMatchers("/user/test").hasAuthority("User")
+                    .antMatchers("/user/register").permitAll()
+                    .antMatchers("/user/confirm").permitAll()
+                    .antMatchers("/user/findEmail").permitAll()
+                    .antMatchers("/user/login").permitAll()
                     .anyRequest().authenticated();
             http.addFilterBefore(new JwtFilter(userService,managerService,secretKey), UsernamePasswordAuthenticationFilter.class);
             http.formLogin().disable();
