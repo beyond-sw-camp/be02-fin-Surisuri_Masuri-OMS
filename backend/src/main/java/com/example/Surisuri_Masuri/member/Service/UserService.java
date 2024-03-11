@@ -5,7 +5,9 @@ import com.example.Surisuri_Masuri.email.Model.SendEmailReq;
 import com.example.Surisuri_Masuri.email.Service.EmailService;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
+import com.example.Surisuri_Masuri.member.Model.ReqDtos.LoginReq;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserSignUpReq;
+import com.example.Surisuri_Masuri.member.Model.ResDtos.LoginRes;
 import com.example.Surisuri_Masuri.member.Model.ResDtos.UserSignUpRes;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
@@ -125,6 +127,24 @@ public class UserService {
             }
             return null;
         }
+
+    // 로그인 기능
+    public BaseResponse<LoginRes> CustomerLogin(LoginReq userLoginReq) {
+        LoginRes loginRes = null;
+        Optional<User> user = userRepository.findByUserEmail(userLoginReq.getId());
+        if (user.isEmpty()) {
+            return BaseResponse.failResponse(7000, "가입되지 않은 회원입니다.");
+        } else if (user.isPresent() && passwordEncoder.matches(userLoginReq.getPassword(), user.get().getPassword()))
+            ;
+        {
+            loginRes = LoginRes.builder()
+                    .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
+                    .build();
+
+        }
+        return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
+    }
+
 
 }
 

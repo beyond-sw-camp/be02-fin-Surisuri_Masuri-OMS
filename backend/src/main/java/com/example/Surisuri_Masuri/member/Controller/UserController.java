@@ -2,6 +2,7 @@ package com.example.Surisuri_Masuri.member.Controller;
 
 import com.example.Surisuri_Masuri.email.Model.EmailConfirmReq;
 import com.example.Surisuri_Masuri.email.Service.EmailService;
+import com.example.Surisuri_Masuri.member.Model.ReqDtos.LoginReq;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserSignUpReq;
 import com.example.Surisuri_Masuri.member.Service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,13 @@ public class UserController {
         return ResponseEntity.ok().body(userService.UserSignUp(userSignUpReq));
     }
 
+
+    // 로그인 기능
+    @PostMapping("/user/login")
+    public ResponseEntity CustomerLogin(@RequestBody LoginReq loginReq)
+    {
+        return ResponseEntity.ok().body(userService.CustomerLogin(loginReq));
+    }
 
     // 이메일 인증
     @GetMapping(value = "/user/confirm")
