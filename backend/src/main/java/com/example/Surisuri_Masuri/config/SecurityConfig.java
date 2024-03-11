@@ -40,6 +40,7 @@ public class SecurityConfig {
             http.csrf().disable()
                     .authorizeRequests()
                     .antMatchers("/user/test").hasAuthority("User")
+                    .antMatchers("/user/update").hasAuthority("User")
                     .antMatchers("/user/register").permitAll()
                     .antMatchers("/user/confirm").permitAll()
                     .antMatchers("/user/findEmail").permitAll()
