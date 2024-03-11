@@ -58,7 +58,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 return;
             }
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    User.builder().userEmail(email).idx(user.getIdx()).build(), null,
+                    User.builder().userEmail(email).idx(idx).build(), null,
                     user.getAuthorities()
             );
 
@@ -78,7 +78,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 return;
             }
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    Manager.builder().managerEmail(email).idx(manager.getIdx()).build(), null,
+                    Manager.builder().managerEmail(email).idx(idx).build(), null,
                     manager.getAuthorities()
             );
 
