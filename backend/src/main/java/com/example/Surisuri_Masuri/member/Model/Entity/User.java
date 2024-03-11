@@ -1,9 +1,7 @@
 package com.example.Surisuri_Masuri.member.Model.Entity;
 
-import com.example.Surisuri_Masuri.common.Address;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import lombok.*;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

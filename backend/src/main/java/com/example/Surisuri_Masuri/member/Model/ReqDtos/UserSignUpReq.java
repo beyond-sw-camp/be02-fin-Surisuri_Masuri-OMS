@@ -1,6 +1,5 @@
 package com.example.Surisuri_Masuri.member.Model.ReqDtos;
 
-import com.example.Surisuri_Masuri.common.Address;
 import lombok.Builder;
 import lombok.Data;
 
