@@ -8,20 +8,18 @@ import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.LoginReq;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserFindEmailReq;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserSignUpReq;
+import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserUpdateReq;
 import com.example.Surisuri_Masuri.member.Model.ResDtos.LoginRes;
 import com.example.Surisuri_Masuri.member.Model.ResDtos.UserFindEmailRes;
 import com.example.Surisuri_Masuri.member.Model.ResDtos.UserSignUpRes;
+import com.example.Surisuri_Masuri.member.Model.ResDtos.UserUpdateRes;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import com.example.Surisuri_Masuri.store.Repository.StoreRepository;
-import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -168,6 +166,47 @@ public class UserService {
         else
             return BaseResponse.failResponse(7000, "잘못된 정보를 입력하셨습니다.");
     }
+
+    public BaseResponse userUpdate(String token,UserUpdateReq userUpdateReq) {
+        token = JwtUtils.replaceToken(token);
+        String email = JwtUtils.getUserEmail(token, secretKey);
+        Optional<User> user = userRepository.findByUserEmail(email);
+
+        User user3 = user.get();
+        Long idx = user3.getIdx(); // store에서 사용하는 키값
+
+        if (user.isPresent()) {
+            User user2 = user.get();
+            user2.setUserPassword(passwordEncoder.encode(userUpdateReq.getUserPassword()));
+            user2.setUserPhoneNo(userUpdateReq.getUserPhoneNo());
+            userRepository.save(user2);
+
+            Optional<Store> store = storeRepository.findById(idx);
+            Store store2 = store.get();
+
+            store2.setStoreAddr(userUpdateReq.getStoreAddr());
+            store2.setStorePhoneNo(userUpdateReq.getUserPhoneNo());
+            store2.setCreatedAt(create);
+            store2.setUpdatedAt(update);
+            storeRepository.save(store2);
+
+
+            UserUpdateRes userUpdateRes = UserUpdateRes
+                    .builder()
+                    .userPassword(userUpdateReq.getUserPassword())
+                    .storeAddr(userUpdateReq.getStoreAddr())
+                    .userPhoneNo(userUpdateReq.getUserPhoneNo())
+                    .storePhoneNo(userUpdateReq.getStorePhoneNo())
+                    .build();
+            BaseResponse baseResponse = BaseResponse.successResponse("수정된 회원정보입니다.",userUpdateRes );
+
+
+            return baseResponse;
+        } else {
+            return BaseResponse.failResponse(7000, "요청실패");
+        }
+    }
+
 
 }
 

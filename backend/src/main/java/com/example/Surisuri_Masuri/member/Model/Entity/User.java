@@ -32,6 +32,14 @@ public class User implements UserDetails {
 
     private Boolean status;
 
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
+    }
+
+    public void setUserPhoneNo(String userPhoneNo) {
+        this.userPhoneNo = userPhoneNo;
+    }
+
     private String userAuthority;
 
     private Date createdAt;
@@ -40,6 +48,8 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Store> stores;
+
+
 
     public Boolean changeStatus(Boolean status) {
         return this.status = status;

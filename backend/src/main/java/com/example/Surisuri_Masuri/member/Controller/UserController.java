@@ -5,6 +5,7 @@ import com.example.Surisuri_Masuri.email.Service.EmailService;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.LoginReq;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserFindEmailReq;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserSignUpReq;
+import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserUpdateReq;
 import com.example.Surisuri_Masuri.member.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,13 @@ public class UserController {
     public ResponseEntity findEmail(@RequestBody UserFindEmailReq userFindEmailReq)
     {
         return ResponseEntity.ok().body(userService.findEmail(userFindEmailReq));
+    }
+
+    // 회원정보 수정
+    @PatchMapping("/user/update")
+    public ResponseEntity updateUser(@RequestHeader(value = "Authorization") String token, @RequestBody UserUpdateReq userUpdateReq)
+    {
+        return ResponseEntity.ok().body(userService.userUpdate(token,userUpdateReq));
     }
 
     // 권한 테스트용
