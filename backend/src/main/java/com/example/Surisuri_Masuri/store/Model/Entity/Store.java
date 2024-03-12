@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,13 +33,18 @@ public class Store {
 
     private String storePhoneNo;
 
+    private String storeManagerPhoneNo;
+
     private Date createdAt;
 
     private Date updatedAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userIdx")
     private User user;
+
+    @OneToMany(mappedBy = "store")
+    private List<StoreStock> storeStocks;
 
     public void setStoreAddr(String storeAddr) {
         this.storeAddr = storeAddr;

@@ -1,11 +1,13 @@
 package com.example.Surisuri_Masuri.product.model;
 
+import com.example.Surisuri_Masuri.store.Model.Entity.StoreStock;
 import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -20,11 +22,15 @@ public class Product {
     private Long idx;
 
     private String productName;
+
     private Integer price;
 
     @Column(updatable = false, nullable = false)
     private Date createdAt;
     private Date updatedAt;
+
+    @OneToMany(mappedBy = "product")
+    private List<StoreStock> storeStocks;
 
     @PrePersist
     void createdAt() {
