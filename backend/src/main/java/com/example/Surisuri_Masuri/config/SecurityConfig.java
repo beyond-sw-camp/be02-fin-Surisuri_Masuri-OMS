@@ -41,6 +41,7 @@ public class SecurityConfig {
                     .authorizeRequests()
                     .antMatchers("/user/test").hasAuthority("User")
                     .antMatchers("/user/update").hasAuthority("User")
+                    .antMatchers("/store/create").hasAuthority("Manager")
                     .antMatchers("/user/register").permitAll()
                     .antMatchers("/manager/register").permitAll()
                     .antMatchers("/user/confirm").permitAll()
@@ -49,6 +50,7 @@ public class SecurityConfig {
                     .antMatchers("/manager/login").permitAll()
                     .antMatchers("/user/findPassword").permitAll()
                     .antMatchers("/user/resetPassword/{idx}").permitAll()
+
                     .anyRequest().authenticated();
             http.addFilterBefore(new JwtFilter(userService,managerService,secretKey), UsernamePasswordAuthenticationFilter.class);
             http.formLogin().disable();
