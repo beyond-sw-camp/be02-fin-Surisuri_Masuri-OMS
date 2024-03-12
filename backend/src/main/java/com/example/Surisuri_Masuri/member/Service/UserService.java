@@ -41,7 +41,6 @@ public class UserService {
     private int expiredTimeMs;
 
     LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-    Date create = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
     Date update = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
 
     UserSignUpRes userSignUpRes;
@@ -68,7 +67,6 @@ public class UserService {
                         .userPhoneNo(userSignUpReq.getUserPhoneNo())
                         .userAuthority("User")
                         .status(false)
-                        .createdAt(create)
                         .updatedAt(update)
                         .build();
 
@@ -78,7 +76,6 @@ public class UserService {
 
                 store2.setStoreAddr(userSignUpReq.getStoreAddr());
                 store2.setStorePhoneNo(userSignUpReq.getUserPhoneNo());
-                store2.setCreatedAt(create);
                 store2.setUpdatedAt(update);
                 store2.setUser(user);
 
@@ -171,7 +168,6 @@ public class UserService {
 
             store2.setStoreAddr(userUpdateReq.getStoreAddr());
             store2.setStorePhoneNo(userUpdateReq.getUserPhoneNo());
-            store2.setCreatedAt(create);
             store2.setUpdatedAt(update);
             storeRepository.save(store2);
 
