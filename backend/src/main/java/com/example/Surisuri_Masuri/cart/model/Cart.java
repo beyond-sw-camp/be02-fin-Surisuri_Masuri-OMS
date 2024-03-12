@@ -23,7 +23,7 @@ public class Cart {
     private Date createdAt;
     private Date updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "Store_idx")
     private Store store;
 

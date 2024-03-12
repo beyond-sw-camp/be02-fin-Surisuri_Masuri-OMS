@@ -27,23 +27,51 @@ public class CartService {
 
         Product product = productResult.get();
 
-        Cart cart = cartRepository.save(Cart.builder()
-                .store(Store.builder().idx(req.getStoreIdx()).build())
-                .build());
+        Optional<Cart> cartResult = cartRepository.findById(req.getIdx());
 
-        CartDetail cartDetail = cartDetailRepository.save(CartDetail.builder()
-                .cart(cart)
-                .product(product)
-                .productQuantity(req.getProductQuantity())
-                .build());
+        if (!cartResult.isPresent()) {
+            Cart cart = cartRepository.save(Cart.builder()
+                    .store(Store.builder().idx(req.getStoreIdx()).build())
+                    .build());
 
-        CartCreateRes cartCreateRes = CartCreateRes.builder()
-                .idx(cart.getIdx())
-                .productName(product.getProductName())
-                .price(product.getPrice())
-                .productQuantity(cartDetail.getProductQuantity())
-                .build();
+            CartDetail cartDetail = cartDetailRepository.save(CartDetail.builder()
+                    .cart(cart)
+                    .product(product)
+                    .productQuantity(req.getProductQuantity())
+                    .build());
 
-        return BaseResponse.successResponse("요청 성공", cartCreateRes);
+            CartCreateRes cartCreateRes = CartCreateRes.builder()
+                    .idx(cart.getIdx())
+                    .productName(product.getProductName())
+                    .price(product.getPrice())
+                    .productQuantity(cartDetail.getProductQuantity())
+                    .build();
+
+            return BaseResponse.successResponse("요청 성공", cartCreateRes);
+        } else {
+            Cart cart = cartResult.get();
+
+            Optional<CartDetail> cartDetailResult = cartDetailRepository.findById(req.getCartDetailIdx());
+            CartDetail cartDetail = cartDetailResult.get();
+
+            if (cartDetail.getProduct().getIdx() == req.getProductIdx()) {
+                cartDetail.setProductQuantity(req.getProductQuantity() + cartDetail.getProductQuantity());
+                cartDetailRepository.save(cartDetail);
+            } else {
+                cartDetailRepository.save(CartDetail.builder()
+                        .cart(Cart.builder().idx(req.getIdx()).build())
+                        .product(product)
+                        .productQuantity(req.getProductQuantity())
+                        .build());
+            }
+            CartCreateRes cartCreateRes = CartCreateRes.builder()
+                    .idx(req.getIdx())
+                    .productName(product.getProductName())
+                    .price(product.getPrice())
+                    .productQuantity(cartDetail.getProductQuantity())
+                    .build();
+
+            return BaseResponse.successResponse("요청 성공", cartCreateRes);
+        }
     }
 }

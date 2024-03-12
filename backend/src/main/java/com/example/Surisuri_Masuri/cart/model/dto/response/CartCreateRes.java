@@ -7,8 +7,8 @@ import lombok.Setter;
 
 @Builder
 public class CartCreateRes {
-    Long idx;
-    String productName;
-    Integer price;
-    Integer productQuantity;
+    public Long idx;
+    public String productName;
+    public Integer price;
+    public Integer productQuantity;
 }
