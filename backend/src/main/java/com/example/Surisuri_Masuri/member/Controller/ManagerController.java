@@ -2,6 +2,7 @@ package com.example.Surisuri_Masuri.member.Controller;
 
 import com.example.Surisuri_Masuri.email.Model.EmailConfirmReq;
 import com.example.Surisuri_Masuri.email.Service.EmailService;
+import com.example.Surisuri_Masuri.member.Model.ReqDtos.LoginReq;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.ManagerSignUpReq;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.UserSignUpReq;
 import com.example.Surisuri_Masuri.member.Service.ManagerService;
@@ -24,6 +25,13 @@ public class ManagerController {
     public ResponseEntity ManagerSignUp(@RequestBody ManagerSignUpReq managerSignUpReq)
     {
         return ResponseEntity.ok().body(managerService.ManagerSignUp(managerSignUpReq));
+    }
+
+    // 로그인 기능
+    @PostMapping("/manager/login")
+    public ResponseEntity ManagerLogin(@RequestBody LoginReq loginReq)
+    {
+        return ResponseEntity.ok().body(managerService.ManagerLogin(loginReq));
     }
 
 }

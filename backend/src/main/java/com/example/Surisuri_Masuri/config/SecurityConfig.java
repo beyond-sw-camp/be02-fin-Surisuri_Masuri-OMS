@@ -42,9 +42,11 @@ public class SecurityConfig {
                     .antMatchers("/user/test").hasAuthority("User")
                     .antMatchers("/user/update").hasAuthority("User")
                     .antMatchers("/user/register").permitAll()
+                    .antMatchers("/manager/register").permitAll()
                     .antMatchers("/user/confirm").permitAll()
                     .antMatchers("/user/findEmail").permitAll()
                     .antMatchers("/user/login").permitAll()
+                    .antMatchers("/manager/login").permitAll()
                     .antMatchers("/user/findPassword").permitAll()
                     .antMatchers("/user/resetPassword/{idx}").permitAll()
                     .anyRequest().authenticated();
