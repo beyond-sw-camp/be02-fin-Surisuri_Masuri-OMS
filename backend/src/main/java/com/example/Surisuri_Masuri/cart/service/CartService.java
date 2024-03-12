@@ -11,6 +11,8 @@ import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.product.model.Product;
 import com.example.Surisuri_Masuri.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -86,5 +88,17 @@ public class CartService {
 
             return BaseResponse.successResponse("요청 성공", cartCreateRes);
         }
+    }
+
+    public BaseResponse delete(Long idx, Long productIdx) {
+        Optional<Cart> cartResult = cartRepository.findById(idx);
+        List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(idx);
+
+        for (CartDetail cartDetail : cartDetailList) {
+            if (cartDetail.getProduct().getIdx() == productIdx)
+                cartDetailRepository.delete(cartDetail);
+        }
+
+        return BaseResponse.successResponse("카트 상품 삭제 성공", null);
     }
 }
