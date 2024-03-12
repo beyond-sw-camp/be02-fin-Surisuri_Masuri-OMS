@@ -13,6 +13,8 @@ import com.example.Surisuri_Masuri.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,7 +24,7 @@ public class CartService {
     private final CartDetailRepository cartDetailRepository;
     private final ProductRepository productRepository;
 
-    public BaseResponse create(CartCreateReq req) {
+    public BaseResponse addCart(CartCreateReq req) {
         Optional<Product> productResult = productRepository.findById(req.getProductIdx());
 
         Product product = productResult.get();
@@ -51,19 +53,30 @@ public class CartService {
         } else {
             Cart cart = cartResult.get();
 
-            Optional<CartDetail> cartDetailResult = cartDetailRepository.findById(req.getCartDetailIdx());
-            CartDetail cartDetail = cartDetailResult.get();
+            List<CartDetail> cartDetailResult = cartDetailRepository.findByCartIdx(req.getIdx());
 
-            if (cartDetail.getProduct().getIdx() == req.getProductIdx()) {
-                cartDetail.setProductQuantity(req.getProductQuantity() + cartDetail.getProductQuantity());
-                cartDetailRepository.save(cartDetail);
-            } else {
-                cartDetailRepository.save(CartDetail.builder()
-                        .cart(Cart.builder().idx(req.getIdx()).build())
-                        .product(product)
-                        .productQuantity(req.getProductQuantity())
-                        .build());
+            for (CartDetail cartDetail : cartDetailResult) {
+                if (cartDetail.getProduct().getIdx() == req.getProductIdx()) {
+                    cartDetail.setProductQuantity(req.getProductQuantity() + cartDetail.getProductQuantity());
+                    cartDetailRepository.save(cartDetail);
+
+                    CartCreateRes cartCreateRes = CartCreateRes.builder()
+                            .idx(req.getIdx())
+                            .productName(product.getProductName())
+                            .price(product.getPrice())
+                            .productQuantity(cartDetail.getProductQuantity())
+                            .build();
+
+                    return BaseResponse.successResponse("요청 성공", cartCreateRes);
+                }
             }
+
+            CartDetail cartDetail = cartDetailRepository.save(CartDetail.builder()
+                    .cart(Cart.builder().idx(req.getIdx()).build())
+                    .product(product)
+                    .productQuantity(req.getProductQuantity())
+                    .build());
+
             CartCreateRes cartCreateRes = CartCreateRes.builder()
                     .idx(req.getIdx())
                     .productName(product.getProductName())

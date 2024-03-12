@@ -9,6 +9,5 @@ public class CartCreateReq {
     Long idx;
     Long productIdx;
     Long storeIdx;
-    Long cartDetailIdx;
     Integer productQuantity;
 }

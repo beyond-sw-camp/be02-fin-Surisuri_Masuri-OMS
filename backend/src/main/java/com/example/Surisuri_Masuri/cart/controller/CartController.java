@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class CartController {
     private final CartService cartService;
 
-    @RequestMapping(method = RequestMethod.POST, value = "/create")
-    public ResponseEntity create(CartCreateReq req) {
+    @RequestMapping(method = RequestMethod.POST, value = "/addcart")
+    public ResponseEntity addCart(CartCreateReq req) {
 
-        return ResponseEntity.ok().body(cartService.create(req));
+        return ResponseEntity.ok().body(cartService.addCart(req));
     }
 }
