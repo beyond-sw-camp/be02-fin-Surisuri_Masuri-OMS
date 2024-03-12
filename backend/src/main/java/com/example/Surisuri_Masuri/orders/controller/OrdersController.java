@@ -40,4 +40,9 @@ public class OrdersController {
 
         return ResponseEntity.ok().body(BaseResponse.failResponse(500,"결제 실패"));
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/list")
+    public ResponseEntity list(Integer page, Integer size) {
+        return ResponseEntity.ok().body(ordersService.list(page, size));
+    }
 }

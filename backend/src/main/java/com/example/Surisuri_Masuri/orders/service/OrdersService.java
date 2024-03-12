@@ -9,6 +9,8 @@ import com.example.Surisuri_Masuri.orders.model.Orders;
 import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersPaymentReq;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersRefundReq;
+import com.example.Surisuri_Masuri.orders.model.dto.response.OrdersListRes;
+import com.example.Surisuri_Masuri.orders.model.dto.response.ProductDtoRes;
 import com.example.Surisuri_Masuri.orders.repository.OrdersDetailRepository;
 import com.example.Surisuri_Masuri.orders.repository.OrdersRepository;
 import com.example.Surisuri_Masuri.product.model.Product;
@@ -21,12 +23,15 @@ import com.siot.IamportRestClient.response.Payment;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.text.html.Option;
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -74,6 +79,35 @@ public class OrdersService {
             ordersDetailRepository.delete(ordersDetail);
         }
         ordersRepository.delete(ordersResult.get());
+    }
+
+    public BaseResponse list(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        List<Orders> ordersResult = ordersRepository.findAll();
+        List<OrdersDetail> ordersDetailsResult = ordersDetailRepository.findAll();
+
+        List<OrdersListRes> ordersListResList = new ArrayList<>();
+
+        for (Orders orders: ordersResult) {
+            List<OrdersDetail> ordersDetailResult = ordersDetailRepository.findByOrdersIdx(orders.getIdx());
+
+            for (OrdersDetail ordersDetail: ordersDetailsResult) {
+                OrdersListRes ordersListRes = OrdersListRes.builder()
+                        .productDtoRes(ProductDtoRes.builder()
+                                .productName(ordersDetail.getProduct().getProductName())
+                                .price(ordersDetail.getProduct().getPrice())
+                                .productQuantity(ordersDetail.getProcuctQuantity())
+                                .build())
+                        .payMethod(orders.getPayMethod())
+                        .totalPrice(orders.getTotalPrice())
+                        .date(orders.getCreatedAt())
+                        .build();
+
+                ordersListResList.add(ordersListRes);
+            }
+        }
+
+        return BaseResponse.successResponse("상품 리스트 검색 성공", ordersListResList);
     }
 
     public BaseResponse payment(OrdersPaymentReq req) throws IamportResponseException, IOException {
