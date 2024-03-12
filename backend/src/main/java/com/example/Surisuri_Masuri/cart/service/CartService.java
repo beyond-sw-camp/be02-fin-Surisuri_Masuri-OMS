@@ -5,6 +5,7 @@ import com.example.Surisuri_Masuri.cart.model.CartDetail;
 import com.example.Surisuri_Masuri.cart.model.Store;
 import com.example.Surisuri_Masuri.cart.model.dto.request.CartCreateReq;
 import com.example.Surisuri_Masuri.cart.model.dto.response.CartCreateRes;
+import com.example.Surisuri_Masuri.cart.model.dto.response.CartListRes;
 import com.example.Surisuri_Masuri.cart.repository.CartDetailRepository;
 import com.example.Surisuri_Masuri.cart.repository.CartRepository;
 import com.example.Surisuri_Masuri.common.BaseResponse;
@@ -15,7 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,6 +92,28 @@ public class CartService {
             return BaseResponse.successResponse("요청 성공", cartCreateRes);
         }
     }
+
+    public BaseResponse list(Long idx, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Optional<Cart> cartResult = cartRepository.findById(idx);
+        Cart cart = cartResult.get();
+        List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(cart.getIdx());
+
+        List<CartListRes> cartListResList = new ArrayList<>();
+
+        for (CartDetail cartDetail: cartDetailList) {
+            CartListRes cartListRes = CartListRes.builder()
+                    .productName(cartDetail.getProduct().getProductName())
+                    .price(cartDetail.getProduct().getPrice())
+                    .productQuantity(cartDetail.getProductQuantity())
+                    .build();
+
+            cartListResList.add(cartListRes);
+        }
+
+        return BaseResponse.successResponse("카트 리스트 검색 성공", cartListResList);
+    }
+
 
     public BaseResponse delete(Long idx, Long productIdx) {
         Optional<Cart> cartResult = cartRepository.findById(idx);

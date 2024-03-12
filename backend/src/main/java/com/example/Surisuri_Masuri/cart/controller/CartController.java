@@ -22,6 +22,12 @@ public class CartController {
         return ResponseEntity.ok().body(cartService.addCart(req));
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/list")
+    public ResponseEntity list(Long idx, Integer page, Integer size) {
+
+        return ResponseEntity.ok().body(cartService.list(idx, page, size));
+    }
+
     @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
     public ResponseEntity delete(Long idx, Long productIdx) {
 
