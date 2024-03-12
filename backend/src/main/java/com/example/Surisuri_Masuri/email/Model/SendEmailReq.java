@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class SendEmailReq {
+    private Long idx;
     private String email;
     private String authority;
     private String accessToken;
