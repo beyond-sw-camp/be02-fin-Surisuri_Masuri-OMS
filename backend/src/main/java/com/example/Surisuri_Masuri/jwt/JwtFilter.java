@@ -69,7 +69,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // 가맹점이 아니면 본사직원일것이다
         else {
-            Manager manager = managerService.getManagerByManagerEmail(email);
+            Manager manager = managerService.getManagerByManagerId(email);
 
             String managerEmail = manager.getUsername();
 
