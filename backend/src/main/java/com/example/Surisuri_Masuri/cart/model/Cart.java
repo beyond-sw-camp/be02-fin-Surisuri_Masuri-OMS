@@ -1,5 +1,6 @@
 package com.example.Surisuri_Masuri.cart.model;
 
+import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import lombok.*;
 
 import javax.persistence.*;
