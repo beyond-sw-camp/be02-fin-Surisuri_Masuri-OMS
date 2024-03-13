@@ -53,7 +53,7 @@ public class ManagerService {
                     .managerEmail(managerSignUpReq.getManagerEmail())
                     .managerName(managerSignUpReq.getManagerName())
                     .managerPhoneNo(managerSignUpReq.getManagerPhoneNo())
-                    .managerAuthority("Manager")
+                    .managerAuthority("ROLE_Manager")
                     .department("headquater")
                     .updatedAt(create)
                     .createdAt(update)
