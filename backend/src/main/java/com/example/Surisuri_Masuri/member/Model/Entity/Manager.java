@@ -1,5 +1,6 @@
 package com.example.Surisuri_Masuri.member.Model.Entity;
 
+import com.example.Surisuri_Masuri.notice.model.entity.Notice;
 import com.example.Surisuri_Masuri.question.model.entity.Answer;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,6 +40,9 @@ public class Manager implements UserDetails {
 
     @OneToMany(mappedBy = "manager")
     private List<Answer> answerList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "manager")
+    private List<Notice> noticeList = new ArrayList<>();
 
     public void setManagerId(String managerId) {
         this.managerId = managerId;
