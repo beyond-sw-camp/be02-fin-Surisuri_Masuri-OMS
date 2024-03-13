@@ -1,14 +1,12 @@
-package com.example.Surisuri_Masuri.cart.model;
+package com.example.Surisuri_Masuri.orders.model;
 
-import com.example.Surisuri_Masuri.store.Model.Entity.Store;
+import com.example.Surisuri_Masuri.product.model.Product;
 import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -16,20 +14,24 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-public class Cart {
+public class OrdersDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
+    private Integer procuctQuantity;
+
+    @Column(updatable = false, nullable = false)
     private Date createdAt;
     private Date updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "Store_idx")
-    private Store store;
+    @JoinColumn(name = "Product_idx")
+    private Product product;
 
-    @OneToMany(mappedBy = "cart")
-    private List<CartDetail> cartDetailList = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "Orders_idx")
+    private Orders orders;
 
     @PrePersist
     void createdAt() {

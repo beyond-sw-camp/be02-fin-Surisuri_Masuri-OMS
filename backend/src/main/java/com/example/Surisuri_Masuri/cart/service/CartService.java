@@ -2,7 +2,6 @@ package com.example.Surisuri_Masuri.cart.service;
 
 import com.example.Surisuri_Masuri.cart.model.Cart;
 import com.example.Surisuri_Masuri.cart.model.CartDetail;
-import com.example.Surisuri_Masuri.cart.model.Store;
 import com.example.Surisuri_Masuri.cart.model.dto.request.CartCreateReq;
 import com.example.Surisuri_Masuri.cart.model.dto.response.CartCreateRes;
 import com.example.Surisuri_Masuri.cart.model.dto.response.CartListRes;
@@ -11,6 +10,7 @@ import com.example.Surisuri_Masuri.cart.repository.CartRepository;
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.product.model.Product;
 import com.example.Surisuri_Masuri.product.repository.ProductRepository;
+import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

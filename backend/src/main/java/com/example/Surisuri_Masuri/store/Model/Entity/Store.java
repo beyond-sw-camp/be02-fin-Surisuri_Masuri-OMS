@@ -1,6 +1,9 @@
 package com.example.Surisuri_Masuri.store.Model.Entity;
 
+import com.example.Surisuri_Masuri.cart.model.Cart;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
+import com.example.Surisuri_Masuri.orders.model.Orders;
+import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,9 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 @Entity
 @Getter
@@ -37,8 +38,14 @@ public class Store {
     private Date updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "userIdx")
+    @JoinColumn(name = "User_idx")
     private User user;
+
+    @OneToMany(mappedBy = "store")
+    private List<Cart> cartList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "store")
+    private List<Orders> ordersList = new ArrayList<>();
 
     public void setStoreAddr(String storeAddr) {
         this.storeAddr = storeAddr;

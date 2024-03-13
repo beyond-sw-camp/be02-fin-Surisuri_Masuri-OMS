@@ -1,4 +1,4 @@
-package com.example.Surisuri_Masuri.cart.model;
+package com.example.Surisuri_Masuri.orders.model;
 
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import lombok.*;
@@ -16,11 +16,18 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-public class Cart {
+public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
+    private Long totalPrice;
+    private String merchantUid;
+    private String deliveryStatus;
+    private String refundReason;
+    private String payMethod;
+
+    @Column(updatable = false, nullable = false)
     private Date createdAt;
     private Date updatedAt;
 
@@ -28,8 +35,8 @@ public class Cart {
     @JoinColumn(name = "Store_idx")
     private Store store;
 
-    @OneToMany(mappedBy = "cart")
-    private List<CartDetail> cartDetailList = new ArrayList<>();
+    @OneToMany(mappedBy = "orders")
+    private List<OrdersDetail> ordersDetailList = new ArrayList<>();
 
     @PrePersist
     void createdAt() {
