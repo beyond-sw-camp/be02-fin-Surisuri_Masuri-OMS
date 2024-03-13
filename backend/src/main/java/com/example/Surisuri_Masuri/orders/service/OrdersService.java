@@ -9,6 +9,7 @@ import com.example.Surisuri_Masuri.orders.model.Orders;
 import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersPaymentReq;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersRefundReq;
+import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersUpdateDeliveryReq;
 import com.example.Surisuri_Masuri.orders.model.dto.response.OrdersListRes;
 import com.example.Surisuri_Masuri.orders.model.dto.response.ProductDtoRes;
 import com.example.Surisuri_Masuri.orders.repository.OrdersDetailRepository;
@@ -52,7 +53,16 @@ public class OrdersService {
     @Value("${imp.imp_key}")
     private String apiKey;
 
+    public BaseResponse updateOrdersDelivery(OrdersUpdateDeliveryReq req) {
+        Optional<Orders> ordersResult = ordersRepository.findById(req.getIdx());
+        Orders orders = ordersResult.get();
 
+        orders.setDeliveryStatus(req.getDeliveryStatus());
+
+        ordersRepository.save(orders);
+
+        return BaseResponse.successResponse("배송 상태 변경 성공", null);
+    }
 
     public BaseResponse list(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page - 1, size);
