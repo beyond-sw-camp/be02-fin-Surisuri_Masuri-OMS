@@ -14,6 +14,8 @@ import InquiryDetail from '../views/InquiryDetail.vue';
 import ResetLoginView from '../views/ResetLoginView.vue';
 import UserProfileView from '../views/UserProfileView.vue';
 import StockEditView from '../views/StockEditView.vue';
+import CartView from '../views/CartView.vue';
+import InquiryNew from '../views/InquiryNew.vue';
 
 
 
@@ -82,7 +84,7 @@ const routes = [
   {
     path: '/inquiry/new',
     name: 'NewInquiry',
-
+    component: InquiryNew,
   },
   {
     path: '/inquiry/:id',
@@ -94,6 +96,12 @@ const routes = [
     path: '/stockedit',
     name: 'stockedit',
     component: StockEditView,
+    props: true,
+  },
+  {
+    path: '/cart',
+    name: 'cart',
+    component: CartView,
     props: true,
   },
   

@@ -1,7 +1,6 @@
 <template>
     <div class="container-fluid px-4">
     
-        <h1 class="mt-4">공지사항 상세</h1>
         <div class="row">
             <div class="col">
                 <div class="card">

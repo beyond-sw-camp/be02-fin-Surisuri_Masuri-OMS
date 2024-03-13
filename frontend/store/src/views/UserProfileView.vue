@@ -35,6 +35,10 @@
                             <div class="mb-3">
                                 <input type="email" class="form-control" placeholder="Email address" aria-label="Email address">
                             </div>
+
+                            <div class="mb-3">
+                                <input type="password" class="form-control" placeholder="password" aria-label="password">
+                            </div>
                             <!-- Date of Birth -->
                            
                             <div class="mb-3">
