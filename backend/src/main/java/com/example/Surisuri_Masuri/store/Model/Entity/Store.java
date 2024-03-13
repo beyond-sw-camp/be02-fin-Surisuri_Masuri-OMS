@@ -2,16 +2,18 @@ package com.example.Surisuri_Masuri.store.Model.Entity;
 
 import com.example.Surisuri_Masuri.cart.model.Cart;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
+import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
 import com.example.Surisuri_Masuri.orders.model.Orders;
 import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+
 import java.util.*;
 
 @Entity
@@ -37,9 +39,12 @@ public class Store {
 
     private Date updatedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "User_idx")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userIdx")
     private User user;
+
+    @OneToMany(mappedBy = "store")
+    private List<StoreStock> storeStocks;
 
     @OneToMany(mappedBy = "store")
     private List<Cart> cartList = new ArrayList<>();

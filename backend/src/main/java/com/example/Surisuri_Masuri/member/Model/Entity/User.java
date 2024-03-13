@@ -44,8 +44,8 @@ public class User implements UserDetails {
 
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "user")
-    private List<Store> stores = new ArrayList<>();
+    @OneToOne(mappedBy = "user")
+    private Store store;
 
     @OneToMany(mappedBy = "user")
     private List<Notice> noticeList = new ArrayList<>();

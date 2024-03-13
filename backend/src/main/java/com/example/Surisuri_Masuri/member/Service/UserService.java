@@ -40,14 +40,14 @@ public class UserService {
     @Value("${jwt.token.expired-time-ms}")
     private int expiredTimeMs;
 
-    LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-    Date create = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
-    Date update = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
-
     UserSignUpRes userSignUpRes;
 
     // 회원가입 기능
     public BaseResponse<UserSignUpRes> UserSignUp(UserSignUpReq userSignUpReq) {
+
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        Date update = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
+        Date create = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
 
         // 1. 이메일을 통해 이미 존재하는 회원인지 확인
         if (userRepository.findByUserEmail(userSignUpReq.getUserEmail()).isPresent()) {
@@ -66,7 +66,8 @@ public class UserService {
                         .userEmail(userSignUpReq.getUserEmail())
                         .userPassword(passwordEncoder.encode(userSignUpReq.getUserPassword()))
                         .userPhoneNo(userSignUpReq.getUserPhoneNo())
-                        .userAuthority("User")
+                        .userAuthority("ROLE_User")
+                        .store(store.get())
                         .status(false)
                         .createdAt(create)
                         .updatedAt(update)
@@ -78,7 +79,6 @@ public class UserService {
 
                 store2.setStoreAddr(userSignUpReq.getStoreAddr());
                 store2.setStorePhoneNo(userSignUpReq.getUserPhoneNo());
-                store2.setCreatedAt(create);
                 store2.setUpdatedAt(update);
                 store2.setUser(user);
 
@@ -153,15 +153,22 @@ public class UserService {
 
     // 회원정보 수정 기능
     public BaseResponse<UserUpdateRes> userUpdate(String token, UserUpdateReq userUpdateReq) {
+
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        Date update = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
+        Date create = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
+
         token = JwtUtils.replaceToken(token);
         String email = JwtUtils.getUserEmail(token, secretKey);
         Optional<User> user = userRepository.findByUserEmail(email);
 
-        User user3 = user.get();
-        Long idx = user3.getIdx(); // store에서 사용하는 키값
-
         if (user.isPresent()) {
+
             User user2 = user.get();
+            User user3 = user.get();
+
+            Long idx = user3.getIdx(); // store에서 사용하는 키값
+
             user2.setUserPassword(passwordEncoder.encode(userUpdateReq.getUserPassword()));
             user2.setUserPhoneNo(userUpdateReq.getUserPhoneNo());
             userRepository.save(user2);
@@ -171,7 +178,6 @@ public class UserService {
 
             store2.setStoreAddr(userUpdateReq.getStoreAddr());
             store2.setStorePhoneNo(userUpdateReq.getUserPhoneNo());
-            store2.setCreatedAt(create);
             store2.setUpdatedAt(update);
             storeRepository.save(store2);
 

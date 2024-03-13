@@ -33,12 +33,13 @@ public class ManagerService {
     @Value("${jwt.token.expired-time-ms}")
     private int expiredTimeMs;
 
-    LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-    Date create = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
-    Date update = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
-
     // 회원가입 기능
     public BaseResponse<ManagerSignUpRes> ManagerSignUp(ManagerSignUpReq managerSignUpReq) {
+
+
+        LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        Date create = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
+        Date update = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
 
             // 1. 이메일을 통해 이미 존재하는 회원인지 확인
             if (managerRepository.findByManagerId(managerSignUpReq.getManagerEmail()).isPresent()) {
@@ -52,7 +53,7 @@ public class ManagerService {
                     .managerEmail(managerSignUpReq.getManagerEmail())
                     .managerName(managerSignUpReq.getManagerName())
                     .managerPhoneNo(managerSignUpReq.getManagerPhoneNo())
-                    .managerAuthority("Manager")
+                    .managerAuthority("ROLE_Manager")
                     .department("headquater")
                     .updatedAt(create)
                     .createdAt(update)

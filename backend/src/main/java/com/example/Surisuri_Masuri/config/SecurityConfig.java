@@ -39,8 +39,10 @@ public class SecurityConfig {
 
             http.csrf().disable()
                     .authorizeRequests()
-                    .antMatchers("/user/test").hasAuthority("User")
-                    .antMatchers("/user/update").hasAuthority("User")
+                    .antMatchers("/user/test").hasAuthority("ROLE_User")
+                    .antMatchers("/user/update").hasAuthority("ROLE_User")
+                    .antMatchers("/store/create").hasAuthority("ROLE_Manager")
+                    .antMatchers("/store/search").hasAuthority("ROLE_Manager")
                     .antMatchers("/user/register").permitAll()
                     .antMatchers("/manager/register").permitAll()
                     .antMatchers("/user/confirm").permitAll()

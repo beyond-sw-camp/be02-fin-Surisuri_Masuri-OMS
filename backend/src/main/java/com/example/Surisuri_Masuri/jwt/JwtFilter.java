@@ -9,7 +9,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +44,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // 이후 사용자를 구별하기위해 Email을 통해 사용자 탐색
         String email = JwtUtils.getUserEmail(token, secretKey);
         Long idx = JwtUtils.getUserIdx(token, secretKey);
-
+        String managerId = JwtUtils.getManagerInfo(token,secretKey);
 
         // 가맹점 먼저 확인
         User user = userService.getUserByUserEmail(email);
@@ -69,16 +68,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // 가맹점이 아니면 본사직원일것이다
         else {
-            Manager manager = managerService.getManagerByManagerId(email);
+            Manager manager = managerService.getManagerByManagerId(managerId);
 
-            String managerEmail = manager.getUsername();
+            String managerId2 = manager.getUsername();
 
-            if (!JwtUtils.validate(token, managerEmail, secretKey)) {
+            if (!JwtUtils.validate2(token, managerId2, secretKey)) {
                 filterChain.doFilter(request, response);
                 return;
             }
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    Manager.builder().managerEmail(email).idx(idx).build(), null,
+                    manager, null,
                     manager.getAuthorities()
             );
 

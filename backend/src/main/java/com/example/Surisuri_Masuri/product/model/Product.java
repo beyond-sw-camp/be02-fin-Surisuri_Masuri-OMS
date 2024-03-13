@@ -1,5 +1,6 @@
 package com.example.Surisuri_Masuri.product.model;
 
+import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
 import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
 import lombok.*;
 
@@ -22,6 +23,7 @@ public class Product {
     private Long idx;
 
     private String productName;
+
     private Integer price;
 
     @Column(updatable = false, nullable = false)
@@ -29,6 +31,8 @@ public class Product {
     private Date updatedAt;
 
     @OneToMany(mappedBy = "product")
+    private List<StoreStock> storeStocks;
+  
     private List<OrdersDetail> ordersDetailList;
 
     @PrePersist

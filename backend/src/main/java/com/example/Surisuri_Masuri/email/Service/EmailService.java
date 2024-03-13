@@ -82,7 +82,7 @@ public class EmailService {
 
     // 검증된 사용자의 status를 변경하기 위한 메소드
     public void update(String email, String authority) {
-        if (authority.equals("User")){
+        if (authority.equals("ROLE_User")){
             Optional<User> result = userRepository.findByUserEmail(email);
             if(result.isPresent()) {
                 User user = result.get();
