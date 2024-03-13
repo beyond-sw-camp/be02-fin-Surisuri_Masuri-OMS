@@ -42,6 +42,9 @@ public class Question {
     @Column(nullable = false)
     private Date updatedAt;
 
+    @OneToOne(mappedBy = "question")
+    private Answer answer;
+
     @PrePersist
     void createdAt() {
         this.createdAt = Timestamp.from(Instant.now());

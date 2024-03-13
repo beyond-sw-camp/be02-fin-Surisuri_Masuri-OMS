@@ -1,13 +1,13 @@
 package com.example.Surisuri_Masuri.member.Model.Entity;
 
+import com.example.Surisuri_Masuri.notice.model.entity.Notice;
+import com.example.Surisuri_Masuri.question.model.entity.Answer;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 @Entity
 @Getter
@@ -37,6 +37,12 @@ public class Manager implements UserDetails {
     private Date createdAt;
 
     private Date updatedAt;
+
+    @OneToMany(mappedBy = "manager")
+    private List<Answer> answerList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "manager")
+    private List<Notice> noticeList = new ArrayList<>();
 
     public void setManagerId(String managerId) {
         this.managerId = managerId;

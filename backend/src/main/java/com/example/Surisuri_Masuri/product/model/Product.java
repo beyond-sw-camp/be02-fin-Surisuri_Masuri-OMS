@@ -1,6 +1,7 @@
 package com.example.Surisuri_Masuri.product.model;
 
 import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
+import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,6 +32,8 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<StoreStock> storeStocks;
+  
+    private List<OrdersDetail> ordersDetailList;
 
     @PrePersist
     void createdAt() {

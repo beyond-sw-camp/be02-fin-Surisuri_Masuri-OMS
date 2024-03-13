@@ -1,6 +1,7 @@
 package com.example.Surisuri_Masuri.question.controller;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.question.model.request.QuestionAnswerReq;
 import com.example.Surisuri_Masuri.question.model.request.PatchUpdateQuestionReq;
 import com.example.Surisuri_Masuri.question.model.request.PostCreateQuestionReq;
 import com.example.Surisuri_Masuri.question.service.QuestionService;
@@ -43,8 +44,9 @@ public class QuestionController {
 
     // TODO: 2024-03-10 관리자가 답변을 작성하는 기능 추가해야함
     @RequestMapping(method = RequestMethod.POST, value = "/answer")
-    public ResponseEntity answer() {
-        return ResponseEntity.ok().body("");
+    public ResponseEntity answer(QuestionAnswerReq req) {
+
+        return ResponseEntity.ok().body(questionService.answer(req));
     }
 
 }
