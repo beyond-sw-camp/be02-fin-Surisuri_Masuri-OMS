@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
 import ContainerList from '../views/ContainerList.vue';
-import ContainerDetail2 from '@/views/ContainerDetail2.vue';
+import ContainerDetail from '@/views/ContainerDetail.vue';
 
 
 const routes = [
@@ -24,8 +24,8 @@ const routes = [
 },
   {
     path: '/containerdetail',
-    name: 'ContainerDetail2',
-    component: ContainerDetail2,
+    name: 'ContainerDetail',
+    component: ContainerDetail,
 },
   
 

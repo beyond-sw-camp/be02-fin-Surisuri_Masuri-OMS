@@ -28,7 +28,7 @@
                                     <td>{{ containers.managerPhone }}</td>
                                     <td>{{ containers.containerComp }}</td>
                                     <td>
-                                        <button @click="goToContainerDetail2(containers.id)" class="btn btn-primary btn-sm">상세보기</button>
+                                        <button @click="goToContainerDetail(containers.id)" class="btn btn-primary btn-sm">상세보기</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -56,8 +56,8 @@ export default {
         };
     },
     methods: {
-        goToContainerDetail2(id) {
-            this.$router.push({ name: 'ContainerDetail2', params: { id: id }});
+        goToContainerDetail(id) {
+            this.$router.push({ name: 'ContainerDetail', params: { id: id }});
         },
     },
 }; 
