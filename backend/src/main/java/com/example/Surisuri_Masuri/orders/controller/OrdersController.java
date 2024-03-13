@@ -3,6 +3,7 @@ package com.example.Surisuri_Masuri.orders.controller;
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersPaymentReq;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersRefundReq;
+import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersUpdateDeliveryReq;
 import com.example.Surisuri_Masuri.orders.service.OrdersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,5 +45,11 @@ public class OrdersController {
     @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ResponseEntity list(Integer page, Integer size) {
         return ResponseEntity.ok().body(ordersService.list(page, size));
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH, value = "/updatedelivery")
+    public ResponseEntity updateOrdersDelivery(OrdersUpdateDeliveryReq req) {
+
+        return ResponseEntity.ok().body(ordersService.updateOrdersDelivery(req));
     }
 }
