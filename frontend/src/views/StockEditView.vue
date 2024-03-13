@@ -55,8 +55,27 @@ export default {
 }
 </script>
 
+
 <style scoped>
+.stock-input {
+     /* 전체 셀 너비의 70%에서 버튼과의 간격을 고려해 조정 */
+    display: inline-block; /* 인라인 블록 요소로 설정하여 옆에 다른 요소(버튼)를 둘 수 있게 함 */
+    margin-right: 10px; /* 입력 필드와 버튼 사이의 간격 조정 */
+}
+
 .btn {
-    margin-left: 10px; /* 버튼 간격 조정 */
+    width: 15%; /* 버튼의 너비를 셀 너비의 30%로 설정 */
+    display: inline-block; /* 인라인 블록 요소로 설정하여 옆에 다른 요소(입력 필드)와 나란히 배치 */
+}
+
+/* 테이블 셀의 텍스트를 가운데 정렬하려면 다음 CSS도 추가하세요 */
+.table th, .table td {
+    text-align: center; /* 모든 셀의 텍스트를 가운데 정렬합니다 */
+}
+.table th, .table td {
+    text-align: center; /* 모든 셀의 텍스트를 가운데 정렬합니다 */
+    vertical-align: middle; /* 셀의 내용을 수직 중앙에 정렬합니다 */
 }
 </style>
+
+
