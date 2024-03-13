@@ -19,6 +19,7 @@ public class JwtUtils {
         Claims claims = Jwts.claims();
         claims.put("idx", user.getIdx());
         claims.put("email", user.getUserEmail());
+        claims.put("storeUuid", user.getStore().getStoreUuid());
 
         String token = Jwts.builder()
                 .setClaims(claims)
@@ -76,6 +77,10 @@ public class JwtUtils {
 
     public static String getUserEmail(String token, String key) {
         return extractAllClaims(token, key).get("email", String.class);
+    }
+
+    public static String getStoreUuid(String token, String key) {
+        return extractAllClaims(token, key).get("storeUuid", String.class);
     }
 
     public static String getManagerInfo(String token, String key) {
