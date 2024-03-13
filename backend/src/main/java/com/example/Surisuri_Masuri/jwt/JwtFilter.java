@@ -77,7 +77,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 return;
             }
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    Manager.builder().managerEmail(email).idx(idx).build(), null,
+                    manager, null,
                     manager.getAuthorities()
             );
 
