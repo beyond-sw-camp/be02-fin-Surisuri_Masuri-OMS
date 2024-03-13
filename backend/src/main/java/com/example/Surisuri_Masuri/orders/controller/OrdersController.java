@@ -52,4 +52,10 @@ public class OrdersController {
 
         return ResponseEntity.ok().body(ordersService.updateOrdersDelivery(req));
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/deliverystatus")
+    public ResponseEntity showDeliveryStatus(Long ordersIdx) {
+
+        return ResponseEntity.ok().body(ordersService.showDeliveryStatus(ordersIdx));
+    }
 }

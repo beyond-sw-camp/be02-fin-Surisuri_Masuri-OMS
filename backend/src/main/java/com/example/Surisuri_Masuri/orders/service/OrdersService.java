@@ -10,7 +10,9 @@ import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersPaymentReq;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersRefundReq;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersUpdateDeliveryReq;
+import com.example.Surisuri_Masuri.orders.model.dto.response.OrdersDetailDtoRes;
 import com.example.Surisuri_Masuri.orders.model.dto.response.OrdersListRes;
+import com.example.Surisuri_Masuri.orders.model.dto.response.OrdersShowDeliveryStatusRes;
 import com.example.Surisuri_Masuri.orders.model.dto.response.ProductDtoRes;
 import com.example.Surisuri_Masuri.orders.repository.OrdersDetailRepository;
 import com.example.Surisuri_Masuri.orders.repository.OrdersRepository;
@@ -62,6 +64,32 @@ public class OrdersService {
         ordersRepository.save(orders);
 
         return BaseResponse.successResponse("배송 상태 변경 성공", null);
+    }
+
+    public BaseResponse showDeliveryStatus(Long ordersIdx) {
+        Optional<Orders> ordersResult = ordersRepository.findById(ordersIdx);
+        Orders orders = ordersResult.get();
+        List<OrdersDetail> ordersDetailList = ordersDetailRepository.findByOrdersIdx(ordersIdx);
+
+        List<OrdersDetailDtoRes> ordersDetailDtoResList = new ArrayList<>();
+
+        for (OrdersDetail ordersDetail : ordersDetailList) {
+            OrdersDetailDtoRes ordersDetailDtoRes = OrdersDetailDtoRes.builder()
+                    .procuctQuantity(ordersDetail.getProcuctQuantity())
+                    .productName(ordersDetail.getProduct().getProductName())
+                    .build();
+
+            ordersDetailDtoResList.add(ordersDetailDtoRes);
+        }
+
+        OrdersShowDeliveryStatusRes ordersShowDeliveryStatusRes = OrdersShowDeliveryStatusRes.builder()
+                .ordersDetailDtoResList(ordersDetailDtoResList)
+                .deliveryStatus(orders.getDeliveryStatus())
+                .createAt(orders.getCreatedAt())
+                .updatedAt(orders.getUpdatedAt())
+                .build();
+
+        return BaseResponse.successResponse("요청 성공", ordersShowDeliveryStatusRes);
     }
 
     public BaseResponse list(Integer page, Integer size) {
