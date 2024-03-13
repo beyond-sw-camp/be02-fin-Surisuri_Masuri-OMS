@@ -52,34 +52,7 @@ public class OrdersService {
     @Value("${imp.imp_key}")
     private String apiKey;
 
-    public void create(OrdersPaymentReq req, String merchantUid, Long amount) {
-        Optional<Cart> cartResult = cartRepository.findById(req.getCartIdx());
-        List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(req.getCartIdx());
 
-        Orders orders = ordersRepository.save(Orders.builder()
-                .payMethod(req.getPayMethod())
-                .totalPrice(amount)
-                .merchantUid(merchantUid)
-                .build());
-
-        for (CartDetail cartDetail: cartDetailList) {
-            ordersDetailRepository.save(OrdersDetail.builder()
-                    .product(cartDetail.getProduct())
-                    .procuctQuantity(cartDetail.getProductQuantity())
-                    .orders(orders)
-                    .build());
-        }
-    }
-
-    public void delete(Long idx) {
-        Optional<Orders> ordersResult = ordersRepository.findById(idx);
-        List<OrdersDetail> ordersDetailList = ordersDetailRepository.findByOrdersIdx(idx);
-
-        for (OrdersDetail ordersDetail : ordersDetailList) {
-            ordersDetailRepository.delete(ordersDetail);
-        }
-        ordersRepository.delete(ordersResult.get());
-    }
 
     public BaseResponse list(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page - 1, size);
@@ -108,6 +81,35 @@ public class OrdersService {
         }
 
         return BaseResponse.successResponse("상품 리스트 검색 성공", ordersListResList);
+    }
+
+    public void create(OrdersPaymentReq req, String merchantUid, Long amount) {
+        Optional<Cart> cartResult = cartRepository.findById(req.getCartIdx());
+        List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(req.getCartIdx());
+
+        Orders orders = ordersRepository.save(Orders.builder()
+                .payMethod(req.getPayMethod())
+                .totalPrice(amount)
+                .merchantUid(merchantUid)
+                .build());
+
+        for (CartDetail cartDetail: cartDetailList) {
+            ordersDetailRepository.save(OrdersDetail.builder()
+                    .product(cartDetail.getProduct())
+                    .procuctQuantity(cartDetail.getProductQuantity())
+                    .orders(orders)
+                    .build());
+        }
+    }
+
+    public void delete(Long idx) {
+        Optional<Orders> ordersResult = ordersRepository.findById(idx);
+        List<OrdersDetail> ordersDetailList = ordersDetailRepository.findByOrdersIdx(idx);
+
+        for (OrdersDetail ordersDetail : ordersDetailList) {
+            ordersDetailRepository.delete(ordersDetail);
+        }
+        ordersRepository.delete(ordersResult.get());
     }
 
     public BaseResponse payment(OrdersPaymentReq req) throws IamportResponseException, IOException {
@@ -155,6 +157,10 @@ public class OrdersService {
             Optional<Orders> ordersResult = ordersRepository.findById(req.getIdx());
 
             orders = ordersResult.get();
+
+            if (!orders.getDeliveryStatus().equals("배송 전")) {
+                return BaseResponse.failResponse(444, "배송이 이미 시작되어 주문 취소가 불가능합니다");
+            }
         }
 
         String access_token = getToken(apiKey, apiSecret);
