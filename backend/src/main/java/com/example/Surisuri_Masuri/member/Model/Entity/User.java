@@ -46,10 +46,8 @@ public class User implements UserDetails {
 
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "user")
-    private List<Store> stores;
-
-
+    @OneToOne(mappedBy = "user")
+    private Store store;
 
     public Boolean changeStatus(Boolean status) {
         return this.status = status;

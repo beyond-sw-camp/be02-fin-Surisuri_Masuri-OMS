@@ -1,16 +1,13 @@
 package com.example.Surisuri_Masuri.store.Model.Entity;
 
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
+import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -33,13 +30,11 @@ public class Store {
 
     private String storePhoneNo;
 
-    private String storeManagerPhoneNo;
-
     private Date createdAt;
 
     private Date updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userIdx")
     private User user;
 
