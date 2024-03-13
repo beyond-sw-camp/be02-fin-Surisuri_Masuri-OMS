@@ -1,5 +1,7 @@
 package com.example.Surisuri_Masuri.notice.model.entity;
 
+import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
+import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.notice.model.request.PatchUpdateNoticeReq;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,6 +43,14 @@ public class Notice {
 
     @Column(nullable = false)
     private Date updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "User_idx")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "Manager_idx")
+    private Manager manager;
 
     @PrePersist
     void createdAt() {

@@ -1,15 +1,13 @@
 package com.example.Surisuri_Masuri.member.Model.Entity;
 
+import com.example.Surisuri_Masuri.notice.model.entity.Notice;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -47,9 +45,10 @@ public class User implements UserDetails {
     private Date updatedAt;
 
     @OneToMany(mappedBy = "user")
-    private List<Store> stores;
+    private List<Store> stores = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "user")
+    private List<Notice> noticeList = new ArrayList<>();
 
     public Boolean changeStatus(Boolean status) {
         return this.status = status;
