@@ -54,7 +54,7 @@
               </router-link>
             </li>
             <li class="sidebar-item">
-              <router-link class="sidebar-link" to="/nofi">
+              <router-link class="sidebar-link" to="/notice">
                 <span>
                   <i class="ti ti-file-description"></i>
                 </span>

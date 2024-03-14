@@ -4,6 +4,9 @@ import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
 import ContainerList from '../views/ContainerList.vue';
 import ContainerDetail from '@/views/ContainerDetail.vue';
+import NoticeList from '../views/NoticeList.vue';
+import NoticeDetail from '../views/NoticeDetail.vue';
+import NoticeNew from '../views/NoticeNew.vue';
 
 
 const routes = [
@@ -26,6 +29,22 @@ const routes = [
     path: '/containerdetail',
     name: 'ContainerDetail',
     component: ContainerDetail,
+},
+{
+  path: '/notice',
+  name: 'NoticeList',
+  component: NoticeList,
+},
+{
+  path: '/notice/new',
+  name: 'NoticeNew',
+  component: NoticeNew,
+},
+{
+  path: '/notice/:id',
+  name: 'NoticeDetail',
+  component: NoticeDetail,
+  props: true,
 },
   
 
