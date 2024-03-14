@@ -7,6 +7,7 @@ import ContainerDetail from '@/views/ContainerDetail.vue';
 import NoticeList from '../views/NoticeList.vue';
 import NoticeDetail from '../views/NoticeDetail.vue';
 import NoticeNew from '../views/NoticeNew.vue';
+import ShopView from '../views/ShopView.vue';
 
 
 const routes = [
@@ -46,6 +47,12 @@ const routes = [
   component: NoticeDetail,
   props: true,
 },
+{
+  path: '/shop',
+  name: 'shop',
+  component: ShopView
+},
+
   
 
   // 여기에 다른 라우트를 추가할 수 있습니다.
