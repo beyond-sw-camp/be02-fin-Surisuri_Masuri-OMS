@@ -2,25 +2,31 @@ package com.example.Surisuri_Masuri.storeStock.Service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
+import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.product.model.Product;
 import com.example.Surisuri_Masuri.product.repository.ProductRepository;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
+import com.example.Surisuri_Masuri.store.Model.ReqDtos.StoreSearchReq;
+import com.example.Surisuri_Masuri.store.Model.ResDtos.StoreReadRes;
 import com.example.Surisuri_Masuri.store.Repository.StoreRepository;
 import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
 import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.StoreStockCreateReq;
 import com.example.Surisuri_Masuri.store.Model.ResDtos.StoreDto;
-import com.example.Surisuri_Masuri.storeStock.Model.ResDtos.StoreStockCreateRes;
-import com.example.Surisuri_Masuri.storeStock.Model.ResDtos.StoreStockDto;
-import com.example.Surisuri_Masuri.storeStock.Model.ResDtos.StoreStockReadRes;
+import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.StoreStockDeleteReq;
+import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.StoreStockSearchReq;
+import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.StoreStockUpdateReq;
+import com.example.Surisuri_Masuri.storeStock.Model.ResDtos.*;
 import com.example.Surisuri_Masuri.storeStock.Repository.StoreStockRepository;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -108,17 +114,21 @@ public class StoreStockService {
         String storeUuid = JwtUtils.getStoreUuid(token, secretKey);
 
         Optional<User> user = userRepository.findByUserEmail(email);
-//        Optional<Store> store = storeRepository.findByStoreUuid(storeUuid);
+        Optional<Store> store = storeRepository.findByStoreUuid(storeUuid);
 
         if (user.isPresent()) {
 
-            Pageable pageable = PageRequest.of(page-1,size);
+            Store store2 = store.get();
 
-            Page<StoreStock> result = storeStockRepository.findList(pageable);
+            List<StoreStock> storeStocksList = store2.getStoreStocks();
+
+            // Pageable pageable = PageRequest.of(page-1,size);
+
+            // Page<StoreStock> result = storeStockRepository.findList(pageable);
 
             List<StoreStockReadRes> storeSearchResList = new ArrayList<>();
 
-            for (StoreStock storeStock : result.getContent()) {
+            for (StoreStock storeStock : storeStocksList) {
 
                 String productName = storeStock.getProduct().getProductName();
 
@@ -142,4 +152,101 @@ public class StoreStockService {
 
         }
 
+    // 가맹점 재고 단일 조회
+    public BaseResponse<StoreStockSearchRes> StoreStockSearch(String token, StoreStockSearchReq storeStockSearchReq) {
+
+        token = JwtUtils.replaceToken(token);
+
+        String email = JwtUtils.getUserEmail(token, secretKey);
+        String storeUuid = JwtUtils.getStoreUuid(token, secretKey);
+
+        Optional<User> user = userRepository.findByUserEmail(email);
+        Optional<Store> store = storeRepository.findByStoreUuid(storeUuid);
+        if (user.isPresent()) {
+
+            Optional<StoreStock> storeStock = storeStockRepository.
+                    findStoreStockByProduct_ProductNameAndStore_StoreUuid
+                            (storeStockSearchReq.getProductName(),store.get().getStoreUuid());
+
+            StoreStock storeStock2 = storeStock.get();
+
+            StoreStockDto storeStockDto = StoreStockDto
+                    .builder()
+                    .productName(storeStock2.getProduct().getProductName())
+                    .build();
+
+            StoreStockSearchRes storeStockSearchRes = StoreStockSearchRes
+                    .builder()
+                    .productName(storeStockDto)
+                    .stockQuantity(storeStock2.getStockQuantitiy())
+                    .storeAddr(store.get().getStoreAddr())
+                    .build();
+
+            // DtoToRes
+            return BaseResponse.successResponse("요청 성공", storeStockSearchRes);
+        }
+        else return BaseResponse.failResponse(7000, "요청 실패");
+
+    }
+
+    // 가맹점 재고 수정
+    public BaseResponse<StoreStockUpdateRes> StoreStockUpdate(String token, StoreStockUpdateReq storeStockUpdateReq) {
+
+        token = JwtUtils.replaceToken(token);
+
+        String email = JwtUtils.getUserEmail(token, secretKey);
+        String storeUuid = JwtUtils.getStoreUuid(token, secretKey);
+
+        Optional<User> user = userRepository.findByUserEmail(email);
+        Optional<Store> store = storeRepository.findByStoreUuid(storeUuid);
+        if (user.isPresent()) {
+
+            Optional<StoreStock> storeStock = storeStockRepository.
+                    findStoreStockByProduct_IdxAndStore_StoreUuid(storeStockUpdateReq.getIdx(),store.get().getStoreUuid());
+
+            StoreStock storeStock2 = storeStock.get();
+
+            storeStock2.setStockQuantitiy(storeStockUpdateReq.getStockQuantity());
+
+            storeStockRepository.save(storeStock2);
+
+            StoreStockUpdateRes storeStockUpdateRes = StoreStockUpdateRes
+                    .builder()
+                    .productName(storeStock2.getProduct().getProductName())
+                    .stockQuantity(storeStockUpdateReq.getStockQuantity())
+                    .build();
+
+            // DtoToRes
+            return BaseResponse.successResponse("요청 성공", storeStockUpdateRes);
+        }
+        else return BaseResponse.failResponse(7000, "요청 실패");
+
+    }
+    // 가맹점 재고 삭제
+    @Transactional
+    public BaseResponse<StoreStockDeleteRes> StoreStockDelete(String token, StoreStockDeleteReq storeStockDeleteReq) {
+
+        token = JwtUtils.replaceToken(token);
+
+        String email = JwtUtils.getUserEmail(token, secretKey);
+        String storeUuid = JwtUtils.getStoreUuid(token, secretKey);
+
+        Optional<User> user = userRepository.findByUserEmail(email);
+        Optional<Store> store = storeRepository.findByStoreUuid(storeUuid);
+        if (user.isPresent()) {
+
+            storeStockRepository.
+                    deleteStoreStockByProduct_IdxAndStore_StoreUuid(storeStockDeleteReq.getIdx(),store.get().getStoreUuid());
+
+            StoreStockDeleteRes storeStockDeleteRes = StoreStockDeleteRes
+                    .builder()
+                    .idx(storeStockDeleteReq.getIdx())
+                    .build();
+
+            // DtoToRes
+            return BaseResponse.successResponse("요청 성공", storeStockDeleteRes);
+        }
+        else return BaseResponse.failResponse(7000, "요청 실패");
+
+    }
 }
