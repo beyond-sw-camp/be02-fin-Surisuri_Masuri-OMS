@@ -83,6 +83,7 @@ public class StoreStockService {
                     .updatedAt(update)
                     .stockQuantitiy(storeStockCreateReq.getStockQuantitiy())
                     .store(store2)
+                    .expiredAt(storeStockCreateReq.getExpiredAt())
                     .build();
 
             StoreDto storeDto = StoreDto
@@ -98,6 +99,7 @@ public class StoreStockService {
                     .storeDto(storeDto)
                     .stockQuantitiy(storeStockCreateReq.getStockQuantitiy())
                     .productIdx(storeStockCreateReq.getProductIdx())
+                    .expiredAt(storeStock.getExpiredAt())
                     .build();
             return BaseResponse.successResponse("수정된 회원정보입니다.", storeStockCreateRes);
         }
