@@ -46,7 +46,7 @@
               </router-link>
             </li>
             <li class="sidebar-item">
-              <router-link class="sidebar-link" to="/userprofile">
+              <router-link class="sidebar-link" to="/container">
                 <span>
                   <i class="ti ti-package"></i>
                 </span>
