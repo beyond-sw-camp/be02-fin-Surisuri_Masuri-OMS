@@ -2,19 +2,16 @@ package com.example.Surisuri_Masuri.product.service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.product.model.Product;
-import com.example.Surisuri_Masuri.product.model.ProductExpire;
 import com.example.Surisuri_Masuri.product.model.dto.request.ProductCreateReq;
 import com.example.Surisuri_Masuri.product.model.dto.request.ProductUpdateReq;
 import com.example.Surisuri_Masuri.product.model.dto.response.ProductListRes;
 import com.example.Surisuri_Masuri.product.model.dto.response.ProductSearchRes;
-import com.example.Surisuri_Masuri.product.repository.ProductExpireRepository;
 import com.example.Surisuri_Masuri.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,27 +20,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
-    private final ProductExpireRepository productExpireRepository;
 
     public BaseResponse create(ProductCreateReq req) {
-        Optional<Product> result = productRepository.findByProductName(req.getProductName());
-        if (result.isPresent()) {
-            Product product = productRepository.save(Product.builder()
-                    .productName(req.getProductName())
-                    .price(req.getPrice())
-                    .build());
 
-            productExpireRepository.save(ProductExpire.builder()
-                    .product(product)
-                    .expiredAt(req.getExprireAt())
-                    .productStatus(false)
-                    .build());
-        } else {
-            productExpireRepository.save(ProductExpire.builder()
-                    .product(result.get())
-                    .expiredAt(req.getExprireAt())
-                    .build());
-        }
+        Product product = productRepository.save(Product.builder()
+                .productName(req.getProductName())
+                .price(req.getPrice())
+                .build());
 
         return BaseResponse.successResponse("요청 성공", null);
     }

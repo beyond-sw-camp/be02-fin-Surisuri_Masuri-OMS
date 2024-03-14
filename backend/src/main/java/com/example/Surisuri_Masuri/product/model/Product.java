@@ -36,9 +36,6 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<OrdersDetail> ordersDetailList;
 
-    @OneToMany(mappedBy = "product")
-    private List<ProductExpire> productExpireList;
-
     @PrePersist
     void createdAt() {
         this.createdAt = Timestamp.from(Instant.now());
