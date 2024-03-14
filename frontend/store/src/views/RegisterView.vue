@@ -11,41 +11,41 @@
                 <div class="card-body">
                   <form @submit.prevent="createAccount">
                     <div class="form-floating mb-3">
-                      <input v-model="name" class="form-control" id="inputName" type="text" placeholder="Enter your full name" />
+                      <input v-model="userName" class="form-control" id="inputName" type="text" placeholder="" />
                       <label for="inputName">성함</label>
                     </div>
                     <div class="form-floating mb-3">
-                      <input v-model="email" class="form-control" id="inputEmail" type="email" placeholder="name@example.com" />
-                      <label for="inputEmail">Email 주소</label>
+                      <input v-model="userEmail" class="form-control" id="inputEmail" type="email" placeholder="" />
+                      <label for="inputEmail">Email</label>
                     </div>
                     <div class="row mb-3">
                       <div class="col-md-6">
                         <div class="form-floating mb-3 mb-md-0">
-                          <input v-model="password" class="form-control" id="inputPassword" type="password" placeholder="Create a password" />
+                          <input v-model="userPassword" class="form-control" id="inputPassword" type="password" placeholder="" />
                           <label for="inputPassword">비밀번호</label>
                         </div>
                       </div>
-                      <!-- <div class="col-md-6">
+                      <div class="col-md-6">
                         <div class="form-floating mb-3 mb-md-0">
-                          <input v-model="confirmPassword" class="form-control" id="inputPasswordConfirm" type="password" placeholder="Confirm password" />
+                          <input v-model="confirmPassword" class="form-control" id="inputPasswordConfirm" type="password" placeholder="" />
                           <label for="inputPasswordConfirm">비밀번호 재확인</label>
                         </div>
-                      </div> -->
+                      </div>
                     </div>
                     <div class="form-floating mb-3">
-                      <input v-model="phoneNumber" class="form-control" id="inputPhoneNumber" type="text" placeholder="Enter your phone number" />
+                      <input v-model="userPhoneNo" class="form-control" id="inputPhoneNumber" type="text" placeholder="" />
                       <label for="inputPhoneNumber">핸드폰 번호</label>
                     </div>
                     <div class="form-floating mb-3">
-                      <input v-model="storeUuid" class="form-control" id="inputStoreUuid" type="text" placeholder="Enter store UUID" />
+                      <input v-model="storeUuid" class="form-control" id="inputStoreUuid" type="text" placeholder="" />
                       <label for="inputStoreUuid">가맹점 UUID</label>
                     </div>
                     <div class="form-floating mb-3">
-                      <input v-model="storeAddress" class="form-control" id="inputStoreAddress" type="text" placeholder="Enter store address" />
+                      <input v-model="storeAddr" class="form-control" id="inputStoreAddress" type="text" placeholder="" />
                       <label for="inputStoreAddress">가맹점 주소</label>
                     </div>
                     <div class="form-floating mb-3">
-                      <input v-model="storePhoneNumber" class="form-control" id="inputStorePhoneNumber" type="text" placeholder="Enter store phone number" />
+                      <input v-model="storePhoneNo" class="form-control" id="inputStorePhoneNumber" type="text" placeholder="" />
                       <label for="inputStorePhoneNumber">가맹점 전화번호</label>
                     </div>
                     
@@ -70,26 +70,43 @@
   </template>
   
   <script>
+  import axios from 'axios';
+  
   export default {
     name: 'RegisterView',
     data() {
       return {
-        name: '',
-        email: '',
-        password: '',
+        userName: '',
+        userEmail: '',
+        userPassword: '',
         confirmPassword: '',
-        phoneNumber: '',
+        userPhoneNo: '',
         storeUuid: '',
-        storeAddress: '',
-        storePhoneNumber: '',
+        storeAddr: '',
+        storePhoneNo: '',
       };
     },
     methods: {
       createAccount() {
-        console.log("Account creation requested with:", this.name, this.email, this.password, this.confirmPassword, this.phoneNumber, this.storeUuid, this.storeAddress, this.storePhoneNumber);
-        // 여기에 계정 생성 처리 로직 구현
-        // 예: API 호출을 통해 서버에 계정 생성 요청
+        axios.post('http://localhost:8080/user/register', {
+          userName: this.userName,
+          userEmail: this.userEmail,
+          userPassword: this.userPassword,
+          confirmPassword: this.confirmPassword,
+          userPhoneNo: this.userPhoneNo,
+          storeUuid: this.storeUuid,
+          storeAddr: this.storeAddr,
+          storePhoneNo: this.storePhoneNo,
+        })
+        .then(response => {
+          console.log('회원가입 성공', response.data);
+          // 성공 처리 로직 추가
+        })
+        .catch(error => {
+          console.error('회원가입 실패', error);
+        });
       },
     },
   };
   </script>
+  
