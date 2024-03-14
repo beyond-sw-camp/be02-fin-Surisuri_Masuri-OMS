@@ -2,6 +2,8 @@ package com.example.Surisuri_Masuri.product.model.dto.request;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @Builder
@@ -10,4 +12,5 @@ import lombok.*;
 public class ProductCreateReq {
     String productName;
     Integer price;
+    LocalDate exprireAt;
 }
