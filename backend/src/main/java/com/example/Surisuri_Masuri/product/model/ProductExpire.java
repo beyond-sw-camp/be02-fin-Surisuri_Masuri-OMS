@@ -1,12 +1,13 @@
 package com.example.Surisuri_Masuri.product.model;
 
-import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
 import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
+import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
 import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -16,25 +17,19 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-public class Product {
-
+public class ProductExpire {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    private String productName;
-
-    private Integer price;
-
-    @Column(updatable = false, nullable = false)
     private Date createdAt;
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "product")
-    private List<StoreStock> storeStocks;
+    private LocalDate expiredAt;
 
-    @OneToMany(mappedBy = "product")
-    private List<OrdersDetail> ordersDetailList;
+    @ManyToOne
+    @JoinColumn(name = "Product_idx")
+    private Product product;
 
     @PrePersist
     void createdAt() {
