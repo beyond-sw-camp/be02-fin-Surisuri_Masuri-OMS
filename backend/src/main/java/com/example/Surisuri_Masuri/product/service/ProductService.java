@@ -36,6 +36,7 @@ public class ProductService {
             productExpireRepository.save(ProductExpire.builder()
                     .product(product)
                     .expiredAt(req.getExprireAt())
+                    .productStatus(false)
                     .build());
         } else {
             productExpireRepository.save(ProductExpire.builder()
