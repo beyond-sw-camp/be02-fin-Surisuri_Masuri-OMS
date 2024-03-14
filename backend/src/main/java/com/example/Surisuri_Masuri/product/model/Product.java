@@ -32,7 +32,8 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<StoreStock> storeStocks;
-  
+
+    @OneToMany(mappedBy = "product")
     private List<OrdersDetail> ordersDetailList;
 
     @PrePersist
