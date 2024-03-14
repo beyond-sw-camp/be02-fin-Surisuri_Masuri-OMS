@@ -22,6 +22,8 @@ public class ProductExpire {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
+    private Boolean productStatus;
+
     private Date createdAt;
     private Date updatedAt;
 
