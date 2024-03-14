@@ -29,3 +29,10 @@ export default {
     },
 };
 </script>
+
+
+<style scoped>
+.py-4 {
+    background-color: white !important
+}
+</style>
