@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class StoreStockSearchRes {
-    private StoreStockDto productName;
+    private StoreStockDto storeStockDto;
     private Long stockQuantity;
     private String storeAddr;
 }

@@ -4,6 +4,7 @@ import com.example.Surisuri_Masuri.product.model.Product;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import lombok.*;
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -19,8 +20,9 @@ public class StoreStock {
 
     private Long stockQuantitiy;
 
-    private Date createdAt;
+    private LocalDate expiredAt;
 
+    private Date createdAt;
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

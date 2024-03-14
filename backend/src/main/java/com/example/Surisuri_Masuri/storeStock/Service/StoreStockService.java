@@ -83,6 +83,7 @@ public class StoreStockService {
                     .updatedAt(update)
                     .stockQuantitiy(storeStockCreateReq.getStockQuantitiy())
                     .store(store2)
+                    .expiredAt(storeStockCreateReq.getExpiredAt())
                     .build();
 
             StoreDto storeDto = StoreDto
@@ -98,6 +99,7 @@ public class StoreStockService {
                     .storeDto(storeDto)
                     .stockQuantitiy(storeStockCreateReq.getStockQuantitiy())
                     .productIdx(storeStockCreateReq.getProductIdx())
+                    .expiredAt(storeStock.getExpiredAt())
                     .build();
             return BaseResponse.successResponse("수정된 회원정보입니다.", storeStockCreateRes);
         }
@@ -135,6 +137,7 @@ public class StoreStockService {
                 StoreStockDto storeStockDto = StoreStockDto
                         .builder()
                         .productName(productName)
+                        .expiredAt(storeStock.getExpiredAt())
                         .build();
 
                 storeStockReadRes = StoreStockReadRes
@@ -150,7 +153,7 @@ public class StoreStockService {
         }
         else return BaseResponse.failResponse(7000, "요청 실패");
 
-        }
+    }
 
     // 가맹점 재고 단일 조회
     public BaseResponse<StoreStockSearchRes> StoreStockSearch(String token, StoreStockSearchReq storeStockSearchReq) {
@@ -173,11 +176,12 @@ public class StoreStockService {
             StoreStockDto storeStockDto = StoreStockDto
                     .builder()
                     .productName(storeStock2.getProduct().getProductName())
+                    .expiredAt(storeStock2.getExpiredAt())
                     .build();
 
             StoreStockSearchRes storeStockSearchRes = StoreStockSearchRes
                     .builder()
-                    .productName(storeStockDto)
+                    .storeStockDto(storeStockDto)
                     .stockQuantity(storeStock2.getStockQuantitiy())
                     .storeAddr(store.get().getStoreAddr())
                     .build();
