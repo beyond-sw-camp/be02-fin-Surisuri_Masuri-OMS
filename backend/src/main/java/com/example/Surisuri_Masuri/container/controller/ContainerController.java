@@ -1,6 +1,7 @@
 package com.example.Surisuri_Masuri.container.controller;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.container.model.request.ContainerCreateProductReq;
 import com.example.Surisuri_Masuri.container.model.request.PostCreateContainerReq;
 import com.example.Surisuri_Masuri.container.service.ContainerService;
 import com.example.Surisuri_Masuri.notice.model.request.PostCreateNoticeReq;
@@ -25,6 +26,11 @@ public class ContainerController {
     public ResponseEntity create(@RequestBody PostCreateContainerReq postCreateContainerReq) {
         BaseResponse baseResponse = containerService.create(postCreateContainerReq);
         return ResponseEntity.ok().body(baseResponse);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/createproduct")
+    public ResponseEntity createContainerProduct(@RequestBody ContainerCreateProductReq req) {
+        return ResponseEntity.ok().body(containerService.createContainerProduct(req));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/list")
