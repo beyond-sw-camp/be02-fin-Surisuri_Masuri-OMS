@@ -3,6 +3,7 @@ package com.example.Surisuri_Masuri.storeStock.Controller;
 import com.example.Surisuri_Masuri.store.Model.ReqDtos.StoreCreateReq;
 import com.example.Surisuri_Masuri.store.Model.ResDtos.StoreCreateRes;
 import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.StoreStockCreateReq;
+import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.StoreStockSearchReq;
 import com.example.Surisuri_Masuri.storeStock.Service.StoreStockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +30,12 @@ public class StoreStockController {
         return ResponseEntity.ok().body(storeStockService.StoreStockList(token,page, size));
     }
 
-
     // 단일 재고 조회
+    @RequestMapping(method = RequestMethod.GET, value = "/stock/search")
+    public ResponseEntity StoreStockSearch(@RequestHeader(value = "Authorization") String token, @RequestBody StoreStockSearchReq storeStockSearchReq) {
+        return ResponseEntity.ok().body(storeStockService.StoreStockSearch(token,storeStockSearchReq));
+    }
+
 
     // 재고 수정
 }
