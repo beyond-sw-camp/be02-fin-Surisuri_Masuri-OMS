@@ -101,18 +101,18 @@
 
 
 .sidebar-item .hide-menu {
-    font-size: 16px; /* 세부 목차 글씨 크기 조정 */
+    font-size: 19px; /* 세부 목차 글씨 크기 조정 */
 }
 
 .nav-small-cap {
-    font-size: 15px;
-    margin-top: 20px;
-    margin-bottom: 15px;
+    font-size: 18px;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 /* 세부 항목 글씨 크기 및 간격 조정 */
 .sidebar-item {
-    margin-bottom: 10px; /* 항목 사이의 간격 늘리기 */
+    margin-bottom: 20px; /* 항목 사이의 간격 늘리기 */
 }
 
 .giga-coffee {
