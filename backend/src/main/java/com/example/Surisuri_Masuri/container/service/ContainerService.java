@@ -16,6 +16,7 @@ import com.example.Surisuri_Masuri.product.model.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -58,7 +59,7 @@ public class ContainerService {
                 .container(Container.builder().idx(req.getContainerIdx()).build())
                 .product(Product.builder().idx(req.getProductIdx()).build())
                 .productQuantity(req.getQuantity())
-                .expiredAt(req.getExpireAt())
+                .expiredAt(req.getExpiredAt())
                 .build());
 
         return BaseResponse.successResponse("창고 상품 등록 성공", null);
