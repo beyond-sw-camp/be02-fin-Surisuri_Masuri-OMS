@@ -3,6 +3,7 @@ package com.example.Surisuri_Masuri.container.service;
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.container.model.entity.Container;
 import com.example.Surisuri_Masuri.container.model.entity.ContainerStock;
+import com.example.Surisuri_Masuri.container.model.request.ContainerCreateProductReq;
 import com.example.Surisuri_Masuri.container.model.request.PostCreateContainerReq;
 import com.example.Surisuri_Masuri.container.model.response.GetListContainerRes;
 import com.example.Surisuri_Masuri.container.model.response.GetSingleContainerStockRes;
@@ -11,13 +12,16 @@ import com.example.Surisuri_Masuri.container.repository.ContainerRepository;
 import com.example.Surisuri_Masuri.container.repository.ContainerStockRepository;
 import com.example.Surisuri_Masuri.notice.model.entity.Notice;
 import com.example.Surisuri_Masuri.notice.model.response.PostCreateNoticeRes;
+import com.example.Surisuri_Masuri.product.model.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +52,17 @@ public class ContainerService {
         return BaseResponse.successResponse("창고 등록 성공",postCreateContainerRes);
     }
 
+    public BaseResponse createContainerProduct(ContainerCreateProductReq req) {
+
+        containerStockRepository.save(ContainerStock.builder()
+                .container(Container.builder().idx(req.getContainerIdx()).build())
+                .product(Product.builder().idx(req.getProductIdx()).build())
+                .productQuantity(req.getQuantity())
+                .expiredAt(req.getExpireAt())
+                .build());
+
+        return BaseResponse.successResponse("창고 상품 등록 성공", null);
+    }
 
     public BaseResponse list(Integer page, Integer size) {
 
@@ -73,9 +88,9 @@ public class ContainerService {
     }
 
 
-    public BaseResponse singlestock(Integer idx) {
+    public BaseResponse singleStockProduct(Integer containerIdx) {
 
-        List<ContainerStock> result = containerStockRepository.findByContainerIdx(idx);
+        List<ContainerStock> result = containerStockRepository.findByContainerIdx(containerIdx);
 
         List<GetSingleContainerStockRes> getSingleContainerStockResList = new ArrayList<>();
 
@@ -84,7 +99,7 @@ public class ContainerService {
                     .containerName(containerStock.getContainer().getContainerName())
                     .productName(containerStock.getProduct().getProductName())
                     .productQuantity(containerStock.getProductQuantity())
-                    .createdAt(containerStock.getCreatedAt())
+                    .expiredAt(containerStock.getExpiredAt())
                     .build();
 
             getSingleContainerStockResList.add(getSingleContainerStockRes);

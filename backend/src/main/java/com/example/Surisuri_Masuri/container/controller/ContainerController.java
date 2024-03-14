@@ -37,8 +37,8 @@ public class ContainerController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/singlestock")
-    public ResponseEntity singlestock(Integer idx) {
-        BaseResponse baseResponse = containerService.singlestock(idx);
+    public ResponseEntity singleStockProduct(Integer idx) {
+        BaseResponse baseResponse = containerService.singleStockProduct(idx);
         return ResponseEntity.ok().body(baseResponse);
     }
 

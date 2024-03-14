@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -24,6 +25,8 @@ public class ContainerStock {
 
     @Column(nullable = false, length = 300)
     private Long productQuantity;
+
+    private LocalDate expiredAt;
 
     @ManyToOne
     @JoinColumn(name = "product_Idx")
@@ -42,6 +45,11 @@ public class ContainerStock {
     @PrePersist
     void createdAt() {
         this.createdAt = Timestamp.from(Instant.now());
+        this.updatedAt = Timestamp.from(Instant.now());
+    }
+
+    @PreUpdate
+    void updatedAt() {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 }
