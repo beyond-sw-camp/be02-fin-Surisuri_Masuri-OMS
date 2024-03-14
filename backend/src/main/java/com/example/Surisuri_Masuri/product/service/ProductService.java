@@ -4,6 +4,7 @@ import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.product.model.Product;
 import com.example.Surisuri_Masuri.product.model.dto.request.ProductCreateReq;
 import com.example.Surisuri_Masuri.product.model.dto.request.ProductUpdateReq;
+import com.example.Surisuri_Masuri.product.model.dto.response.ProductListRes;
 import com.example.Surisuri_Masuri.product.model.dto.response.ProductSearchRes;
 import com.example.Surisuri_Masuri.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +51,17 @@ public class ProductService {
         Pageable pageable = PageRequest.of(page - 1, size);
         List<Product> result = productRepository.findAll();
 
-        return BaseResponse.successResponse("상품 리스트 검색 성공", result);
+        List<ProductListRes> productListResList = new ArrayList<>();
+
+        for (Product product: result) {
+            ProductListRes productListRes = ProductListRes.builder()
+                    .productName(product.getProductName())
+                    .build();
+
+            productListResList.add(productListRes);
+        }
+
+        return BaseResponse.successResponse("상품 리스트 검색 성공", productListResList);
 
     }
 
@@ -67,7 +79,7 @@ public class ProductService {
             productRepository.save(product);
         }
 
-        return BaseResponse.successResponse("상품 수정 성공", result);
+        return BaseResponse.successResponse("상품 수정 성공", null);
     }
 
     public BaseResponse delete(Long idx) {
@@ -77,7 +89,7 @@ public class ProductService {
 
         productRepository.delete(product);
 
-        return BaseResponse.successResponse("상품 삭제 성공", product);
+        return BaseResponse.successResponse("상품 삭제 성공", null);
 
     }
 }
