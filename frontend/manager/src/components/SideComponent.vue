@@ -9,6 +9,70 @@
         <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
          
         </div>
+
+        <!-- Sidebar navigation-->
+        <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+          <ul id="sidebarnav">
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Home</span>
+            </li>
+            <li class="sidebar-item">
+              <router-link class="sidebar-link" to="/home">
+                <span>
+                  <i class="ti ti-layout-dashboard"></i>
+                </span>
+                <span class="hide-menu">Dashboard</span>
+              </router-link>
+            </li>
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">본사 관리</span>
+            </li>
+            <li class="sidebar-item">
+              <router-link class="sidebar-link" to="/shop">
+                <span>
+                  <i class="ti ti-home"></i>
+                </span>
+                <span class="hide-menu">가맹점 조회</span>
+              </router-link>
+            </li>
+            <li class="sidebar-item">
+              <router-link class="sidebar-link" to="/order">
+                <span>
+                  <i class="ti ti-shopping-cart"></i>
+                </span>
+                <span class="hide-menu">주문</span>
+              </router-link>
+            </li>
+            <li class="sidebar-item">
+              <router-link class="sidebar-link" to="/container">
+                <span>
+                  <i class="ti ti-package"></i>
+                </span>
+                <span class="hide-menu">창고</span>
+              </router-link>
+            </li>
+            <li class="sidebar-item">
+              <router-link class="sidebar-link" to="/notice">
+                <span>
+                  <i class="ti ti-file-description"></i>
+                </span>
+                <span class="hide-menu">공지사항</span>
+              </router-link>
+            </li>
+            <li class="sidebar-item">
+              <router-link class="sidebar-link" to="/inquiry">
+                <span>
+                  <i class="ti ti-typography"></i>
+                </span>
+                <span class="hide-menu">문의사항</span>
+              </router-link>
+              
+            </li>
+          </ul>
+        </nav>
+        <!-- End Sidebar navigation -->
       </div>
       <!-- Sidebar navigation-->
       <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
