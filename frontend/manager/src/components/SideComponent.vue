@@ -30,7 +30,7 @@
               <span class="hide-menu">본사 관리</span>
             </li>
             <li class="sidebar-item">
-              <router-link class="sidebar-link" to="/product">
+              <router-link class="sidebar-link" to="/shop">
                 <span>
                   <i class="ti ti-home"></i>
                 </span>
@@ -38,7 +38,7 @@
               </router-link>
             </li>
             <li class="sidebar-item">
-              <router-link class="sidebar-link" to="/stockedit">
+              <router-link class="sidebar-link" to="/order">
                 <span>
                   <i class="ti ti-shopping-cart"></i>
                 </span>
