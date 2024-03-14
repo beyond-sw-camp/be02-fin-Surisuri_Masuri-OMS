@@ -261,7 +261,7 @@ export default {
   /* object-fit: contain;를 사용하면 이미지 전체가 보이되, 슬라이드를 꽉 채우지 않을 수 있음 */
 }
 .main-container {
-  max-width: 1000px; /* 원하는 최대 너비로 조정하세요 */
+  max-width: 1300px; /* 원하는 최대 너비로 조정하세요 */
   margin: 0 auto; /* 중앙 정렬을 위해 사용 */
 }
 
