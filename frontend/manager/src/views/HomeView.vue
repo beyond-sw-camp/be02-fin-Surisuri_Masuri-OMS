@@ -1,149 +1,121 @@
-<template><div class="container-fluid main-container">
-  
-  <!--  Row 1 -->
-  <div class="row">
-    <div class="col-lg-8 d-flex align-items-strech">
-      <div class="card w-100" id = "chart-card" >
-        <div class="card-body">
-          <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-            <div class="mb-3 mb-sm-0">
-              <h5 class="card-title fw-semibold">많이 팔린 상품</h5>
-            </div>
-            
-          </div>
-          <canvas ref="MyChart" ></canvas>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-4">
+<template>
+  <main class="main-container">
+    <div class="container-fluid px-4">
+      <!-- 첫 번째 줄: Success Card와 Area Chart -->
       <div class="row">
-        <div class="col-lg-12">
-          <!-- Yearly Breakup -->
-          <div class="card overflow-hidden">
-            <div class="card-body p-4" id = "chart-card1">
-              
-              <div class="row align-items-center">
-                <div class="col-8" >
-                  <h4 class="fw-semibold mb-3">상품 잔여 재고</h4>
-                  <div class="d-flex align-items-center mb-3">
-                    <span
-                      class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
-                      <i class="ti ti-arrow-up-left text-success"></i>
-                    </span>
-                    <p class="text-dark me-1 fs-3 mb-0">+9%</p>
-                    <p class="fs-3 mb-0">last year</p>
-                  </div>
-                  <div class="d-flex align-items-center">
-      
-                  </div>
-                </div>
-                <div class="col-4">
-                  <div class="d-flex justify-content-center">
-                    <canvas ref="myPieChart"></canvas>
-                  </div>
-                </div>
-              </div>
+        <!-- 생략된 Success Card와 Area Chart 코드... -->
+      </div>
+      <!-- 두 번째 줄: 카드 구조 변경 -->
+      <div class="row">
+        <!-- 첫 번째 카드 (크기 유지) -->
+        <div class="col-xl-6 col-md-6">
+          <div class="card mb-4">
+            <div class="card-header">
+              월간매출
+            </div>
+            <div class="card-body">
+              <canvas ref="myLineChart1"></canvas>
             </div>
           </div>
         </div>
-        <div class="col-lg-12">
-          <!-- Monthly Earnings -->
-          <div class="card">
-            <div class="card-body" id = "chart-card2">
-              <div class="row alig n-items-start">
-                <div class="col-8" id = "chart-card2">
-                  <h5 class="card-title mb-9 fw-semibold"> 월별 매출 </h5>
-                  <div class="d-flex align-items-center pb-1">
-                    <span
-                      class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
-                      <i class="ti ti-arrow-down-right text-danger"></i>
-                    </span>
-                    <p class="text-dark me-1 fs-3 mb-0">+9%</p>
-                    <p class="fs-3 mb-0">last month</p>
-                  </div>
-                </div>
-                <div class="col-4">
-                  <div class="d-flex justify-content-end">
-                    <div
-                      class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
-                      <i class="ti ti-currency-dollar fs-6"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        <!-- 두 번째 카드 (크기 유지) -->
+        <div class="col-xl-6 col-md-6">
+          <div class="card mb-4">
+            <div class="card-header">
+              차트 제목 2
             </div>
-            <canvas ref="myLineChart"></canvas>
+            <div class="card-body">
+              <canvas ref="myLineChart2"></canvas>
+            </div>
+          </div>
+        </div>
+        <!-- 세 번째 카드 (크기 2배) -->
+        
+      </div>
+      <!-- 새로운 행: 네 번째 카드 (전체 폭 차지) -->
+      <div class="row">
+        <div class="col-xl-6">
+          <div class="card mb-4">
+            <div class="card-header">
+              재고현황
+            </div>
+            <div class="card-body">
+              <canvas ref="myPieChart" ></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-6">
+          <div class="card mb-4">
+            <div class="card-header">
+              datatables
+            </div>
+            <div class="card-body">
+                                    <table id="datatablesSimple">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Position</th>
+                                                <th>Office</th>
+                                                <th>Age</th>
+                                                <th>Start date</th>
+                                                <th>Salary</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Position</th>
+                                                <th>Office</th>
+                                                <th>Age</th>
+                                                <th>Start date</th>
+                                                <th>Salary</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            <tr>
+                                                <td>Tiger Nixon</td>
+                                                <td>System Architect</td>
+                                                <td>Edinburgh</td>
+                                                <td>61</td>
+                                                <td>2011/04/25</td>
+                                                <td>$320,800</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Garrett Winters</td>
+                                                <td>Accountant</td>
+                                                <td>Tokyo</td>
+                                                <td>63</td>
+                                                <td>2011/07/25</td>
+                                                <td>$170,750</td>
+                                            </tr>
+                                        
+                                        </tbody>
+                                    </table>
+                                </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-lg-4 d-flex align-items-stretch">
-      <div class="card w-100">
-        <div class="card-body p-4">
-          <div class="mb-4">
-            <h5 class="card-title fw-semibold">공지사항</h5>
-          </div>
-          
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-8 d-flex align-items-stretch">
-      <div class="card w-100">
-        <swiper class="mySwiper" :options="{ navigation: { clickable: true } }">
-              <swiper-slide v-for="image in images" :key="image">
-                <img :src="image" alt="사진 슬라이드">
-              </swiper-slide>
-            </swiper>
-        <div class="card-body p-4">
-          <h5 class="card-title fw-semibold mb-4"></h5>
-          <div class="table-responsive">
-            <table class="table text-nowrap mb-0 align-middle">
-              
-              
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  </div>
+  </main>
 </template>
+
+
 
 <script>
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
-import { Swiper, SwiperSlide } from "swiper/vue";
-import "swiper/css";
 
 export default {
   data() {
     return {
-      images: [
-        require("@/assets/image2.jpg"),
-        require("@/assets/image.jpg"),
-      ],
-      barChartData: {
+      lineChartData1: {
         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
         datasets: [{
-          label: '# of Votes',
+          label: 'Number of Votes',
           data: [12, 19, 3, 5, 2, 3],
-          backgroundColor: [
-            'rgba(173, 216, 230, 0.2)', // 하늘색
-            'rgba(0, 191, 255, 0.2)',   // 깊은 하늘색
-            'rgba(0, 0, 255, 0.2)',     // 파란색
-            'rgba(0, 0, 139, 0.2)',     // 짙은 파란색
-            'rgba(25, 25, 112, 0.2)'    // 남색
-          ],
-          borderColor: [
-            'rgba(173, 216, 230, 1)', // 하늘색
-            'rgba(0, 191, 255, 1)',   // 깊은 하늘색
-            'rgba(0, 0, 255, 1)',     // 파란색
-            'rgba(0, 0, 139, 1)',     // 짙은 파란색
-            'rgba(25, 25, 112, 1)'    // 남색
-          ],
-          borderWidth: 1
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)',
+          tension: 0.1
         }]
       },
       pieChartData: {
@@ -160,23 +132,23 @@ export default {
           ]
         }]
       },
-      lineChartData: {
+      lineChartData2: {
         labels: ['January', 'February', 'March', 'April', 'May', 'June'],
         datasets: [{
           label: 'Monthly Sales',
           data: [65, 59, 80, 81, 56, 55],
           fill: false,
-          borderColor: 'rgb(75, 192, 192)',
+          borderColor: 'rgb(255, 99, 132)',
           tension: 0.1
         }]
       }
     };
   },
   mounted() {
-    this.createBarChart();
-    this.createPieChart();
-    this.createLineChart();
-  },
+  this.createLineChart('myLineChart1', this.lineChartData1);
+  this.createLineChart('myLineChart2', this.lineChartData2);
+  this.createPieChart('myPieChart', this.pieChartData);
+},
   methods: {
     createChart(chartRef, chartType, chartData, chartOptions) {
       const ctx = this.$refs[chartRef].getContext('2d');
@@ -186,57 +158,37 @@ export default {
         options: chartOptions,
       });
     },
-    createBarChart() {
-      const barChartOptions = {
-        scales: {
-          x: {
-            grid: {
-              display: false
-            }
-          },
-          y: {
-            grid: {
-              display: false
-            }
-          }
+    createLineChart(chartRef, chartData) {
+  const lineChartOptions = {
+    scales: {
+      x: {
+        grid: {
+          display: false
         }
-      };
-      this.createChart('MyChart', 'bar', this.barChartData, barChartOptions);
-    },
-    createPieChart() {
-      const pieChartOptions = {
-        plugins: {
-          legend: {
-            display: false // 이 부분을 추가하여 레전드를 숨깁니다.
-          }
+      },
+      y: {
+        grid: {
+          display: false
         }
-      };
-      this.createChart('myPieChart', 'doughnut', this.pieChartData, pieChartOptions);
-    },
-    createLineChart() {
-      const lineChartOptions = {
-        scales: {
-          x: {
-            grid: {
-              display: false
-            }
-          },
-          y: {
-            grid: {
-              display: false
-            }
-          }
-        }
-      };
-      this.createChart('myLineChart', 'line', this.lineChartData, lineChartOptions);
+      }
     }
-  },
-  components: {
-    Swiper,
-    SwiperSlide,
-  },
-};
+  };
+  this.createChart(chartRef, 'line', chartData, lineChartOptions);
+},
 
+createPieChart(chartRef, chartData) {
+  const pieChartOptions = {
+    aspectRatio: 1,
+    plugins: {
+      legend: {
+        display: false // 이 부분을 추가하여 레전드를 숨깁니다.
+      }
+    }
+  };
+  this.createChart(chartRef, 'doughnut', chartData, pieChartOptions);
+},
+  }
+};
 </script>
 
 <style scoped>
@@ -261,9 +213,45 @@ export default {
   /* object-fit: contain;를 사용하면 이미지 전체가 보이되, 슬라이드를 꽉 채우지 않을 수 있음 */
 }
 .main-container {
-  max-width: 1000px; /* 원하는 최대 너비로 조정하세요 */
+  max-width: 1400px; /* 원하는 최대 너비로 조정하세요 */
   margin: 0 auto; /* 중앙 정렬을 위해 사용 */
 }
 
+.card-body canvas {
+    width: 100% !important;
+    height: auto !important; /* 높이를 자동으로 조정하거나 필요에 따라 고정값 지정 */
+    aspect-ratio: 16 / 9; /* 캔버스의 비율을 유지하고 싶은 경우 사용 */
+}
+/* 테이블의 헤더와 셀에 패딩을 추가하여 공간을 늘립니다 */
+#datatablesSimple th, 
+#datatablesSimple td {
+    padding: 12px 15px; /* 상하 패딩 12px, 좌우 패딩 15px */
+}
+
+/* 테이블 행 간의 간격을 늘립니다 */
+#datatablesSimple tr {
+    border-bottom: 1px solid #dddddd; /* 행 사이에 경계선을 추가하여 시각적 구분을 명확히 합니다 */
+}
+
+/* 테이블의 마지막 행의 하단 경계선을 제거합니다 */
+#datatablesSimple tr:last-child {
+    border-bottom: none;
+}
+
+/* 테이블 헤더의 배경색과 글씨색을 설정합니다 */
+#datatablesSimple thead {
+    background-color: #f8f9fa; /* 연한 회색 배경 */
+    color: #333333; /* 어두운 글씨 */
+}
+
+/* 카드 헤더의 간격을 조정합니다 */
+
+
+/* 카드 본문의 간격을 조정합니다 */
+.card-body {
+    padding: 20px; /* 모든 방향 패딩 20px */
+}
 </style>
+
+
 
