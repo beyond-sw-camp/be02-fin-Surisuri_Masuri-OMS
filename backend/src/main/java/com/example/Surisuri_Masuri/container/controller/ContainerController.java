@@ -9,10 +9,7 @@ import com.example.Surisuri_Masuri.question.model.request.PostCreateQuestionReq;
 import com.example.Surisuri_Masuri.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -25,7 +22,7 @@ public class ContainerController {
 
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
-    public ResponseEntity create(PostCreateContainerReq postCreateContainerReq) {
+    public ResponseEntity create(@RequestBody PostCreateContainerReq postCreateContainerReq) {
         BaseResponse baseResponse = containerService.create(postCreateContainerReq);
         return ResponseEntity.ok().body(baseResponse);
     }
