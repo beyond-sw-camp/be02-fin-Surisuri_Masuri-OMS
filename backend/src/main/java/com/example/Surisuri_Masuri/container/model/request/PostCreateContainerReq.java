@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,5 +18,6 @@ public class PostCreateContainerReq {
     private String containerName;
     private String containerManager;
     private String containerPhoneNo;
+    private LocalDate expiredAt;
 
 }
