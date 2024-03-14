@@ -18,6 +18,4 @@ public class PostCreateContainerReq {
     private String containerName;
     private String containerManager;
     private String containerPhoneNo;
-    private LocalDate expiredAt;
-
 }

@@ -11,5 +11,5 @@ public class ContainerCreateProductReq {
     Integer containerIdx;
     Long productIdx;
     Long quantity;
-    LocalDate expireAt;
+    LocalDate expiredAt;
 }
