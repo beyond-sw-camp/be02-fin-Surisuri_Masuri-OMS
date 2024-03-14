@@ -137,6 +137,7 @@ public class StoreStockService {
                 StoreStockDto storeStockDto = StoreStockDto
                         .builder()
                         .productName(productName)
+                        .expiredAt(storeStock.getExpiredAt())
                         .build();
 
                 storeStockReadRes = StoreStockReadRes
@@ -152,7 +153,7 @@ public class StoreStockService {
         }
         else return BaseResponse.failResponse(7000, "요청 실패");
 
-        }
+    }
 
     // 가맹점 재고 단일 조회
     public BaseResponse<StoreStockSearchRes> StoreStockSearch(String token, StoreStockSearchReq storeStockSearchReq) {
