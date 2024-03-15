@@ -1,12 +1,14 @@
 package com.example.Surisuri_Masuri.question.controller;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.question.model.request.QuestionAnswerReq;
 import com.example.Surisuri_Masuri.question.model.request.PatchUpdateQuestionReq;
 import com.example.Surisuri_Masuri.question.model.request.PostCreateQuestionReq;
 import com.example.Surisuri_Masuri.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -37,8 +39,8 @@ public class QuestionController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
-    public ResponseEntity delete(Integer idx) {
-        BaseResponse baseResponse = questionService.delete(idx);
+    public ResponseEntity delete(@AuthenticationPrincipal User user, Integer idx) {
+        BaseResponse baseResponse = questionService.delete(user, idx);
         return ResponseEntity.ok().body(baseResponse);
     }
 
