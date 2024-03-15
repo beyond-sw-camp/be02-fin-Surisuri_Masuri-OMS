@@ -9,4 +9,5 @@ public class StoreStockSearchRes {
     private StoreStockDto storeStockDto;
     private Long stockQuantity;
     private String storeAddr;
+    private Long storeStockIdx;
 }
