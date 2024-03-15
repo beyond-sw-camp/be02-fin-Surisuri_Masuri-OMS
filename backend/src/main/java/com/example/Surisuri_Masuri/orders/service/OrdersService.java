@@ -7,7 +7,6 @@ import com.example.Surisuri_Masuri.cart.repository.CartRepository;
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.orders.model.Orders;
 import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
-import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersPaymentReq;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersRefundReq;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersUpdateDeliveryReq;
 import com.example.Surisuri_Masuri.orders.model.dto.response.OrdersDetailDtoRes;
@@ -16,7 +15,6 @@ import com.example.Surisuri_Masuri.orders.model.dto.response.OrdersShowDeliveryS
 import com.example.Surisuri_Masuri.orders.model.dto.response.ProductDtoRes;
 import com.example.Surisuri_Masuri.orders.repository.OrdersDetailRepository;
 import com.example.Surisuri_Masuri.orders.repository.OrdersRepository;
-import com.example.Surisuri_Masuri.product.model.Product;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.siot.IamportRestClient.IamportClient;
@@ -24,14 +22,12 @@ import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.swing.text.html.Option;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
@@ -121,12 +117,12 @@ public class OrdersService {
         return BaseResponse.successResponse("상품 리스트 검색 성공", ordersListResList);
     }
 
-    public void create(OrdersPaymentReq req, String merchantUid, Long amount) {
-        Optional<Cart> cartResult = cartRepository.findById(req.getCartIdx());
-        List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(req.getCartIdx());
+    public void create(String payMethod, Long cartIdx, String merchantUid, Long amount) {
+        Optional<Cart> cartResult = cartRepository.findById(cartIdx);
+        List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(cartIdx);
 
         Orders orders = ordersRepository.save(Orders.builder()
-                .payMethod(req.getPayMethod())
+                .payMethod(payMethod)
                 .totalPrice(amount)
                 .merchantUid(merchantUid)
                 .build());
@@ -150,15 +146,24 @@ public class OrdersService {
         ordersRepository.delete(ordersResult.get());
     }
 
-    public BaseResponse payment(OrdersPaymentReq req) throws IamportResponseException, IOException {
-        IamportResponse<Payment> response = getPaymentInfo(req.getImpUid());
-        
+    public BaseResponse payment(String imp_uid) throws IamportResponseException, IOException {
+        IamportResponse<Payment> response = getPaymentInfo(imp_uid);
+
+        String customDataString = response.getResponse().getCustomData();
+        System.out.println(customDataString);
+
+        String payMethod = response.getResponse().getPgProvider();
+
+        Gson gson = new Gson();
+        Cart cart = gson.fromJson(customDataString, Cart.class);
+        Long cartIdx = cart.getIdx();
+
         Long amount = response.getResponse().getAmount().longValue();
         String merchantUid = response.getResponse().getMerchantUid();
 
-        Optional<Cart> cartResult = cartRepository.findById(req.getCartIdx());
-        List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(req.getCartIdx());
-        
+        Optional<Cart> cartResult = cartRepository.findById(cartIdx);
+        List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(cartIdx);
+
         Integer productPrice = null;
 
         for (CartDetail cartDetail: cartDetailList) {
@@ -169,7 +174,6 @@ public class OrdersService {
 
         if (productPrice != amount.intValue()) {
             OrdersRefundReq ordersRefundReq = OrdersRefundReq.builder()
-                    .idx(null)
                     .merchantUid(merchantUid)
                     .refundReason("결제 금액과 상품 금액 총합이 맞지 않습니다")
                     .build();
@@ -178,9 +182,9 @@ public class OrdersService {
             return BaseResponse.failResponse(444, "금액 불일치");
         }
 
-        create(req, merchantUid, amount);
-        
-        return BaseResponse.successResponse("결제 성공", response.getResponse());
+        create(payMethod ,cartIdx, merchantUid, amount);
+
+        return BaseResponse.successResponse("결제 성공", customDataString);
     }
 
     public IamportResponse getPaymentInfo(String impUid) throws IamportResponseException, IOException {
