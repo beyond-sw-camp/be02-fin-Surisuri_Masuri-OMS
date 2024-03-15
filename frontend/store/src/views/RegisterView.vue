@@ -70,39 +70,21 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { useUserStore } from '/stores/userStore'; // 이 경로는 프로젝트에 맞게 수정해주세요
 
 export default {
   name: 'RegisterView',
-  data() {
-    return {
-      userSignUpReq: {
-        userName: '',
-        userEmail: '',
-        userPassword: '',
-        confirmPassword: '',
-        userPhoneNo: '',
-        storeUuid: '',
-        storeAddr: '',
-        storePhoneNo: '',
-      },
+  setup() {
+    const userStore = useUserStore();
+
+    const createAccount = async () => {
+      await userStore.createAccount();
     };
-  },
-  methods: {
-    createAccount() {
-      axios.post('http://localhost:8080/user/register', this.userSignUpReq, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => {
-          console.log('회원가입 성공', response.data);
-          // 성공 처리 로직 추가
-        })
-        .catch(error => {
-          console.error('회원가입 실패', error);
-        });
-    },
+
+    return {
+      createAccount,
+      userSignUpReq: userStore.userSignUpReq,
+    };
   },
 };
 </script>
