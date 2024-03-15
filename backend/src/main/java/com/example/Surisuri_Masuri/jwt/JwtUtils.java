@@ -24,7 +24,7 @@ public class JwtUtils {
         String token = Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiredTimeMs))
+                .setExpiration(new Date(System.currentTimeMillis() + expiredTimeMs*1000L))
                 .signWith(getSignKey(secretkey), SignatureAlgorithm.HS256)
                 .compact();
 
