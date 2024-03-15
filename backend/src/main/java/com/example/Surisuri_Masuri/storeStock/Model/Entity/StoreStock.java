@@ -9,6 +9,7 @@ import java.util.Date;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -25,13 +26,13 @@ public class StoreStock {
     private Date createdAt;
     private Date updatedAt;
 
+    private Boolean isDiscarded; // 폐기 여부
+
+    private LocalDate discardedAt; // 폐기 일자
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "storeIdx")
     private Store store;
-
-    public void setStockQuantitiy(Long stockQuantitiy) {
-        this.stockQuantitiy = stockQuantitiy;
-    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "productIdx")

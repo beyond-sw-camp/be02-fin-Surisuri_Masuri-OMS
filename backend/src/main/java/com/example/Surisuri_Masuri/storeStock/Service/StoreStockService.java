@@ -2,38 +2,30 @@ package com.example.Surisuri_Masuri.storeStock.Service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
-import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.product.model.Product;
 import com.example.Surisuri_Masuri.product.repository.ProductRepository;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
-import com.example.Surisuri_Masuri.store.Model.ReqDtos.StoreSearchReq;
-import com.example.Surisuri_Masuri.store.Model.ResDtos.StoreReadRes;
 import com.example.Surisuri_Masuri.store.Repository.StoreRepository;
 import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
-import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.StoreStockCreateReq;
+import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.*;
 import com.example.Surisuri_Masuri.store.Model.ResDtos.StoreDto;
-import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.StoreStockDeleteReq;
-import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.StoreStockSearchReq;
-import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.StoreStockUpdateReq;
 import com.example.Surisuri_Masuri.storeStock.Model.ResDtos.*;
 import com.example.Surisuri_Masuri.storeStock.Repository.StoreStockRepository;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -81,7 +73,7 @@ public class StoreStockService {
                     .product(product2)
                     .createdAt(create)
                     .updatedAt(update)
-                    .stockQuantitiy(storeStockCreateReq.getStockQuantitiy())
+                    .stockQuantitiy(storeStockCreateReq.getStockQuantity())
                     .store(store2)
                     .expiredAt(storeStockCreateReq.getExpiredAt())
                     .build();
@@ -97,7 +89,7 @@ public class StoreStockService {
             storeStockCreateRes = StoreStockCreateRes
                     .builder()
                     .storeDto(storeDto)
-                    .stockQuantitiy(storeStockCreateReq.getStockQuantitiy())
+                    .stockQuantitiy(storeStockCreateReq.getStockQuantity())
                     .productIdx(storeStockCreateReq.getProductIdx())
                     .expiredAt(storeStock.getExpiredAt())
                     .build();
@@ -253,4 +245,57 @@ public class StoreStockService {
         else return BaseResponse.failResponse(7000, "요청 실패");
 
     }
+
+    @Transactional
+    public BaseResponse<List<ExpiredFoodStockDto>> findExpiringFoodStocks(String token) {
+        token = JwtUtils.replaceToken(token);
+
+        String userEmail = JwtUtils.getUserEmail(token, secretKey);
+        String storeUuid = JwtUtils.getStoreUuid(token, secretKey);
+
+        Optional<User> optionalUser = userRepository.findByUserEmail(userEmail);
+        Optional<Store> optionalStore = storeRepository.findByStoreUuid(storeUuid);
+
+        if (optionalUser.isPresent() && optionalStore.isPresent()) {
+            // 현재 날짜
+            LocalDate currentDate = LocalDate.now();
+
+            // 1주일 후 날짜 계산
+            LocalDate weekFromNow = currentDate.plusWeeks(1);
+
+            // 유통기한이 1주일 남은 음식 재고들 조회
+            List<StoreStock> expiringInOneWeekFoodStocks = storeStockRepository.findStocksExpiringInOneWeek(weekFromNow, currentDate).stream()
+                    .filter(stock -> stock.getProduct().getIsItFood()) // 음식인 재고만 필터링
+                    .collect(Collectors.toList());
+
+            List<ExpiredFoodStockDto> expiredStocks = new ArrayList<>();
+            for (StoreStock storeStock : expiringInOneWeekFoodStocks) {
+                // 폐기처리를 위해 폐기여부 속성 추가 및 값 설정
+                storeStock.setIsDiscarded(true);
+                storeStock.setDiscardedAt(currentDate);
+
+                // 데이터베이스에 변경된 상태를 저장
+                storeStockRepository.save(storeStock);
+
+                // 폐기 처리된 재고를 응답에 추가
+                String productName = storeStock.getProduct().getProductName();
+
+                ExpiredFoodStockDto expiredFoodStockDto = ExpiredFoodStockDto
+                        .builder()
+                        .productName(productName)
+                        .expiredAt(storeStock.getExpiredAt())
+                        .stockQuantity(storeStock.getStockQuantitiy())
+                        .discarded(true)
+                        .discardedAt(currentDate)
+                        .build();
+
+                expiredStocks.add(expiredFoodStockDto);
+            }
+
+            return BaseResponse.successResponse("유통기한이 1주일 남은 음식 재고들을 폐기 처리했습니다.", expiredStocks);
+        } else {
+            return BaseResponse.failResponse(7000, "요청 실패");
+        }
+    }
+
 }

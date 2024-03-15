@@ -1,15 +1,13 @@
 package com.example.Surisuri_Masuri.storeStock.Controller;
 
-import com.example.Surisuri_Masuri.store.Model.ReqDtos.StoreCreateReq;
-import com.example.Surisuri_Masuri.store.Model.ResDtos.StoreCreateRes;
-import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.StoreStockCreateReq;
-import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.StoreStockDeleteReq;
-import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.StoreStockSearchReq;
-import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.StoreStockUpdateReq;
+import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.storeStock.Model.ReqDtos.*;
 import com.example.Surisuri_Masuri.storeStock.Service.StoreStockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+        import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,6 +48,10 @@ public class StoreStockController {
         return ResponseEntity.ok().body(storeStockService.StoreStockDelete(token, storeStockDeleteReq));
     }
 
+    @GetMapping("/nearExpiredFoodStocks")
+    public ResponseEntity<BaseResponse<List<ExpiredFoodStockDto>>> findNearExpiredFoodStocks(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok().body(storeStockService.findExpiringFoodStocks(token));
+    }
 
 }
 
