@@ -15,5 +15,6 @@ public class PostCreateQuestionRes {
     private String title;
     private String content;
     private Boolean status;
+    private Long userIdx;
 
 }
