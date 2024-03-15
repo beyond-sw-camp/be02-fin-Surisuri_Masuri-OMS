@@ -81,11 +81,14 @@ public class QuestionService {
         Optional<Question> result = questionRepository.findById(patchUpdateQuestionReq.getIdx());
 
         if (result.isPresent()) {
-            Question question = result.get();
-            question.update(patchUpdateQuestionReq);
-            questionRepository.save(question);
+            if (result.get().getUser().getIdx().equals(patchUpdateQuestionReq.getUserIdx())) {
+                Question question = result.get();
+                question.update(patchUpdateQuestionReq);
+                questionRepository.save(question);
 
-            return BaseResponse.successResponse("문의사항 수정 성공",patchUpdateQuestionReq);
+                return BaseResponse.successResponse("문의사항 수정 성공", patchUpdateQuestionReq);
+            }
+            return BaseResponse.failResponse(444, "본인이 작성한 문의사항이 아닙니다");
         } else {
             return BaseResponse.successResponse("문의사항 수정 실패",null);
         }
