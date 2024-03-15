@@ -1,8 +1,6 @@
 package com.example.Surisuri_Masuri.storeStock.Repository.QueryDsl;
 
-import com.example.Surisuri_Masuri.store.Model.Entity.QStore;
-import com.example.Surisuri_Masuri.store.Model.Entity.QStoreStock;
-import com.example.Surisuri_Masuri.store.Model.Entity.Store;
+import com.example.Surisuri_Masuri.storeStock.Model.Entity.QStoreStock;
 import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
