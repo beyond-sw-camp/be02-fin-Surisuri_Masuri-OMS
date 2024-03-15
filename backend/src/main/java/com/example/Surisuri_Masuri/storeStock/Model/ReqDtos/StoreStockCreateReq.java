@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class StoreStockCreateReq {
 
     private Long productIdx;
-    private Long stockQuantitiy;
+    private Long stockQuantity;
     private LocalDate expiredAt;
 
 }
