@@ -46,7 +46,7 @@ public class StoreStockService {
     private int expiredTimeMs;
 
     // 가맹점 재고 등록
-    public BaseResponse<StoreStockCreateRes> StoreStockCreate(String token, StoreStockCreateReq storeStockCreateReq) {
+    public BaseResponse<StoreStockCreateRes> storeStockCreate(String token, StoreStockCreateReq storeStockCreateReq) {
 
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         Date update = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
@@ -101,7 +101,7 @@ public class StoreStockService {
     }
 
     // 가맹점 재고 리스트 조회
-    public BaseResponse<List<StoreStockReadRes>> StoreStockList(String token, Integer page, Integer size) {
+    public BaseResponse<List<StoreStockReadRes>> storeStockList(String token, Integer page, Integer size) {
 
         token = JwtUtils.replaceToken(token);
 
@@ -150,7 +150,7 @@ public class StoreStockService {
     }
 
     // 가맹점 재고 단일 조회
-    public BaseResponse<StoreStockSearchRes> StoreStockSearch(String token, StoreStockSearchReq storeStockSearchReq) {
+    public BaseResponse<StoreStockSearchRes> storeStockSearch(String token, StoreStockSearchReq storeStockSearchReq) {
 
         token = JwtUtils.replaceToken(token);
 
@@ -189,7 +189,7 @@ public class StoreStockService {
     }
 
     // 가맹점 재고 수정
-    public BaseResponse<StoreStockUpdateRes> StoreStockUpdate(String token, StoreStockUpdateReq storeStockUpdateReq) {
+    public BaseResponse<StoreStockUpdateRes> storeStockUpdate(String token, StoreStockUpdateReq storeStockUpdateReq) {
 
         token = JwtUtils.replaceToken(token);
 
@@ -223,7 +223,7 @@ public class StoreStockService {
     }
     // 가맹점 재고 삭제
     @Transactional
-    public BaseResponse<StoreStockDeleteRes> StoreStockDelete(String token, StoreStockDeleteReq storeStockDeleteReq) {
+    public BaseResponse<StoreStockDeleteRes> storeStockDelete(String token, StoreStockDeleteReq storeStockDeleteReq) {
 
         token = JwtUtils.replaceToken(token);
 
