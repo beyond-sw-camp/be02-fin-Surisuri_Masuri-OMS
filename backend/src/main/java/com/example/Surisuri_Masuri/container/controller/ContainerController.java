@@ -2,15 +2,14 @@ package com.example.Surisuri_Masuri.container.controller;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.container.model.request.ContainerCreateProductReq;
+import com.example.Surisuri_Masuri.container.model.request.ContainerStockDto;
 import com.example.Surisuri_Masuri.container.model.request.PostCreateContainerReq;
 import com.example.Surisuri_Masuri.container.service.ContainerService;
-import com.example.Surisuri_Masuri.notice.model.request.PostCreateNoticeReq;
-import com.example.Surisuri_Masuri.question.model.request.PatchUpdateQuestionReq;
-import com.example.Surisuri_Masuri.question.model.request.PostCreateQuestionReq;
-import com.example.Surisuri_Masuri.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 public class ContainerController {
 
     private final ContainerService containerService;
-
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
     public ResponseEntity create(@RequestBody PostCreateContainerReq postCreateContainerReq) {
@@ -43,6 +41,12 @@ public class ContainerController {
     public ResponseEntity singleStockProduct(Integer idx) {
         BaseResponse baseResponse = containerService.singleStockProduct(idx);
         return ResponseEntity.ok().body(baseResponse);
+    }
+
+    @PostMapping("/discardExpiredFoodProducts")
+    public ResponseEntity<BaseResponse<List<ContainerStockDto>>> discardExpiredFoodProducts() {
+        BaseResponse<List<ContainerStockDto>> response = containerService.discardExpiredFoodProducts();
+        return ResponseEntity.ok().body(response);
     }
 
 }

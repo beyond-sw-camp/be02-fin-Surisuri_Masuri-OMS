@@ -28,6 +28,10 @@ public class ContainerStock {
 
     private LocalDate expiredAt;
 
+    private Boolean isDiscarded; // 폐기 여부
+
+    private Timestamp discardedAt; // 폐기 일자
+
     @ManyToOne
     @JoinColumn(name = "product_Idx")
     private Product product;
