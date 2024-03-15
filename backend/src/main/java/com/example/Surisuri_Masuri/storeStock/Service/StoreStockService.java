@@ -200,23 +200,35 @@ public class StoreStockService {
         Optional<Store> store = storeRepository.findByStoreUuid(storeUuid);
         if (user.isPresent()) {
 
-            Optional<StoreStock> storeStock = storeStockRepository.
-                    findStoreStockByProduct_IdxAndStore_StoreUuid(storeStockUpdateReq.getIdx(),store.get().getStoreUuid());
+            List<StoreStock> storeStockResult = storeStockRepository.findByStoreIdx(store.get().getIdx());
 
-            StoreStock storeStock2 = storeStock.get();
+            for (StoreStock storeStock : storeStockResult) {
+                if (store.get().getStoreUuid().equals(storeStock.getStore().getStoreUuid())) {
+                    storeStock.setStockQuantitiy(storeStockUpdateReq.getStockQuantity());
 
-            storeStock2.setStockQuantitiy(storeStockUpdateReq.getStockQuantity());
+                    storeStockRepository.save(storeStock);
 
-            storeStockRepository.save(storeStock2);
+                    StoreStockUpdateRes storeStockUpdateRes = StoreStockUpdateRes
+                            .builder()
+                            .productName(storeStock.getProduct().getProductName())
+                            .stockQuantity(storeStockUpdateReq.getStockQuantity())
+                            .build();
 
-            StoreStockUpdateRes storeStockUpdateRes = StoreStockUpdateRes
-                    .builder()
-                    .productName(storeStock2.getProduct().getProductName())
-                    .stockQuantity(storeStockUpdateReq.getStockQuantity())
-                    .build();
+                    // DtoToRes
+                    return BaseResponse.successResponse("요청 성공", storeStockUpdateRes);
+                }
+            }
 
-            // DtoToRes
-            return BaseResponse.successResponse("요청 성공", storeStockUpdateRes);
+//            Optional<StoreStock> storeStock = storeStockRepository.
+//                    findStoreStockByProduct_IdxAndStore_StoreUuid(storeStockUpdateReq.getIdx(),store.get().getStoreUuid());
+//
+//            StoreStock storeStock2 = storeStock.get();
+//
+//            storeStock2.setStockQuantitiy(storeStockUpdateReq.getStockQuantity());
+//
+//            storeStockRepository.save(storeStock2);
+
+            return BaseResponse.failResponse(444, "회원 정보가 존재하지 않습니다");
         }
         else return BaseResponse.failResponse(7000, "요청 실패");
 
