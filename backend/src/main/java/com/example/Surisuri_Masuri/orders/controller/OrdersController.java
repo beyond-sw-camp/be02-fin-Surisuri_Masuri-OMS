@@ -1,17 +1,12 @@
 package com.example.Surisuri_Masuri.orders.controller;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
-import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersPaymentReq;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersRefundReq;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersUpdateDeliveryReq;
 import com.example.Surisuri_Masuri.orders.service.OrdersService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/orders")
@@ -21,9 +16,9 @@ public class OrdersController {
     private final OrdersService ordersService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/payment")
-    public ResponseEntity payment(OrdersPaymentReq req) {
+    public ResponseEntity payment(@RequestBody String imp_uid) {
         try {
-            return ResponseEntity.ok().body(ordersService.payment(req));
+            return ResponseEntity.ok().body(ordersService.payment(imp_uid));
         } catch (Exception e) {
             e.printStackTrace();
         }
