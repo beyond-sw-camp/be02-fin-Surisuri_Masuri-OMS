@@ -14,5 +14,6 @@ public class StoreStockCreateRes {
     private Long productIdx;
     private Long stockQuantitiy;
     private LocalDate expiredAt;
+    private Long storeStockIdx;
 
 }
