@@ -2,6 +2,7 @@ package com.example.Surisuri_Masuri.question.service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
+import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.notice.model.entity.Notice;
 import com.example.Surisuri_Masuri.question.model.entity.Answer;
 import com.example.Surisuri_Masuri.question.model.entity.Question;
@@ -38,6 +39,7 @@ public class QuestionService {
                 .title(postQuestionReq.getTitle())
                 .content(postQuestionReq.getContent())
                 .status(postQuestionReq.getStatus())
+                .user(User.builder().idx(postQuestionReq.getUserIdx()).build())
                 .build();
         questionRepository.save(question);
 
@@ -45,6 +47,7 @@ public class QuestionService {
                 .category(postQuestionReq.getCategory())
                 .title(postQuestionReq.getTitle())
                 .content(postQuestionReq.getContent())
+                .userIdx(postQuestionReq.getUserIdx())
                 .build();
 
         return BaseResponse.successResponse("문의사항 작성 성공", postCreateQuestionRes);
