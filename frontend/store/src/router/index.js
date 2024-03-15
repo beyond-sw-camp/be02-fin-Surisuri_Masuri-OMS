@@ -36,12 +36,12 @@ const routes = [
     component: PasswordView // 로그인 컴포넌트
   },
   {
-    path: '/login-reset',
-    name: 'loginreset',
+    path: '/loginReset',
+    name: 'loginReset',
     component: ResetLoginView, // 수정된 부분
   },
   {
-    path: '/password-reset',
+    path: '/passwordReset/:idx',
     name: 'passwordReset',
     component: ResetPasswordView, // 수정된 부분
   },

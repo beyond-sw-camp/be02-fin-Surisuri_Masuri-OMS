@@ -11,11 +11,11 @@
                 <div class="card-body">
                   <form @submit.prevent="findId">
                     <div class="form-floating mb-3">
-                      <input v-model="name" class="form-control" id="inputName" type="text" placeholder="홍길동" />
+                      <input v-model="userName" class="form-control" id="inputName" type="text" placeholder="" />
                       <label for="inputName">성함</label>
                     </div>
                     <div class="form-floating mb-3">
-                      <input v-model="phoneNumber" class="form-control" id="inputPhoneNumber" type="tel" placeholder="010-1234-5678" />
+                      <input v-model="userPhoneNo" class="form-control" id="inputPhoneNumber" type="tel" placeholder="" />
                       <label for="inputPhoneNumber">핸드폰 번호</label>
                     </div>
                     <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
@@ -34,21 +34,72 @@
       </main>
     </div>
   </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        name: '',
-        phoneNumber: '',
-      };
+
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      userName: '',
+      userPhoneNo: '',
+      foundId: '',
+    };
+  },
+  methods: {
+    async findId() {
+      try {
+        const response = await axios.get('http://localhost:8080/user/findEmail', {
+          params: {
+            userName: this.userName,
+            userPhoneNo: this.userPhoneNo,
+          }
+        });
+
+        // 응답에서 받은 아이디를 변수에 할당합니다.
+        this.foundId = response.data.result.userEmail;
+
+        // 아이디를 화면에 보여줍니다.
+        console.log('찾은 아이디:', this.foundId);
+      } catch (error) {
+        // 오류가 발생한 경우 오류를 처리합니다.
+        console.error('아이디를 찾는 동안 오류가 발생했습니다:', error);
+      }
     },
-    methods: {
-      findId() {
-        // 여기에 이름과 핸드폰 번호를 사용한 아이디 찾기 로직을 구현합니다.
-        // 예시: 서버에 요청을 보내어 입력받은 정보와 일치하는 계정의 아이디를 조회합니다.
-        console.log("찾는 중:", this.name, this.phoneNumber);
-      },
+  },
+};
+</script>
+
+
+<!-- <script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      userName: '',
+      userPhoneNo: '',
+      foundId: '',
+    };
+  },
+  methods: {
+    async findId() {
+      try {
+        const response = await axios.get('http://localhost:8080/user/findEmail', {
+          name: this.userName,
+          phoneNumber: this.userPhoneNo,
+        });
+
+        // 응답에서 받은 아이디를 변수에 할당합니다.
+        this.foundId = response.data.userEmail;
+
+        // 아이디를 화면에 보여줍니다.
+        console.log('찾은 아이디:', this.foundId);
+      } catch (error) {
+        // 오류가 발생한 경우 오류를 처리합니다.
+        console.error('아이디를 찾는 동안 오류가 발생했습니다:', error);
+      }
     },
-  };
-  </script>
+  },
+};
+</script> -->

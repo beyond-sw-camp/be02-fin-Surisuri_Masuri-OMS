@@ -28,7 +28,7 @@ export default {
   },
   data() {
     return {
-      hiddenRoutes: ['/', '/password', '/register', '/password-reset', '/login-reset'],
+      hiddenRoutes: ['/', '/password', '/register' , '/loginReset', '/passwordReset/:idx'],
       isHiddenPage: false,
     };
   },
