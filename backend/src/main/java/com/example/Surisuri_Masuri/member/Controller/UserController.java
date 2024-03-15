@@ -37,12 +37,21 @@ public class UserController {
         return ResponseEntity.ok().body(userService.UserLogin(loginReq));
     }
 
+
+//    @GetMapping("/user/findEmail")
+//    public ResponseEntity findEmail(@ReqeustBody UserFindEmailReq userFindEmailReq)
+//    {
+//        return ResponseEntity.ok().body(userService.findEmail(userFindEmailReq));
+//    }
+
     // 아이디 찾기
     @GetMapping("/user/findEmail")
-    public ResponseEntity findEmail(@RequestBody UserFindEmailReq userFindEmailReq)
-    {
-        return ResponseEntity.ok().body(userService.findEmail(userFindEmailReq));
+    public ResponseEntity findEmail(UserFindEmailReq req) {
+        return ResponseEntity.ok().body(userService.findEmail(req));
     }
+
+
+
 
     // 회원정보 수정
     @PatchMapping("/user/update")

@@ -1,14 +1,21 @@
 package com.example.Surisuri_Masuri.member.Model.ReqDtos;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 @Builder
-@Data
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserFindEmailReq {
+    String userName;
 
-    private String userName;
+    String userPhoneNo;
 
-    private String userPhoneNo;
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
+    public void setUserPhoneNo(String userPhoneNo) {
+        this.userPhoneNo = userPhoneNo;
+    }
 }
