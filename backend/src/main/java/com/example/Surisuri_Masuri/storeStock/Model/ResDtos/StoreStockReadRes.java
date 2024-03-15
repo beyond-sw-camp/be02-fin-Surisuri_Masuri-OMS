@@ -13,5 +13,6 @@ public class StoreStockReadRes {
     private final Long stockQuantitiy;
     private final Boolean discarded;
     private final LocalDate discardedAt;
+    private final Long storeStockIdx;
 
 }

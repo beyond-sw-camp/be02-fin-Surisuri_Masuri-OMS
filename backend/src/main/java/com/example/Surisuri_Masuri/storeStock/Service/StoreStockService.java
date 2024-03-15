@@ -137,6 +137,7 @@ public class StoreStockService {
                         .builder()
                         .storeStockDto(storeStockDto)
                         .stockQuantitiy(storeStock.getStockQuantitiy())
+                        .storeStockIdx(storeStock.getIdx())
                         .build();
 
                 storeSearchResList.add(storeStockReadRes);
