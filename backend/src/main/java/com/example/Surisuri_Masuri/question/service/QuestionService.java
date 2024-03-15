@@ -66,6 +66,7 @@ public class QuestionService {
                         .category(question.getCategory())
                         .title(question.getTitle())
                         .content(question.getContent())
+                        .userIdx(question.getUser().getIdx())
                         .build();
 
                 getListQuestionResList.add(getListQuestionRes);
