@@ -1,6 +1,7 @@
 package com.example.Surisuri_Masuri.member.Model.Entity;
 
 import com.example.Surisuri_Masuri.notice.model.entity.Notice;
+import com.example.Surisuri_Masuri.question.model.entity.Question;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -43,6 +44,9 @@ public class User implements UserDetails {
     private Date createdAt;
 
     private Date updatedAt;
+
+    @OneToMany(mappedBy = "user")
+    private List<Question> questionList = new ArrayList<>();
 
     @OneToOne(mappedBy = "user")
     private Store store;

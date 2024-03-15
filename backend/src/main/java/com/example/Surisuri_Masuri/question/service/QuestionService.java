@@ -2,6 +2,7 @@ package com.example.Surisuri_Masuri.question.service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
+import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.notice.model.entity.Notice;
 import com.example.Surisuri_Masuri.question.model.entity.Answer;
 import com.example.Surisuri_Masuri.question.model.entity.Question;
@@ -38,6 +39,7 @@ public class QuestionService {
                 .title(postQuestionReq.getTitle())
                 .content(postQuestionReq.getContent())
                 .status(postQuestionReq.getStatus())
+                .user(User.builder().idx(postQuestionReq.getUserIdx()).build())
                 .build();
         questionRepository.save(question);
 
@@ -45,6 +47,7 @@ public class QuestionService {
                 .category(postQuestionReq.getCategory())
                 .title(postQuestionReq.getTitle())
                 .content(postQuestionReq.getContent())
+                .userIdx(postQuestionReq.getUserIdx())
                 .build();
 
         return BaseResponse.successResponse("문의사항 작성 성공", postCreateQuestionRes);
@@ -63,6 +66,7 @@ public class QuestionService {
                         .category(question.getCategory())
                         .title(question.getTitle())
                         .content(question.getContent())
+                        .userIdx(question.getUser().getIdx())
                         .build();
 
                 getListQuestionResList.add(getListQuestionRes);
@@ -77,24 +81,29 @@ public class QuestionService {
         Optional<Question> result = questionRepository.findById(patchUpdateQuestionReq.getIdx());
 
         if (result.isPresent()) {
-            Question question = result.get();
-            question.update(patchUpdateQuestionReq);
-            questionRepository.save(question);
+            if (result.get().getUser().getIdx().equals(patchUpdateQuestionReq.getUserIdx())) {
+                Question question = result.get();
+                question.update(patchUpdateQuestionReq);
+                questionRepository.save(question);
 
-            return BaseResponse.successResponse("문의사항 수정 성공",patchUpdateQuestionReq);
+                return BaseResponse.successResponse("문의사항 수정 성공", patchUpdateQuestionReq);
+            }
+            return BaseResponse.failResponse(444, "본인이 작성한 문의사항이 아닙니다");
         } else {
             return BaseResponse.successResponse("문의사항 수정 실패",null);
         }
     }
 
 
-    public BaseResponse delete(Integer idx) {
+    public BaseResponse delete(User user, Integer idx) {
         Optional<Question> result = questionRepository.findById(idx);
 
         if(result.isPresent()) {
-            Question question = result.get();
-            questionRepository.delete(question);
-            return BaseResponse.successResponse("문의사항 삭제 성공",null);
+            if (result.get().getUser().getIdx().equals(user.getIdx())) {
+                Question question = result.get();
+                questionRepository.delete(question);
+                return BaseResponse.successResponse("문의사항 삭제 성공", null);
+            }
         }
         return BaseResponse.successResponse("삭제할 문의사항이 존재하지 않습니다", null);
 
