@@ -178,6 +178,7 @@ public class StoreStockService {
                     .storeStockDto(storeStockDto)
                     .stockQuantity(storeStock2.getStockQuantitiy())
                     .storeAddr(store.get().getStoreAddr())
+                    .storeStockIdx(storeStock2.getIdx())
                     .build();
 
             // DtoToRes
