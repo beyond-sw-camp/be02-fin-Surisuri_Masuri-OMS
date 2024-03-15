@@ -95,13 +95,15 @@ public class QuestionService {
     }
 
 
-    public BaseResponse delete(Integer idx) {
+    public BaseResponse delete(User user, Integer idx) {
         Optional<Question> result = questionRepository.findById(idx);
 
         if(result.isPresent()) {
-            Question question = result.get();
-            questionRepository.delete(question);
-            return BaseResponse.successResponse("문의사항 삭제 성공",null);
+            if (result.get().getUser().getIdx().equals(user.getIdx())) {
+                Question question = result.get();
+                questionRepository.delete(question);
+                return BaseResponse.successResponse("문의사항 삭제 성공", null);
+            }
         }
         return BaseResponse.successResponse("삭제할 문의사항이 존재하지 않습니다", null);
 
