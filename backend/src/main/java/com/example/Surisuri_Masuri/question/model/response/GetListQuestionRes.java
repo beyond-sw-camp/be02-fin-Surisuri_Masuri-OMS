@@ -14,5 +14,5 @@ public class GetListQuestionRes {
     private String category;
     private String title;
     private String content;
-
+    private Long userIdx;
 }
