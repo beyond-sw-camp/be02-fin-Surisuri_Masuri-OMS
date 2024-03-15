@@ -92,6 +92,7 @@ public class StoreStockService {
                     .stockQuantitiy(storeStockCreateReq.getStockQuantity())
                     .productIdx(storeStockCreateReq.getProductIdx())
                     .expiredAt(storeStock.getExpiredAt())
+                    .storeStockIdx(storeStock.getIdx())
                     .build();
             return BaseResponse.successResponse("수정된 회원정보입니다.", storeStockCreateRes);
         }
