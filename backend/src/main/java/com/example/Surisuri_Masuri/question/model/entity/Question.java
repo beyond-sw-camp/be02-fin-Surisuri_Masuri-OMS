@@ -1,5 +1,6 @@
 package com.example.Surisuri_Masuri.question.model.entity;
 
+import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.question.model.request.PatchUpdateQuestionReq;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,6 +42,10 @@ public class Question {
 
     @Column(nullable = false)
     private Date updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "User_idx")
+    private User user;
 
     @OneToOne(mappedBy = "question")
     private Answer answer;

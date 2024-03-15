@@ -1,5 +1,7 @@
 package com.example.Surisuri_Masuri.product.model;
 
+import com.example.Surisuri_Masuri.cart.model.CartDetail;
+import com.example.Surisuri_Masuri.container.model.entity.ContainerStock;
 import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
 import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
 import lombok.*;
@@ -7,6 +9,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +40,12 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<OrdersDetail> ordersDetailList;
+
+    @OneToMany(mappedBy = "product")
+    private List<ContainerStock> containerStockList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product")
+    private List<CartDetail> cartDetailList = new ArrayList<>();
 
     @PrePersist
     void createdAt() {
