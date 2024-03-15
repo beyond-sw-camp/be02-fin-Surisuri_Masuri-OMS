@@ -30,6 +30,8 @@ public class Product {
     private Date createdAt;
     private Date updatedAt;
 
+    private Boolean isItFood;
+
     @OneToMany(mappedBy = "product")
     private List<StoreStock> storeStocks;
 
