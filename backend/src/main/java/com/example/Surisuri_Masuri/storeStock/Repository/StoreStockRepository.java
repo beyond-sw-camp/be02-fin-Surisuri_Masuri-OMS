@@ -19,5 +19,5 @@ public interface StoreStockRepository extends JpaRepository<StoreStock,Long> , S
     @Query("SELECT s FROM StoreStock s WHERE s.product.isItFood = 1 AND s.expiredAt BETWEEN :currentDate AND :weekFromNow")
     List<StoreStock> findStocksExpiringInOneWeek(LocalDate weekFromNow, LocalDate currentDate);
 
-
+    List<StoreStock> findByStoreIdx(Long storeIdx);
 }
