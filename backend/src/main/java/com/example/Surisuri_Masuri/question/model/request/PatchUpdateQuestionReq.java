@@ -16,6 +16,5 @@ public class PatchUpdateQuestionReq {
     private String title;
     private String content;
     private Boolean status;
-    private Long userIdx;
 
 }

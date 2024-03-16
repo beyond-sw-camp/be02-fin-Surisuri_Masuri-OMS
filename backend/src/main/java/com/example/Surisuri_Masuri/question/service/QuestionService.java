@@ -77,11 +77,11 @@ public class QuestionService {
     }
 
 
-    public BaseResponse update(PatchUpdateQuestionReq patchUpdateQuestionReq) {
+    public BaseResponse update(User user, PatchUpdateQuestionReq patchUpdateQuestionReq) {
         Optional<Question> result = questionRepository.findById(patchUpdateQuestionReq.getIdx());
 
         if (result.isPresent()) {
-            if (result.get().getUser().getIdx().equals(patchUpdateQuestionReq.getUserIdx())) {
+            if (result.get().getUser().getIdx().equals(user.getIdx())) {
                 Question question = result.get();
                 question.update(patchUpdateQuestionReq);
                 questionRepository.save(question);
@@ -90,7 +90,7 @@ public class QuestionService {
             }
             return BaseResponse.failResponse(444, "본인이 작성한 문의사항이 아닙니다");
         } else {
-            return BaseResponse.successResponse("문의사항 수정 실패",null);
+            return BaseResponse.failResponse(444,"문의사항이 존재하지 않습니다");
         }
     }
 
