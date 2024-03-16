@@ -12,6 +12,9 @@ import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import com.example.Surisuri_Masuri.store.Repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -21,7 +24,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -123,16 +126,18 @@ public class UserService {
     public BaseResponse<LoginRes> UserLogin(LoginReq userLoginReq) {
         LoginRes loginRes = null;
         Optional<User> user = userRepository.findByUserEmail(userLoginReq.getId());
-        if (user.isEmpty()) {
-            return BaseResponse.failResponse(7000, "가입되지 않은 회원입니다.");
-        } else if (user.isPresent() && passwordEncoder.matches(userLoginReq.getPassword(), user.get().getPassword()))
-            ;
+        if (user.isPresent() &&
+                passwordEncoder.matches(userLoginReq.getPassword(), user.get().getPassword())
+                && user.get().getStatus().equals(true))
         {
             loginRes = LoginRes.builder()
                     .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
                     .build();
+
+            return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
         }
-        return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
+        else
+            return BaseResponse.failResponse(7000, "가입되지 않은 회원입니다.");
     }
 
     // 이메일 찾기 기능
@@ -260,6 +265,17 @@ public class UserService {
             return user.get();
         }
         return null;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> result = userRepository.findByUserEmail(username);
+        User user = null;
+        if(result.isPresent()) {
+            user = result.get();
+        }
+
+        return user;
     }
 }
 
