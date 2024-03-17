@@ -25,14 +25,19 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
+    @Column(nullable = false)
     private String productName;
 
+    @Column(nullable = false)
     private Integer price;
 
-    @Column(updatable = false, nullable = false)
+    @Column(nullable = false, updatable = false)
     private Date createdAt;
+
+    @Column(nullable = false)
     private Date updatedAt;
 
+    @Column(nullable = false)
     private Boolean isItFood;
 
     @OneToMany(mappedBy = "product")
