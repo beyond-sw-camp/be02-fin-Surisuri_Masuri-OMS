@@ -35,8 +35,10 @@ public class Store {
 
     private String storePhoneNo;
 
+    @Column(nullable = false, updatable = false)
     private Date createdAt;
 
+    @Column(nullable = false)
     private Date updatedAt;
 
     @OneToOne(fetch = FetchType.LAZY)
