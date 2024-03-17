@@ -19,9 +19,13 @@ public class CartDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
+    @Column(nullable = false)
     private Integer productQuantity;
 
+    @Column(nullable = false, updatable = false)
     private Date createdAt;
+
+    @Column(nullable = false)
     private Date updatedAt;
 
     @ManyToOne
