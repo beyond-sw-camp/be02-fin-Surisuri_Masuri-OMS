@@ -36,7 +36,7 @@ public class Container {
     @Column(nullable = false, length = 50)
     private String containerPhoneNo;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private Date createdAt;
 
     @Column(nullable = false)
