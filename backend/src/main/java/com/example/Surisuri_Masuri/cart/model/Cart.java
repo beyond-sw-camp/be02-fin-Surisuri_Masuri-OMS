@@ -1,5 +1,6 @@
 package com.example.Surisuri_Masuri.cart.model;
 
+import com.example.Surisuri_Masuri.cart.model.CartDetail;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import lombok.*;
 
@@ -21,7 +22,10 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
+    @Column(nullable = false, updatable = false)
     private Date createdAt;
+
+    @Column(nullable = false)
     private Date updatedAt;
 
     @ManyToOne
