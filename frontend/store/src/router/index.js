@@ -36,12 +36,12 @@ const routes = [
     component: PasswordView // 로그인 컴포넌트
   },
   {
-    path: '/loginReset',
-    name: 'loginReset',
+    path: '/login-reset',
+    name: 'loginreset',
     component: ResetLoginView, // 수정된 부분
   },
   {
-    path: '/passwordReset/:idx',
+    path: '/password-reset',
     name: 'passwordReset',
     component: ResetPasswordView, // 수정된 부분
   },
@@ -71,10 +71,10 @@ const routes = [
     component: NofiView,
 },
   {
-    path: '/nofi/:id',
-    name: 'NofiDetailView', // 이 이름을 공지사항 목록 컴포넌트에서 사용해야 합니다.
+    path: '/noticedetail',
+    name: 'NoticeDetail',
     component: NofiDetailView,
-    props: true,
+    props: (route) => ({ query: route.query })
   },
   {
     path: '/inquiry',
@@ -87,10 +87,10 @@ const routes = [
     component: InquiryNew,
   },
   {
-    path: '/inquiry/:id',
+    path: '/inquirydetail/:idx?', // :idx가 필수 파라미터로 설정되어 있음
     name: 'InquiryDetail',
     component: InquiryDetail,
-    props: true,
+    // 다른 설정들...
   },
   {
     path: '/stockedit',
