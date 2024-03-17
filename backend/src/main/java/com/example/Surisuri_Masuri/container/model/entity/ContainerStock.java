@@ -26,8 +26,10 @@ public class ContainerStock {
     @Column(nullable = false, length = 300)
     private Long productQuantity;
 
+    @Column(nullable = false)
     private LocalDate expiredAt;
 
+    @Column(nullable = false)
     private Boolean isDiscarded; // 폐기 여부
 
     private Timestamp discardedAt; // 폐기 일자
@@ -40,7 +42,7 @@ public class ContainerStock {
     @JoinColumn(name = "container_Idx")
     private Container container;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private Date createdAt;
 
     @Column(nullable = false)
