@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 import java.util.List;
 
@@ -27,12 +28,17 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idx;
 
+    @Column(nullable = false, length = 100, unique = true)
     private String storeName;
 
+    @Column(nullable = false, length = 100, unique = true)
     private String storeUuid;
 
+    @Column(nullable = false, length = 100, unique = true)
     private String storeAddr;
 
+    @Column(nullable = false, length = 50)
+    @Pattern(regexp = "^(\\d{2,3}-?\\d{3,4}-?\\d{4}|\\d{10,11})$", message = "올바른 전화번호 형식이어야 합니다.")
     private String storePhoneNo;
 
     @Column(nullable = false, updatable = false)
