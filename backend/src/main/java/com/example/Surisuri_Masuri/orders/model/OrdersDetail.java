@@ -21,8 +21,10 @@ public class OrdersDetail {
 
     private Integer procuctQuantity;
 
-    @Column(updatable = false, nullable = false)
+    @Column(nullable = false, updatable = false)
     private Date createdAt;
+
+    @Column(nullable = false)
     private Date updatedAt;
 
     @ManyToOne
