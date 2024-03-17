@@ -18,14 +18,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, errorCode.getStatus());
     }
 
-    // 401 에러 처리 - 토큰
-    @ExceptionHandler({AccessDeniedException.class})
-    public ResponseEntity<ErrorResponse> handleInvalidTokenException(AccessDeniedException e) {
-        ErrorCode errorCode = ErrorCode.INVALID_TOKEN;
-        ErrorResponse response = new ErrorResponse(errorCode.getCode(), e.getMessage());
-        return new ResponseEntity<>(response, errorCode.getStatus());
-    }
-
     // 401 에러 처리 - 권한
     @ExceptionHandler({AccessDeniedException.class})
     public ResponseEntity<ErrorResponse> handleInvalidPermissionException(AccessDeniedException e) {

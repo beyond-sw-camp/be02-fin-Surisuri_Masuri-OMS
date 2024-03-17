@@ -32,11 +32,9 @@ public class Container {
     private String containerName;
 
     @Column(nullable = false, length = 100)
-    @Pattern(regexp = "^[가-힣]*$", message = "한글만 가능합니다.")
     private String containerManager;
 
     @Column(nullable = false, length = 50)
-    @Pattern(regexp = "^(\\d{2,3}-?\\d{3,4}-?\\d{4}|\\d{10,11})$", message = "올바른 전화번호 형식이어야 합니다.")
     private String containerPhoneNo;
 
     @Column(nullable = false, updatable = false)
