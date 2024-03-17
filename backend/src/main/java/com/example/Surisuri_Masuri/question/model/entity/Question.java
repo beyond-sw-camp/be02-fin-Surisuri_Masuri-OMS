@@ -37,7 +37,7 @@ public class Question {
     @Column(nullable = false, length = 1)
     private Boolean status;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private Date createdAt;
 
     @Column(nullable = false)

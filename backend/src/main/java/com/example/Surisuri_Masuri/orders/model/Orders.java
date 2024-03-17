@@ -4,6 +4,7 @@ import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -21,14 +22,26 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
+    @Column(nullable = false)
     private Long totalPrice;
+
+    @Column(nullable = false)
     private String merchantUid;
+
+    @Column(nullable = false)
     private String deliveryStatus;
+
+    @NotBlank(message = "환불 사유를 입력하세요")
+    @Column(nullable = false)
     private String refundReason;
+
+    @Column(nullable = false)
     private String payMethod;
 
-    @Column(updatable = false, nullable = false)
+    @Column(nullable = false, updatable = false)
     private Date createdAt;
+
+    @Column(nullable = false)
     private Date updatedAt;
 
     @ManyToOne
