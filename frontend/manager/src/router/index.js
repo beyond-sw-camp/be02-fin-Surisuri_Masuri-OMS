@@ -42,8 +42,8 @@ const routes = [
     component: AdminInquiryList
   },
   {
-    path: '/inquiries/:id',
-    name: 'AdminInquiryDetail',
+    path: '/inquirydetail/:idx?', // :idx가 필수 파라미터로 설정되어 있음
+    name: 'InquiryDetail',
     component: AdminInquiryDetail,
     props: true, // props를 통해 파라미터를 컴포넌트에 전달할 수 있게 합니다.
   },
@@ -64,15 +64,15 @@ const routes = [
     component: NoticeList
   },
   {
-    path: '/notice/new',
+    path: '/noticenew',
     name: 'NoticeNew',
     component: NoticeNew
   },
   {
-    path: '/notice/:id',
+    path: '/noticedetail',
     name: 'NoticeDetail',
     component: NoticeDetail,
-    props: true
+    props: (route) => ({ query: route.query })
   },
   {
     path: '/shop',
