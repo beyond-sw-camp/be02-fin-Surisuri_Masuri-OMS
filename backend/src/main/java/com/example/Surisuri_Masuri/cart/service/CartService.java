@@ -134,15 +134,27 @@ public class CartService {
     }
 
 
-    public BaseResponse delete(Long idx, Long productIdx) {
-        Optional<Cart> cartResult = cartRepository.findById(idx);
-        List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(idx);
+    public BaseResponse delete(User user, Long cartIdx, String productName) {
+        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
+        if (userResult.isPresent()) {
+            user = userResult.get();
+            Optional<Cart> cartResult = cartRepository.findById(cartIdx);
+            Cart cart = cartResult.get();
 
-        for (CartDetail cartDetail : cartDetailList) {
-            if (cartDetail.getProduct().getIdx() == productIdx)
-                cartDetailRepository.delete(cartDetail);
+            if (user.getStore().getIdx().equals(cart.getStore().getIdx())) {
+                List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(cartIdx);
+
+                for (CartDetail cartDetail : cartDetailList) {
+                    if (cartDetail.getProduct().getProductName().equals(productName)) {
+                        cartDetailRepository.delete(cartDetail);
+
+                        return BaseResponse.successResponse("카트 상품 삭제 성공", null);
+                    }
+                }
+                return BaseResponse.successResponse("카트에 존재하지 않는 상품", null);
+            }
+            return BaseResponse.failResponse(444, "해당 유저의 카트가 아닙니다");
         }
-
-        return BaseResponse.successResponse("카트 상품 삭제 성공", null);
+        return BaseResponse.failResponse(444, "토큰이 없습니다");
     }
 }
