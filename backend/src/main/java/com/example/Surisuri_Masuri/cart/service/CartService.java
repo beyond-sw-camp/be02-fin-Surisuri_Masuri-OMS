@@ -106,25 +106,31 @@ public class CartService {
         }
     }
 
-    public BaseResponse list(Long idx, Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        Optional<Cart> cartResult = cartRepository.findById(idx);
-        Cart cart = cartResult.get();
-        List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(cart.getIdx());
+    public BaseResponse list(User user, Integer page, Integer size) {
+        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
+        if (userResult.isPresent()) {
+            user = userResult.get();
+            Pageable pageable = PageRequest.of(page - 1, size);
+            Optional<Cart> cartResult = cartRepository.findById(user.getStore().getCartList().get(0).getIdx());
+            Cart cart = cartResult.get();
+            List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(cart.getIdx());
 
-        List<CartListRes> cartListResList = new ArrayList<>();
+            List<CartListRes> cartListResList = new ArrayList<>();
 
-        for (CartDetail cartDetail: cartDetailList) {
-            CartListRes cartListRes = CartListRes.builder()
-                    .productName(cartDetail.getProduct().getProductName())
-                    .price(cartDetail.getProduct().getPrice())
-                    .productQuantity(cartDetail.getProductQuantity())
-                    .build();
+            for (CartDetail cartDetail : cartDetailList) {
+                CartListRes cartListRes = CartListRes.builder()
+                        .cartIdx(cart.getIdx())
+                        .productName(cartDetail.getProduct().getProductName())
+                        .price(cartDetail.getProduct().getPrice())
+                        .productQuantity(cartDetail.getProductQuantity())
+                        .build();
 
-            cartListResList.add(cartListRes);
+                cartListResList.add(cartListRes);
+            }
+
+            return BaseResponse.successResponse("카트 리스트 검색 성공", cartListResList);
         }
-
-        return BaseResponse.successResponse("카트 리스트 검색 성공", cartListResList);
+        return BaseResponse.successResponse("카트 리스트가 존재하지 않습니다", null);
     }
 
 
