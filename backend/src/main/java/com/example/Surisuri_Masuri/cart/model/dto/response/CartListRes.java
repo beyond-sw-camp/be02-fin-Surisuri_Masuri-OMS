@@ -6,6 +6,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class CartListRes {
+    Long cartIdx;
     String productName;
     Integer price;
     Integer productQuantity;
