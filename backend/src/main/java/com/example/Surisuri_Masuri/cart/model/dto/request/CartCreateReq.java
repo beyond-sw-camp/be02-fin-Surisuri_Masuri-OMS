@@ -8,6 +8,5 @@ import lombok.Getter;
 public class CartCreateReq {
     Long idx;
     Long productIdx;
-    Long storeIdx;
     Integer productQuantity;
 }
