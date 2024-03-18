@@ -1,11 +1,13 @@
 package com.example.Surisuri_Masuri.orders.controller;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersRefundReq;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersUpdateDeliveryReq;
 import com.example.Surisuri_Masuri.orders.service.OrdersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,9 +18,9 @@ public class OrdersController {
     private final OrdersService ordersService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/payment")
-    public ResponseEntity payment(@RequestBody String imp_uid) {
+    public ResponseEntity payment(@AuthenticationPrincipal User user, @RequestBody String imp_uid) {
         try {
-            return ResponseEntity.ok().body(ordersService.payment(imp_uid));
+            return ResponseEntity.ok().body(ordersService.payment(user, imp_uid));
         } catch (Exception e) {
             e.printStackTrace();
         }
