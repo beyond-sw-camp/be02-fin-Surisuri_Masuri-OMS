@@ -3,14 +3,11 @@
       <div class="row">
         <div class="col">
           <div class="card">
-              <router-link to="/noticenew" class="btn btn-success float-end">
-                공지사항 작성하기
-              </router-link>
             <div class="card-body">
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">번호</th>
                     <th scope="col">제목</th>
                     <th scope="col">내용</th>
                     <th scope="col">상세보기</th>
@@ -40,6 +37,9 @@
                   </tr>
                 </tbody>
               </table>
+              <router-link to="/noticenew" class="btn btn-success float-end">
+                공지사항 작성하기
+              </router-link>
             </div>
           </div>
         </div>
