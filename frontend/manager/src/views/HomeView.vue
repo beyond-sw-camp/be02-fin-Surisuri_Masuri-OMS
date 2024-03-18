@@ -11,7 +11,7 @@
         <div class="col-xl-6 col-md-6">
           <div class="card mb-4">
             <div class="card-header">
-              월간매출
+              전국 가맹점 일일 매출 (원)
             </div>
             <div class="card-body">
               <canvas ref="myLineChart1"></canvas>
@@ -22,7 +22,7 @@
         <div class="col-xl-6 col-md-6">
           <div class="card mb-4">
             <div class="card-header">
-              차트 제목 2
+              전국 가맹점 월별 매출 (원)
             </div>
             <div class="card-body">
               <canvas ref="myLineChart2"></canvas>
@@ -37,9 +37,9 @@
         <div class="col-xl-6">
           <div class="card mb-4">
             <div class="card-header">
-              재고현황
+              창고 재고 현황
             </div>
-            <div class="card-body">
+            <div class="card-body2">
               <canvas ref="myPieChart" ></canvas>
             </div>
           </div>
@@ -47,47 +47,58 @@
         <div class="col-xl-6">
           <div class="card mb-4">
             <div class="card-header">
-              datatables
+              가맹점 별 발주액
             </div>
             <div class="card-body">
                                     <table id="datatablesSimple">
                                         <thead>
                                             <tr>
-                                                <th>Name</th>
-                                                <th>Position</th>
-                                                <th>Office</th>
-                                                <th>Age</th>
-                                                <th>Start date</th>
-                                                <th>Salary</th>
+                                                <th>가맹점 이름</th>
+                                                <th>담당자</th>
+                                                <th>주문 항목</th>
+                                                <th>주문 날짜</th>
+                                                <th>금액</th>
+                                                <th></th>
+                                                <th></th>
                                             </tr>
                                         </thead>
-                                        <tfoot>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Position</th>
-                                                <th>Office</th>
-                                                <th>Age</th>
-                                                <th>Start date</th>
-                                                <th>Salary</th>
-                                            </tr>
-                                        </tfoot>
                                         <tbody>
                                             <tr>
-                                                <td>Tiger Nixon</td>
-                                                <td>System Architect</td>
-                                                <td>Edinburgh</td>
-                                                <td>61</td>
+                                                <td>서울1호점</td>
+                                                <td>마동팔</td>
+                                                <td>원두</td>
                                                 <td>2011/04/25</td>
-                                                <td>$320,800</td>
+                                                <td>5,000,000</td>
                                             </tr>
                                             <tr>
-                                                <td>Garrett Winters</td>
-                                                <td>Accountant</td>
-                                                <td>Tokyo</td>
-                                                <td>63</td>
+                                                <td>부산1호점</td>
+                                                <td>곽팔추</td>
+                                                <td>업소용 우유</td>
                                                 <td>2011/07/25</td>
-                                                <td>$170,750</td>
+                                                <td>2,000,000</td>
                                             </tr>
+                                            <tr>
+                                                <td>제주1호점</td>
+                                                <td>허태건</td>
+                                                <td>플라스틱 빨대</td>
+                                                <td>2011/07/25</td>
+                                                <td>2,000,000</td>
+                                            </tr>
+                                            <tr>
+                                                <td>강원1호점</td>
+                                                <td>구동곡</td>
+                                                <td>매장용 머그컵</td>
+                                                <td>2011/07/25</td>
+                                                <td>3,000,000</td>
+                                            </tr>
+                                            <tr>
+                                                <td>독도1호점</td>
+                                                <td>김두식</td>
+                                                <td>휘핑크림</td>
+                                                <td>2011/07/25</td>
+                                                <td>2,000,000</td>
+                                            </tr>
+                                            
                                         
                                         </tbody>
                                     </table>
@@ -109,19 +120,18 @@ export default {
   data() {
     return {
       lineChartData1: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: ['월', '화', '수', '목', '금', '주말'],
         datasets: [{
-          label: 'Number of Votes',
-          data: [12, 19, 3, 5, 2, 3],
+          data: [3500000, 3600000, 4000000, 4500000, 4700000, 5000000],
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
           tension: 0.1
         }]
       },
       pieChartData: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: ['원두', '플라스틱 빨대', '매장용 머그컵', '업소용 우유', '휘핑크림','시럽'],
         datasets: [{
-          data: [12, 19, 3, 5, 2, 3],
+          data: [100,70,30,20,60,80],
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
             'rgba(54, 162, 235, 0.2)',
@@ -133,10 +143,9 @@ export default {
         }]
       },
       lineChartData2: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        labels: ['1월', '2월', '3월', '4월', '5월', '6월'],
         datasets: [{
-          label: 'Monthly Sales',
-          data: [65, 59, 80, 81, 56, 55],
+          data: [100000000, 101100000, 101000000, 103000000, 102000000, 103000000],
           fill: false,
           borderColor: 'rgb(255, 99, 132)',
           tension: 0.1
@@ -160,6 +169,11 @@ export default {
     },
     createLineChart(chartRef, chartData) {
   const lineChartOptions = {
+    plugins: {
+          legend: {
+            display: false // 이 부분을 추가하여 레전드를 숨깁니다.
+          }
+        },
     scales: {
       x: {
         grid: {
@@ -222,6 +236,14 @@ createPieChart(chartRef, chartData) {
     height: auto !important; /* 높이를 자동으로 조정하거나 필요에 따라 고정값 지정 */
     aspect-ratio: 16 / 9; /* 캔버스의 비율을 유지하고 싶은 경우 사용 */
 }
+
+.card-body2 canvas {
+    width: 50% !important;
+    height: auto !important; /* 높이를 자동으로 조정하거나 필요에 따라 고정값 지정 */
+    margin: 0 auto;
+    aspect-ratio: 1 / 1; /* 캔버스의 비율을 유지하고 싶은 경우 사용 */
+}
+
 /* 테이블의 헤더와 셀에 패딩을 추가하여 공간을 늘립니다 */
 #datatablesSimple th, 
 #datatablesSimple td {
