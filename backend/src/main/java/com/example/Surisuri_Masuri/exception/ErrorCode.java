@@ -51,6 +51,7 @@ public enum ErrorCode {
     // UserRegister_007(3005, HttpStatus.BAD_REQUEST, "잘못된 형식의 storeUuid입니다."),
     UserRegister_008(3006, HttpStatus.BAD_REQUEST, "존재하지 않는 storeUuid입니다."),
     UserRegister_009(3007, HttpStatus.CONFLICT, "가게 정보가 이미 등록되어있습니다."),
+    UserRegister_0010(3007, HttpStatus.CONFLICT, "이미 존재하는 아이디 입니다."),
 
     // Store Addr
     // UserRegister_010(3008, HttpStatus.BAD_REQUEST, "잘못된 형식의 주소 정보입니다."),
@@ -86,11 +87,13 @@ public enum ErrorCode {
     // ManagerRegister_003(3025, HttpStatus.BAD_REQUEST, "잘못된 형식의 부서 이름입니다."),
     // ManagerRegister_004(3026, HttpStatus.BAD_REQUEST, "잘못된 형식의 아이디입니다."),
     // ManagerRegister_005(3027, HttpStatus.BAD_REQUEST, "잘못된 형식의 비밀번호입니다."),
+    ManagerRegister_006(3028, HttpStatus.BAD_REQUEST, "이미 존재하는 아이디입니다."),
+    ManagerRegister_007(3029, HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),
 
     // ManagerLogin
     // ManagerLogin_002(3028, HttpStatus.BAD_REQUEST, "잘못된 형식의 이메일입니다."),
-     ManagerLogin_003(3029, HttpStatus.BAD_REQUEST, "가입되지 않은 이메일입니다."),
-     ManagerLogin_004(3030, HttpStatus.BAD_REQUEST, "비밀번호가 틀렸습니다."),
+    ManagerLogin_003(3029, HttpStatus.BAD_REQUEST, "가입되지 않은 이메일입니다."),
+    ManagerLogin_004(3030, HttpStatus.BAD_REQUEST, "비밀번호가 틀렸습니다."),
 
     // Delivery
     // Delivery_002(3031, HttpStatus.BAD_REQUEST, "잘못된 형식의 배송 상태 값입니다."),
@@ -156,6 +159,8 @@ public enum ErrorCode {
     // QuestionUpdate_002(3061, HttpStatus.BAD_REQUEST, "잘못된 형식의 제목입니다."),
     // QuestionUpdate_003(3062, HttpStatus.BAD_REQUEST, "잘못된 형식의 내용입니다."),
     // QuestionUpdate_004(3063, HttpStatus.BAD_REQUEST, "잘못된 형식의 카테고리입니다."),
+    QuestionUpdate_005(3063, HttpStatus.BAD_REQUEST, "존재하지 않는 문의사항입니다."),
+
 
     // QuestionDelete
     QuestionDelete_002(3064, HttpStatus.BAD_REQUEST, "공지사항이 존재하지 않습니다."),
@@ -186,15 +191,20 @@ public enum ErrorCode {
     // StoreCreate
     // StoreCreate_002(3076, HttpStatus.BAD_REQUEST, "잘못된 형식의 가맹점 이름입니다."),
     // StoreCreate_003(3077, HttpStatus.BAD_REQUEST, "잘못된 형식의 가맹점 uuid입니다."),
+    StoreCreate_004(3076, HttpStatus.BAD_REQUEST, "가입되지 않은 관리자입니다."),
+
 
     // StoreSearch
     StoreSearch_002(3078, HttpStatus.BAD_REQUEST, "잘못된 주소입니다."),
     StoreSearch_003(3079, HttpStatus.BAD_REQUEST, "검색 결과가 존재하지 않습니다"),
+    StoreSearch_004(3079, HttpStatus.BAD_REQUEST, "가맹점 정보가 등록됬으나 유저 가입이 되지 않았습니다."),
+
 
     // StoreList
     StoreList_002(3080, HttpStatus.BAD_REQUEST, "페이지 크기는 1 이상이어야 합니다."),
     StoreList_003(3081, HttpStatus.BAD_REQUEST, "잘못된 페이지 번호입니다."),
     StoreList_004(3082, HttpStatus.BAD_REQUEST, "요청한 페이지 범위를 초과했습니다."),
+    StoreList_005(3083, HttpStatus.BAD_REQUEST, "가입되지 않은 관리자입니다."),
 
     // StockCreate
     // StockCreate_002(3083, HttpStatus.BAD_REQUEST, "잘못된 형식의 상품 이름입니다."),
@@ -233,7 +243,7 @@ public enum ErrorCode {
     ContainerCreate_005(3102, HttpStatus.BAD_REQUEST, "존재하지 않는 창고 입니다."),
 
     // ContainerStock
-    ContainerStock_002(3103, HttpStatus.BAD_REQUEST, "처분할 상품이 존재하지 않습니다.");
+    ContainerStock_002(3103, HttpStatus.BAD_REQUEST, "처분할 상품이 존재하지 않습니다. ");
 
 
 
