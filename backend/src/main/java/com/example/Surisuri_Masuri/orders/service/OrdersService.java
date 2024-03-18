@@ -6,6 +6,8 @@ import com.example.Surisuri_Masuri.cart.repository.CartDetailRepository;
 import com.example.Surisuri_Masuri.cart.repository.CartRepository;
 import com.example.Surisuri_Masuri.cart.service.CartService;
 import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.jwt.JwtUtils;
+import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
@@ -53,6 +55,14 @@ public class OrdersService {
 
     private final IamportClient iamportClient;
 
+    @Value("${imp.imp_secret}")
+    private String apiSecret;
+
+    @Value("${imp.imp_key}")
+    private String apiKey;
+
+    @Value("${jwt.secret-key}")
+    private String secretKey;
 
     public BaseResponse updateOrdersDelivery(OrdersUpdateDeliveryReq req) {
         Optional<Orders> ordersResult = ordersRepository.findById(req.getIdx());
@@ -91,33 +101,47 @@ public class OrdersService {
         return BaseResponse.successResponse("요청 성공", ordersShowDeliveryStatusRes);
     }
 
-    public BaseResponse list(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        List<Orders> ordersResult = ordersRepository.findAll();
-        List<OrdersDetail> ordersDetailsResult = ordersDetailRepository.findAll();
+    public BaseResponse list(String token, Integer page, Integer size) {
+        token = JwtUtils.replaceToken(token);
 
-        List<OrdersListRes> ordersListResList = new ArrayList<>();
+        String email = JwtUtils.getUserEmail(token, secretKey);
+        String managerId = JwtUtils.getManagerInfo(token, secretKey);
 
-        for (Orders orders: ordersResult) {
-            List<OrdersDetail> ordersDetailResult = ordersDetailRepository.findByOrdersIdx(orders.getIdx());
+        Optional<User> userResult = userRepository.findByUserEmail(email);
+        Optional<Manager> managerResult = managerRepository.findByManagerId(managerId);
+        User user = userResult.get();
 
-            for (OrdersDetail ordersDetail: ordersDetailsResult) {
-                OrdersListRes ordersListRes = OrdersListRes.builder()
-                        .productDtoRes(ProductDtoRes.builder()
-                                .productName(ordersDetail.getProduct().getProductName())
-                                .price(ordersDetail.getProduct().getPrice())
-                                .productQuantity(ordersDetail.getProcuctQuantity())
-                                .build())
-                        .payMethod(orders.getPayMethod())
-                        .totalPrice(orders.getTotalPrice())
-                        .date(orders.getCreatedAt())
-                        .build();
+        if (userResult.isPresent() || managerResult.isPresent()) {
+            Pageable pageable = PageRequest.of(page - 1, size);
+            List<Orders> ordersResult = ordersRepository.findAll();
+            List<OrdersDetail> ordersDetailsResult = ordersDetailRepository.findAll();
 
-                ordersListResList.add(ordersListRes);
+            List<OrdersListRes> ordersListResList = new ArrayList<>();
+
+            for (Orders orders : ordersResult) {
+                List<OrdersDetail> ordersDetailResult = ordersDetailRepository.findByOrdersIdx(orders.getIdx());
+
+                for (OrdersDetail ordersDetail : ordersDetailsResult) {
+                    OrdersListRes ordersListRes = OrdersListRes.builder()
+                            .productDtoRes(ProductDtoRes.builder()
+                                    .productName(ordersDetail.getProduct().getProductName())
+                                    .price(ordersDetail.getProduct().getPrice())
+                                    .productQuantity(ordersDetail.getProcuctQuantity())
+                                    .build())
+                            .payMethod(orders.getPayMethod())
+                            .totalPrice(orders.getTotalPrice())
+                            .createdDate(orders.getCreatedAt())
+                            .deliveryStatus(orders.getDeliveryStatus())
+                            .merchantUid(orders.getMerchantUid())
+                            .build();
+
+                    ordersListResList.add(ordersListRes);
+                }
             }
-        }
 
-        return BaseResponse.successResponse("상품 리스트 검색 성공", ordersListResList);
+            return BaseResponse.successResponse("상품 리스트 성공", ordersListResList);
+        }
+        return BaseResponse.failResponse(444,"상품 리스트 불러오기 싶패");
     }
 
     public void create(String payMethod, Long cartIdx, String merchantUid, Long amount) {
