@@ -70,6 +70,15 @@
               </router-link>
               
             </li>
+            <li class="sidebar-item">
+              <router-link class="sidebar-link" to="/orderdetail">
+                <span>
+                  <i class="ti ti-typography"></i>
+                </span>
+                <span class="hide-menu">주문내역</span>
+              </router-link>
+              
+            </li>
           </ul>
         </nav>
         <!-- End Sidebar navigation -->
