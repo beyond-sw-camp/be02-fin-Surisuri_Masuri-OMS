@@ -1,6 +1,5 @@
 <template>
   <div class="container-fluid px-4">
-    
     <div class="row">
       <div class="col">
         <div class="card">
@@ -9,20 +8,18 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">번호</th>
-                  <th scope="col"></th>
-                  <th scope="col"></th>
-                  <th scope="col"></th>
-                  <th scope="col"></th>
+                  <th scope="col" class="text-center align-middle">번호</th>
+                  <th scope="col" class="text-center align-middle">제목</th>
+                  <th scope="col" class="text-center align-middle">카테고리</th>
+                  <th scope="col" class="text-center align-middle">답변하기</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(question, index) in questions" :key="question.idx">
-                  <th scope="row">{{ index + 1 }}</th>
-                  <td>{{ question.title }}</td>
-                  <td>{{ question.content }}</td>
-                  <td>{{ question.category }}</td>
-                  <td>
+                  <th scope="row" class="text-center align-middle">{{ index + 1 }}</th>
+                  <td class="text-center align-middle">{{ question.title }}</td>
+                  <td class="text-center align-middle">{{ question.category }}</td>
+                  <td class="text-center align-middle">
                     <router-link
                       :to="{
                         name: 'InquiryDetail',
