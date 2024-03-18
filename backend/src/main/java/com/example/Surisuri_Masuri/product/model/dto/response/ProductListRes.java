@@ -7,4 +7,6 @@ import lombok.Getter;
 @Builder
 public class ProductListRes {
     String productName;
+    Integer price;
+    Long productIdx;
 }
