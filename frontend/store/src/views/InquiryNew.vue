@@ -51,7 +51,8 @@ export default {
         });
 
         alert('문의사항이 성공적으로 제출되었습니다.');
-        // 성공 후 로직 처리, 예: 페이지 이동
+        // 문의사항 제출 후 /inquiry 페이지로 리다이렉트
+        this.$router.push('/inquiry');
       } catch (error) {
         console.error(`문의사항 제출 실패: ${error}`);
         alert('문의사항 제출에 실패했습니다. 다시 시도해주세요.');
@@ -60,4 +61,3 @@ export default {
   },
 };
 </script>
-

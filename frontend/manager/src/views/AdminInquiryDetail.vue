@@ -22,7 +22,7 @@
     />
     <button @click="submitAnswer" class="btn btn-primary">답변 제출</button>
 
-    <router-link to="/question" class="btn btn-secondary mt-3">목록으로 돌아가기</router-link>
+    <router-link to="/inquiries" class="btn btn-secondary mt-3">목록으로 돌아가기</router-link>
   </div>
 </template>
 

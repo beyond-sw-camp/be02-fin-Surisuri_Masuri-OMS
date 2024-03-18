@@ -1,53 +1,53 @@
 <template>
-    <div class="container-fluid px-4">
-      <router-link to="/inquiry/new" class="btn btn-primary mb-3"
-        >새 문의사항 작성</router-link
-      >
-      <div class="row">
-        <div class="col">
-          <div class="card">
-            <div class="card-header">문의사항</div>
-            <div class="card-body">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(question, index) in questions" :key="question.idx">
-                    <th scope="row">{{ index + 1 }}</th>
-                    <td>{{ question.title }}</td>
-                    <td>{{ question.content }}</td>
-                    <td>{{ question.category }}</td>
-                    <td>
-                      <router-link
-                        :to="{
-                          name: 'InquiryDetail',
-                          query: {
-                            idx: question.idx,
-                            title: question.title,
-                            content: question.content,
-                            category: question.category,
-                            status: question.status
-                          }
-                        }"
-                        class="btn btn-primary btn-sm"
-                      >상세 보기</router-link>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+  <div class="container-fluid px-4">
+    <router-link to="/inquiry/new" class="btn btn-primary mb-3">새 문의사항 작성</router-link>
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-header">문의사항</div>
+          <div class="card-body">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">번호</th>
+                  <th scope="col">제목</th>
+                  <th scope="col" class="text-center">카테고리</th>
+                  <th scope="col" class="text-center">상세 보기</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(question, index) in questions" :key="question.idx">
+                  <th scope="row">{{ index + 1 }}</th>
+                  <td>{{ question.title }}</td>
+                  <!-- 카테고리 가운데 정렬 -->
+                  <td class="text-center">{{ question.category }}</td>
+                  <!-- 상세 보기 버튼 가운데 정렬 -->
+                  <td class="text-center">
+                    <router-link
+                      :to="{
+                        name: 'InquiryDetail',
+                        query: {
+                          idx: question.idx,
+                          title: question.title,
+                          content: question.content,
+                          category: question.category,
+                          status: question.status,
+                          answerContent: question.answerContent
+                        }
+                      }"
+                      class="btn btn-primary btn-sm"
+                    >상세 보기</router-link>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
-  </template>
+  </div>
+</template>
+
   
   <script>
   import axios from "axios";
