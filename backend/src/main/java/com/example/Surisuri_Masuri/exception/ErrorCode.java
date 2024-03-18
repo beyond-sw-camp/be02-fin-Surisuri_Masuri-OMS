@@ -13,7 +13,7 @@ public enum ErrorCode {
     INVALID_INPUT_VALUE(900,HttpStatus.BAD_REQUEST, "입력값 검증 관련"),
 
     // 401
-    INVALID_TOKEN(1000,HttpStatus.UNAUTHORIZED, "잘못된 토큰입니다."),
+    // INVALID_TOKEN(1000,HttpStatus.UNAUTHORIZED, "잘못된 토큰입니다."),
 
     // 401
     INVALID_PERMISION(1001,HttpStatus.UNAUTHORIZED, "권한이 없습니다."),
@@ -223,11 +223,19 @@ public enum ErrorCode {
     ContainerList_004(3096, HttpStatus.BAD_REQUEST, "요청한 페이지 범위를 초과했습니다."),
 
     // ContainerSingleStock
-    ContainerSingleStock_002(3097, HttpStatus.BAD_REQUEST, "재고 정보가 존재하지 않습니다.");
+    ContainerSingleStock_002(3097, HttpStatus.BAD_REQUEST, "재고 정보가 존재하지 않습니다."),
 
     // ContainerCreate
     // ContainerCreate_002(3098, HttpStatus.BAD_REQUEST, "잘못된 형식의 창고 이름입니다."),
     // ContainerCreate_003(3099, HttpStatus.BAD_REQUEST, "잘못된 형식의 창고 복잡도 입니다.");
+    ContainerCreate_003(3100, HttpStatus.BAD_REQUEST, "이미 존재하는 창고 주소입니다."),
+    ContainerCreate_004(3101, HttpStatus.BAD_REQUEST, "이미 존재하는 창고 이름입니다."),
+    ContainerCreate_005(3102, HttpStatus.BAD_REQUEST, "존재하지 않는 창고 입니다."),
+
+    // ContainerStock
+    ContainerStock_002(3103, HttpStatus.BAD_REQUEST, "처분할 상품이 존재하지 않습니다.");
+
+
 
     private final Integer code;
     private final HttpStatus status;
