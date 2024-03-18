@@ -4,7 +4,7 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">#</th>
+            <th scope="col">번호</th>
             <th scope="col">창고 이름</th>
             <th scope="col">주소</th>
             <th scope="col">복잡도</th>

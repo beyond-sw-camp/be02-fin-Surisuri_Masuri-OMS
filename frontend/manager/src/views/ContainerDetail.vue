@@ -11,7 +11,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
+                                    <th scope="col">번호</th>
                                     <th scope="col">상품 이름</th>
                                     <th scope="col">재고</th>
                                 </tr>
