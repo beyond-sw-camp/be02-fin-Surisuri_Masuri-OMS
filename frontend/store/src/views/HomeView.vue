@@ -59,6 +59,34 @@
         <div class="card-body p-4">
           <div class="mb-4">
             <h5 class="card-title fw-semibold">공지사항</h5>
+              <!-- 공지사항 제목 표시 시작 -->
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">제목</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(notice, index) in notices" :key="notice.idx">
+                    <th scope="row">{{ index + 1 }}</th>
+                    <td>
+                      <!-- 문의사항 제목에 router-link 적용하여 상세 페이지로 이동 -->
+                      <router-link
+                        :to="{
+                          name: 'NoticeDetail',
+                          query: {
+                            idx: notice.idx,
+                            title: notice.title,
+                            content: notice.content,
+                            category: notice.category
+                          }
+                        }"
+                      >{{ notice.title }}</router-link>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
           </div>
           
         </div>
@@ -91,6 +119,7 @@ import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
+import axios from 'axios';
 
 export default {
   data() {
@@ -99,24 +128,25 @@ export default {
         require("@/assets/splide1.png"),
         require("@/assets/image2.jpg"),
       ],
+      notices: [],
       barChartData: {
         labels: ['블루마운틴 원두', '업소용 우유 (1L)', '플라스틱 빨대', '매장용 머그컵', '휘핑 크림', '시그니처 텀블러'],
         datasets: [{
-          label: '# of Votes',
+          label: '재고 수량',
           data: [18, 19, 15, 12, 17, 7],
           backgroundColor: [
-            'rgba(173, 216, 230, 0.2)', // 하늘색
-            'rgba(0, 191, 255, 0.2)',   // 깊은 하늘색
-            'rgba(0, 0, 255, 0.2)',     // 파란색
-            'rgba(0, 0, 139, 0.2)',     // 짙은 파란색
-            'rgba(25, 25, 112, 0.2)'    // 남색
+            'rgba(173, 216, 230, 0.2)',
+            'rgba(0, 191, 255, 0.2)',
+            'rgba(0, 0, 255, 0.2)',
+            'rgba(0, 0, 139, 0.2)',
+            'rgba(25, 25, 112, 0.2)'
           ],
           borderColor: [
-            'rgba(173, 216, 230, 1)', // 하늘색
-            'rgba(0, 191, 255, 1)',   // 깊은 하늘색
-            'rgba(0, 0, 255, 1)',     // 파란색
-            'rgba(0, 0, 139, 1)',     // 짙은 파란색
-            'rgba(25, 25, 112, 1)'    // 남색
+            'rgba(173, 216, 230, 1)',
+            'rgba(0, 191, 255, 1)',
+            'rgba(0, 0, 255, 1)',
+            'rgba(0, 0, 139, 1)',
+            'rgba(25, 25, 112, 1)'
           ],
           borderWidth: 1
         }]
@@ -132,13 +162,14 @@ export default {
             'rgba(75, 192, 192, 0.2)',
             'rgba(153, 102, 255, 0.2)',
             'rgba(255, 159, 64, 0.2)'
-          ]
+          ],
+          borderWidth: 1
         }]
       },
       lineChartData: {
         labels: ['1월', '2월', '3월', '4월', '5월', '6월'],
         datasets: [{
-          label: 'Monthly Sales',
+          label: '월별 매출',
           data: [73, 78, 80, 85, 83, 84],
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
@@ -151,6 +182,7 @@ export default {
     this.createBarChart();
     this.createPieChart();
     this.createLineChart();
+    this.fetchNotices();
   },
   methods: {
     createChart(chartRef, chartType, chartData, chartOptions) {
@@ -162,66 +194,78 @@ export default {
       });
     },
     createBarChart() {
-      const barChartOptions = {
-        plugins: {
-          legend: {
-            display: false // 이 부분을 추가하여 레전드를 숨깁니다.
-          }
-        },
-        scales: {
-          x: {
-            grid: {
-              display: false
-            }
-          },
-          y: {
-            grid: {
-              display: false
-            }
-          }
-        }
-      };
-      this.createChart('MyChart', 'bar', this.barChartData, barChartOptions);
+  const barChartOptions = {
+    plugins: {
+      legend: {
+        display: false // 레전드를 표시하도록 설정
+      }
     },
-    createPieChart() {
-      const pieChartOptions = {
-        plugins: {
-          legend: {
-            display: false // 이 부분을 추가하여 레전드를 숨깁니다.
-          }
+    scales: {
+      x: {
+        grid: {
+          display: false
         }
-      };
-      this.createChart('myPieChart', 'doughnut', this.pieChartData, pieChartOptions);
-    },
-    createLineChart() {
-      const lineChartOptions = {
-        plugins: {
-          legend: {
-            display: false // 이 부분을 추가하여 레전드를 숨깁니다.
-          }
-        },
-        scales: {
-          x: {
-            grid: {
-              display: false
-            }
-          },
-          y: {
-            grid: {
-              display: false
-            }
-          }
+      },
+      y: {
+        grid: {
+          display: false
         }
-      };
-      this.createChart('myLineChart', 'line', this.lineChartData, lineChartOptions);
+      }
     }
+  };
+  this.createChart('MyChart', 'bar', this.barChartData, barChartOptions);
+},
+createPieChart() {
+  const pieChartOptions = {
+    plugins: {
+      legend: {
+        display: false // 레전드를 표시하도록 설정
+      }
+    }
+  };
+  this.createChart('myPieChart', 'doughnut', this.pieChartData, pieChartOptions);
+},
+createLineChart() {
+  const lineChartOptions = {
+    plugins: {
+      legend: {
+        display: false // 레전드를 표시하도록 설정
+      }
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false
+        }
+      },
+      y: {
+        grid: {
+          display: false
+        }
+      }
+    }
+  };
+  this.createChart('myLineChart', 'line', this.lineChartData, lineChartOptions);
+},
+    async fetchNotices() {
+      try {
+        const response = await axios.get('http://localhost:8080/notice/list', {
+          params: {
+            page: 1,
+            size: 10,
+          }
+        });
+        this.notices = response.data.result;
+      } catch (error) {
+        console.error('공지사항 목록을 불러오는 중 오류가 발생했습니다.', error);
+      }
+    },
   },
   components: {
     Swiper,
     SwiperSlide,
   },
 };
-
 </script>
 
 <style scoped>
