@@ -3,6 +3,9 @@ package com.example.Surisuri_Masuri.member.Service;
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.email.Model.SendEmailReq;
 import com.example.Surisuri_Masuri.email.Service.EmailService;
+import com.example.Surisuri_Masuri.exception.EntityException.ManagerException;
+import com.example.Surisuri_Masuri.exception.EntityException.UserException;
+import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.*;
@@ -34,8 +37,10 @@ public class UserService implements UserDetailsService {
 
     private final EmailService emailService;
 
-    User compare1;
-    User compare2;
+    Optional<User> compare1;
+    Optional<User> compare2;
+
+    UserFindEmailRes userFindEmailRes;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -54,7 +59,8 @@ public class UserService implements UserDetailsService {
 
         // 1. 이메일을 통해 이미 존재하는 회원인지 확인
         if (userRepository.findByUserEmail(userSignUpReq.getUserEmail()).isPresent()) {
-            return BaseResponse.failResponse(7000, "중복된 회원이 있습니다.");
+            throw new UserException(ErrorCode.UserRegister_0010,
+                    String.format("Already exist User ID"));
         }
 
         // 2. storeUuid를 통해 이미 본사와 계약이 체결되어 uuid가 발급된 회원인지 확인
@@ -125,35 +131,45 @@ public class UserService implements UserDetailsService {
     // 로그인 기능
     public BaseResponse<LoginRes> UserLogin(LoginReq userLoginReq) {
         LoginRes loginRes = null;
+
         Optional<User> user = userRepository.findByUserEmail(userLoginReq.getId());
+
+        if (user.isEmpty()) {
+            throw new UserException(ErrorCode.UserLogin_003,
+                    String.format("Wrong Id"));
+        }
+
         if (user.isPresent() &&
                 passwordEncoder.matches(userLoginReq.getPassword(), user.get().getPassword())
-                && user.get().getStatus().equals(true))
-        {
+                && user.get().getStatus().equals(true)) {
             loginRes = LoginRes.builder()
                     .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
                     .build();
 
             return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
         }
-        else
-            return BaseResponse.failResponse(7000, "가입되지 않은 회원입니다.");
+
+        else throw new ManagerException(ErrorCode.UserLogin_004,
+                String.format("Wrong Password"));
     }
 
     // 이메일 찾기 기능
     public BaseResponse<UserFindEmailRes> findEmail(UserFindEmailReq userFindEmailReq) {
-        compare1 = userRepository.findByUserName(userFindEmailReq.getUserName()).get();
-        compare2 = userRepository.findByUserPhoneNo(userFindEmailReq.getUserPhoneNo()).get();
+        compare1 = userRepository.findByUserName(userFindEmailReq.getUserName());
+        compare2 = userRepository.findByUserPhoneNo(userFindEmailReq.getUserPhoneNo());
 
+        if(compare1.isEmpty() || compare2.isEmpty()) {
+            throw new ManagerException(ErrorCode.UserEmail_004,
+                    String.format("존재하지 않는 회원 정보"));
+        }
         if (compare1.equals(compare2)) {
-            UserFindEmailRes userFindEmailRes = UserFindEmailRes
+             userFindEmailRes = UserFindEmailRes
                     .builder()
-                    .userEmail(compare1.getUserEmail())
+                    .userEmail(compare1.get().getUserEmail())
                     .build();
-
+        }
             return BaseResponse.successResponse("요청하신 회원 정보입니다.", userFindEmailRes);
-        } else
-            return BaseResponse.failResponse(7000, "잘못된 정보를 입력하셨습니다.");
+
     }
 
     // 회원정보 수정 기능
@@ -207,10 +223,12 @@ public class UserService implements UserDetailsService {
     public BaseResponse<FindUserPasswordRes> findPassword(FindUserPasswordReq findUserPasswordReq) {
 
         Optional<User> user = userRepository.findByUserEmail(findUserPasswordReq.getUserEmail());
-        if (user.isPresent()) {
-            User user2 = user.get();
-            Long idx = user2.getIdx();
-            String userEmail = user2.getUserEmail();
+        Optional<User> user2 = userRepository.findByUserName(findUserPasswordReq.getUserName());
+
+        if (user.isPresent() && user2.isPresent()) {
+            User user3 = user.get();
+            Long idx = user3.getIdx();
+            String userEmail = user3.getUserEmail();
             SendEmailReq sendEmailReq = SendEmailReq.builder()
                     .idx(idx)
                     .email(userEmail)
@@ -229,9 +247,10 @@ public class UserService implements UserDetailsService {
 
         }
 
-        {
-            return BaseResponse.failResponse(7000, "요청실패");
-        }
+        else
+            throw new ManagerException(ErrorCode.UserPassword_004,
+                    String.format("존재하지 않는 회원 정보"));
+
     }
 
     // 비밀번호 재설정 기능
@@ -253,9 +272,10 @@ public class UserService implements UserDetailsService {
             return baseResponse;
         }
 
-        {
-            return BaseResponse.failResponse(7000, "요청실패");
-        }
+        else
+            throw new ManagerException(ErrorCode.UserPassword_004,
+                    String.format("존재하지 않는 회원 정보"));
+
     }
 
     public User getUserByUserEmail (String email){

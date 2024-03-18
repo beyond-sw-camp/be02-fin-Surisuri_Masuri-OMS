@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.validation.Valid;
+
 @RestController
 @CrossOrigin("*")
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ public class UserController {
 
     // 계정 생성 - Create
     @PostMapping("/user/register")
-    public ResponseEntity UserSignUp(@RequestBody UserSignUpReq userSignUpReq)
+    public ResponseEntity UserSignUp(@Valid @RequestBody UserSignUpReq userSignUpReq)
     {
         return ResponseEntity.ok().body(userService.UserSignUp(userSignUpReq));
     }
@@ -32,7 +34,7 @@ public class UserController {
 
     // 로그인 기능
     @PostMapping("/user/login")
-    public ResponseEntity UserLogin(@RequestBody LoginReq loginReq)
+    public ResponseEntity UserLogin(@RequestBody @Valid LoginReq loginReq)
     {
         return ResponseEntity.ok().body(userService.UserLogin(loginReq));
     }
@@ -46,30 +48,27 @@ public class UserController {
 
     // 아이디 찾기
     @GetMapping("/user/findEmail")
-    public ResponseEntity findEmail(UserFindEmailReq req) {
-        return ResponseEntity.ok().body(userService.findEmail(req));
+    public ResponseEntity findEmail(@Valid @RequestBody UserFindEmailReq userFindEmailReq) {
+        return ResponseEntity.ok().body(userService.findEmail(userFindEmailReq));
     }
-
-
-
 
     // 회원정보 수정
     @PatchMapping("/user/update")
-    public ResponseEntity updateUser(@RequestHeader(value = "Authorization") String token, @RequestBody UserUpdateReq userUpdateReq)
+    public ResponseEntity updateUser(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid UserUpdateReq userUpdateReq)
     {
         return ResponseEntity.ok().body(userService.userUpdate(token,userUpdateReq));
     }
 
     // Password 재설정 이메일 발송
     @PostMapping("/user/findPassword")
-    public ResponseEntity findPassword(@RequestBody FindUserPasswordReq findUserPasswordReq)
+    public ResponseEntity findPassword(@RequestBody @Valid FindUserPasswordReq findUserPasswordReq)
     {
         return ResponseEntity.ok().body(userService.findPassword(findUserPasswordReq));
     }
 
     // Password 재설정 페이지
     @PatchMapping("/user/resetPassword/{idx}")
-    public ResponseEntity resetPassword(@PathVariable Long idx, ResetPasswordReq resetPasswordReq)
+    public ResponseEntity resetPassword(@PathVariable Long idx, @Valid ResetPasswordReq resetPasswordReq)
     {
         return ResponseEntity.ok().body(userService.resetPassword(idx,resetPasswordReq));
     }

@@ -1,6 +1,9 @@
 package com.example.Surisuri_Masuri.store.Service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
+import com.example.Surisuri_Masuri.exception.EntityException.StoreException;
+import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
@@ -76,7 +79,10 @@ public class StoreService {
 
             return BaseResponse.successResponse("요청 성공", storeCreateRes);
         }
-        else return BaseResponse.failResponse(7000, "요청 실패");
+        else {
+            throw new StoreException(ErrorCode.StoreCreate_004,
+                    String.format("UnRegistered Manager"));
+        }
     }
 
     // 가맹점 리스트 조회
@@ -113,11 +119,14 @@ public class StoreService {
         // DtoToRes
         return BaseResponse.successResponse("요청 성공", storeSearchResList);
         }
-        else return BaseResponse.failResponse(7000, "요청 실패");
+        else {
+            throw new StoreException(ErrorCode.StoreList_005,
+                    String.format("UnRegistered Manager"));
+        }
     }
 
-    public BaseResponse<StoreReadRes> StoreSearch(String token, StoreSearchReq storeSearchReq) {
     // 가맹점 단일 조회
+    public BaseResponse<StoreReadRes> StoreSearch(String token, StoreSearchReq storeSearchReq) {
 
         token = JwtUtils.replaceToken(token);
 
@@ -126,13 +135,16 @@ public class StoreService {
         String managerId = managerInfo.get("id", String.class);
 
         Optional<Manager> manager = managerRepository.findByManagerId(managerId);
-        if (manager.isPresent()){
 
+        if (manager.isPresent()) {
             Optional<Store> store = storeRepository.findByStoreName(storeSearchReq.getStoreName());
             if(store.isPresent()){
-
                 Store store2 = store.get();
-
+                if(store2.getStorePhoneNo() == null)
+                {
+                    throw new StoreException(ErrorCode.StoreSearch_004,
+                            String.format("There's no Registered User"));
+                }
                 storeReadRes = StoreReadRes
                         .builder()
                         .storeName(store2.getStoreName())
@@ -142,10 +154,10 @@ public class StoreService {
                         .storeUuid(store2.getStoreUuid())
                         .build();
             }
-            // DtoToRes
-            return BaseResponse.successResponse("요청 성공", storeReadRes);
+            if (store.isEmpty())
+                throw new StoreException(ErrorCode.StoreSearch_003,
+                        String.format("There's no Registered Store"));
         }
-        else return BaseResponse.failResponse(7000, "요청 실패");
+        return BaseResponse.successResponse("요청 성공", storeReadRes);
     }
-
 }

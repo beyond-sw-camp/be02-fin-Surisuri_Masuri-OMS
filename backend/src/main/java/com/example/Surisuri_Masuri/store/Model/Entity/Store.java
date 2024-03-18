@@ -34,13 +34,13 @@ public class Store {
     @Column(nullable = false, length = 100, unique = true)
     private String storeUuid;
 
-    @Column(nullable = false, length = 100, unique = true)
+    @Column(nullable = true, length = 100, unique = true)
     private String storeAddr;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String storePhoneNo;
 
-    @Column(nullable = false, updatable = false)
+    @Column(updatable = false)
     private Date createdAt;
 
     @Column(nullable = false)
