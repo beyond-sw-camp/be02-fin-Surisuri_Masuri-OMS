@@ -29,8 +29,8 @@ public class CartController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
-    public ResponseEntity delete(Long idx, Long productIdx) {
+    public ResponseEntity delete(@AuthenticationPrincipal User user, Long cartIdx, String productName) {
 
-        return ResponseEntity.ok().body(cartService.delete(idx, productIdx));
+        return ResponseEntity.ok().body(cartService.delete(user, cartIdx, productName));
     }
 }
