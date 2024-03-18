@@ -31,7 +31,7 @@ const routes = [
     component: StoreView
   },
   {
-    path: '/order-detail/:orderNumber',
+    path: '/order-detail/:merchantUid',
     name: 'StoreDetail',
     component: StoreDetailView,
     props: true // 주문 상세 정보를 표시할 컴포넌트

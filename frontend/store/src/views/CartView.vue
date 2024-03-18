@@ -10,18 +10,16 @@
 
     <div class="product" v-for="(item, index) in cartItems" :key="index">
       <div class="product-details">
-        <div class="product-title">{{ item.name }}</div>
+        <div class="product-title">{{ item.productName }}</div>
       </div>
       <div class="product-price">{{ item.price }}</div>
       <div class="product-quantity">
-        <input type="number" v-model.number="item.quantity" min="1">
+        <input type="number" v-model.number="item.productQuantity" min="1" />
       </div>
       <div class="product-removal">
-        <button @click="removeItem(index)" class="btn btn-danger">
-          Remove
-        </button>
+        <button @click="removeItem(index)" class="btn btn-danger">Remove</button>
       </div>
-      <div class="product-line-price">{{ (item.price * item.quantity).toFixed(2) }}</div>
+      <div class="product-line-price">{{ (item.price * item.productQuantity).toFixed(2) }}</div>
     </div>
 
     <div class="totals">
@@ -30,43 +28,154 @@
         <div class="totals-value" id="cart-total">{{ grandTotal.toFixed(2) }}</div>
       </div>
     </div>
-      
-    <button class="checkout" v-if="grandTotal > 0">Checkout</button>
+
+    <button class="checkout" v-if="grandTotal > 0" @click="processKakaoPay()">Checkout</button>
   </div>
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import axios from "axios";
+import { ref, computed, onMounted } from "vue";
 
 export default {
-  name: 'CartPage',
+  name: "CartPage",
   setup() {
-    const cartItems = ref([
-      // 예시 상품 데이터
-      { name: 'Product 1', price: 12.99, quantity: 2 },
-      { name: 'Product 2', price: 45.99, quantity: 1 }
-    ]);
-
+    const cartItems = ref([]);
     const grandTotal = computed(() =>
-      cartItems.value.reduce((total, item) => total + item.price * item.quantity, 0)
+      cartItems.value.reduce((total, item) => total + item.price * item.productQuantity, 0)
     );
 
-    function removeItem(index) {
-      cartItems.value.splice(index, 1);
+    const token = sessionStorage.getItem("token");
+    var IMP = window.IMP;
+
+    var today = new Date();
+    var hours = today.getHours(); // 시
+    var minutes = today.getMinutes(); // 분
+    var seconds = today.getSeconds(); // 초
+    var milliseconds = today.getMilliseconds();
+    var makeMerchantUid = `${hours}` + `${minutes}` + `${seconds}` + `${milliseconds}`;
+
+    IMP.init("imp06283542");
+
+    // function removeItem(index) {
+    //   cartItems.value.splice(index, 1);
+    // }
+
+    onMounted(async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/cart/list", {
+          params: {
+            // idx: 1, // 여기에 카트 ID를 넣어주세요
+            page: 1, // 여기에 페이지 번호를 넣어주세요
+            size: 5, // 여기에 페이지 크기를 넣어주세요
+          },
+          headers: {
+            // 필요한 경우 헤더를 추가하세요
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        // 응답 데이터를 cartItems에 할당
+        cartItems.value = response.data.result;
+
+        // 응답 데이터 처리
+        console.log(response.data.result);
+        // 여기에 응답 데이터를 처리하는 코드를 작성하세요
+      } catch (error) {
+        // 오류 처리
+        console.error("Error fetching cart list:", error);
+      }
+    });
+
+    async function removeItem(index) {
+      try {
+        // 삭제 요청 보내기
+        const response = await axios.delete("http://localhost:8080/cart/delete", {
+          params: {
+            cartIdx: cartItems.value[index].cartIdx,
+            productName: cartItems.value[index].productName,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        cartItems.value.splice(index, 1);
+
+        // 성공적으로 삭제되었을 때 로컬 상태에서도 해당 아이템 삭제
+        if (response.status === 200) {
+          cartItems.value.splice(index, 1);
+          console.log("Item removed successfully");
+        }
+      } catch (error) {
+        console.error("Error removing item:", error);
+      }
+    }
+
+    async function processKakaoPay() {
+      try {
+        var customData = {
+          cartDtoList: cartItems.value,
+          amount: grandTotal.value,
+        };
+
+        IMP.request_pay(
+          {
+            pg: "kakaopay.TC0ONETIME",
+            pay_method: "card",
+            merchant_uid: "IMP" + makeMerchantUid,
+            name: "포트원 기술지원팀", // 상품명 대신에 구매자명을 넣음
+            amount: grandTotal.value,
+            buyer_email: "Iamport@chai.finance",
+            buyer_name: "포트원 기술지원팀",
+            buyer_tel: "010-1234-5678",
+            buyer_addr: "서울특별시 강남구 삼성동",
+            buyer_postcode: "123-456",
+            custom_data: customData,
+          },
+          function (rsp) {
+            // 결제 결과 처리
+            if (rsp.success) {
+              var imp_uid = rsp.imp_uid;
+              // AJAX나 fetch API를 사용하여 imp_uid를 서버로 전달
+              fetch("http://localhost:8080/orders/payment", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: imp_uid,
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  // 서버에서의 응답에 따른 처리
+                  console.log(data);
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                });
+            } else {
+              // 결제 실패 처리
+              console.log("결제 실패:", rsp.error_msg);
+            }
+          }
+        );
+      } catch (error) {
+        console.error("Error processing KakaoPay:", error);
+      }
     }
 
     return {
       cartItems,
       grandTotal,
-      removeItem
+      removeItem,
+      processKakaoPay,
     };
-  }
+  },
 };
 </script>
 
-
 <style scoped>
-
 /*
 I wanted to go with a mobile first approach, but it actually lead to more verbose CSS in this case, so I've gone web first. Can't always force things...
 
@@ -106,7 +215,11 @@ Side note: I know that this style of nesting in SASS doesn't result in the most 
 }
 
 /* This is used as the traditional .clearfix class */
-.group:before, .shopping-cart:before, .column-labels:before, .product:before, .totals-item:before,
+.group:before,
+.shopping-cart:before,
+.column-labels:before,
+.product:before,
+.totals-item:before,
 .group:after,
 .shopping-cart:after,
 .column-labels:after,
@@ -116,17 +229,27 @@ Side note: I know that this style of nesting in SASS doesn't result in the most 
   display: table;
 }
 
-.group:after, .shopping-cart:after, .column-labels:after, .product:after, .totals-item:after {
+.group:after,
+.shopping-cart:after,
+.column-labels:after,
+.product:after,
+.totals-item:after {
   clear: both;
 }
 
-.group, .shopping-cart, .column-labels, .product, .totals-item {
+.group,
+.shopping-cart,
+.column-labels,
+.product,
+.totals-item {
   zoom: 1;
 }
 
 /* Apply clearfix in a few places */
 /* Apply dollar signs */
-.product .product-price:before, .product .product-line-price:before, .totals-value:before {
+.product .product-price:before,
+.product .product-line-price:before,
+.totals-value:before {
   content: "$";
 }
 
@@ -159,7 +282,9 @@ label {
   margin-bottom: 15px;
   border-bottom: 1px solid #eee;
 }
-.column-labels .product-image, .column-labels .product-details, .column-labels .product-removal {
+.column-labels .product-image,
+.column-labels .product-details,
+.column-labels .product-removal {
   text-indent: -9999px;
 }
 
@@ -236,10 +361,10 @@ label {
   background-color: #494;
 }
 .product-fadeout {
-    transition: opacity 0.5s ease, max-height 0.5s ease;
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
+  transition: opacity 0.5s ease, max-height 0.5s ease;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
 }
 
 /* Make adjustments for tablet */
@@ -248,7 +373,6 @@ label {
     margin: 0;
     padding-top: 20px;
     border-top: 1px solid #eee;
-   
   }
   .column-labels {
     display: none;
@@ -312,13 +436,19 @@ label {
   margin: auto;
 }
 /*# sourceMappingURL=style.css.map */
-.product-details, .product-price, .product-quantity, .product-removal, .product-line-price {
+.product-details,
+.product-price,
+.product-quantity,
+.product-removal,
+.product-line-price {
   float: left;
   text-align: left;
 }
 
 /* 전체 product 항목을 product-line-price에 맞춥니다. */
-.product, .totals, .checkout {
+.product,
+.totals,
+.checkout {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -345,7 +475,8 @@ label {
   text-align: right;
 }
 
-.totals-item, .checkout {
+.totals-item,
+.checkout {
   flex-basis: 100%;
 }
 
