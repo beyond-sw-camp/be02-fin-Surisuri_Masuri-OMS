@@ -13,7 +13,7 @@ public class ManagerSignUpReq {
     @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "영어와 숫자만 가능합니다.")
     private String managerId;
 
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=\\\\-])(?=.*[0-9]).{8,15}$")
+    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$")
     private String managerPassword;
 
     @Email(message = "올바른 이메일 형식이어야 합니다.")
