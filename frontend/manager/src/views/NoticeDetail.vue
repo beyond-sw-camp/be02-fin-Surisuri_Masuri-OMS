@@ -1,75 +1,94 @@
 <template>
-  <div class="container-fluid px-4">
-    <div class="container mt-5">
-      
-      <div class="mb-3">
-        <label class="form-label">제목</label>
-        <input type="text" class="form-control" v-model="notice.title" :readonly="!editable">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">카테고리</label>
-        <input type="text" class="form-control" v-model="notice.category" readonly>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">작성일</label>
-        <input type="text" class="form-control" v-model="notice.date" readonly>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">내용</label>
-        <textarea class="form-control" v-model="notice.content" rows="5" :readonly="!editable"></textarea>
-      </div>
-      <div class="d-flex justify-content-between">
-        <router-link to="/notice" class="btn btn-secondary">목록으로</router-link>
-        <button v-if="!editable" @click="enableEditing" class="btn btn-primary">수정</button>
-        <button v-if="editable" @click="updateNotice" class="btn btn-success">저장</button>
-        <button @click="deleteNotice" class="btn btn-danger">삭제</button>
+  <div class="container mt-5">
+    <div class="card">
+      <div class="card-body">
+        <div v-if="!isEditing">
+          <p class="card-text">제목: {{ title }}</p>
+          <p class="card-text">내용: {{ content }}</p>
+        </div>
+        <div v-else>
+          <input v-model="editData.title" class="form-control mb-2" placeholder="제목" />
+          <textarea v-model="editData.content" class="form-control mb-2" placeholder="내용"></textarea>
+        </div>
+        <!-- 수정/저장 버튼 -->
+        <button v-if="!isEditing" class="btn btn-primary mt-3" @click="editPost">수정하기</button>
+        <button v-else class="btn btn-success mt-3" @click="savePost">저장하기</button>
+        <button class="btn btn-danger mt-3" @click="deleteNotice">삭제하기</button>
       </div>
     </div>
+    <router-link to="/notice" class="btn btn-secondary mt-3">목록으로 돌아가기</router-link>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-  name: 'NoticeDetail',
   data() {
     return {
-      notice: {
-        id: this.$route.params.id,
-        title: '',
-        category: '',
-        date: '',
-        content: '',
+      isEditing: false,
+      noticeIdx: this.$route.query.idx,
+      title: this.$route.query.title,
+      content: this.$route.query.content,
+      editData: {
+        title: this.$route.query.title,
+        content: this.$route.query.content,
       },
-      editable: false,
-    };
-  },
-  mounted() {
-    // TODO: 공지사항 ID에 해당하는 상세 정보를 불러오는 로직 구현
-    // 예시 데이터
-    this.notice = {
-      id: this.$route.params.id,
-      title: '공지사항 제목1',
-      category: '배송 관련',
-      date: '2024-03-15',
-      content: '공지사항 상세 내용입니다.',
     };
   },
   methods: {
-    enableEditing() {
-      this.editable = true;
+    editPost() {
+      this.isEditing = true;
+      this.editData.title = this.title;
+      this.editData.content = this.content;
     },
-    updateNotice() {
-      // TODO: 공지사항 수정 로직 구현
-      alert('공지사항이 업데이트되었습니다.');
-      this.editable = false;
+    savePost() {
+      const updateData = {
+        noticeIdx: this.noticeIdx,
+        title: this.editData.title,
+        content: this.editData.content,
+        category: this.$route.query.category,
+        status: true,
+      };
+
+      axios.patch("http://localhost:8080/notice/update", updateData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log("수정 응답:", response);
+        alert("공지사항이 수정되었습니다.");
+        this.$router.push("/notice");
+      })
+      .catch((error) => {
+        console.error("공지사항 수정 중 오류 발생:", error);
+        alert("오류 발생: " + (error.response && error.response.data.message ? error.response.data.message : "공지사항 수정 중 오류가 발생했습니다."));
+      });
+
+      this.isEditing = false;
     },
-    deleteNotice() {
-      // TODO: 공지사항 삭제 로직 구현
-      alert('공지사항이 삭제되었습니다.');
-      this.$router.push('/notice');
-    },
+    async deleteNotice() {
+      try {
+        if (!this.noticeIdx) {
+          alert("삭제할 공지사항이 선택되지 않았습니다.");
+          return;
+        }
+
+        const response = await axios.delete(`http://localhost:8080/notice/delete?noticeIdx=${this.noticeIdx}`);
+        console.log("공지사항 삭제 응답:", response.data);
+        alert("공지사항이 성공적으로 삭제되었습니다.");
+
+        this.noticeIdx = null;
+        this.title = "";
+        this.content = "";
+        // 삭제 후 추가적으로 필요한 로직 처리
+        this.$router.push('/notice');
+      } catch (error) {
+        console.error("공지사항 삭제 중 오류:", error);
+        alert("공지사항 삭제 중 오류가 발생했습니다: " + (error.response && error.response.data ? error.response.data.message : error.message));
+      }
+    }
   },
 };
 </script>
-
-  
