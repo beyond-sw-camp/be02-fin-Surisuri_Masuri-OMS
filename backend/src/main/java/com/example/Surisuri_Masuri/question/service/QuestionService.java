@@ -2,11 +2,10 @@ package com.example.Surisuri_Masuri.question.service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
-import com.example.Surisuri_Masuri.exception.EntityException.QuestionException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
-import com.example.Surisuri_Masuri.notice.model.entity.Notice;
+import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
 import com.example.Surisuri_Masuri.question.model.entity.Answer;
 import com.example.Surisuri_Masuri.question.model.entity.Question;
 import com.example.Surisuri_Masuri.question.model.request.PatchUpdateQuestionReq;
@@ -17,13 +16,9 @@ import com.example.Surisuri_Masuri.question.model.response.PostCreateQuestionRes
 import com.example.Surisuri_Masuri.question.repository.AnswerRepository;
 import com.example.Surisuri_Masuri.question.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +29,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
+    private final ManagerRepository managerRepository;
 
     public BaseResponse create(PostCreateQuestionReq postQuestionReq) {
 
@@ -53,7 +49,7 @@ public class QuestionService {
                 .userIdx(postQuestionReq.getUserIdx())
                 .build();
 
-        return BaseResponse.successResponse("문의사항 작성 성공", postCreateQuestionRes);
+        return BaseResponse.successResponse("문의사항 작성 성공", null);
 
     }
 
@@ -116,20 +112,22 @@ public class QuestionService {
         }
     }
 
-    public BaseResponse answer(QuestionAnswerReq req) {
+    public BaseResponse answer(Manager manager, QuestionAnswerReq req) {
+        Optional<Manager> managerResult = managerRepository.findByManagerId(manager.getManagerId());
+        manager = managerResult.get();
         Optional<Question> questionResult = questionRepository.findById(req.getQuestionIdx());
+        Question question = questionResult.get();
 
         if (questionResult.isPresent()) {
             Optional<Answer> answerResult = answerRepository.findByQuestionIdx(req.getQuestionIdx());
 
             if (!answerResult.isPresent()) {
                 answerRepository.save(Answer.builder()
-                        .manager(Manager.builder().idx(req.getManagerIdx()).build())
-                        .question(Question.builder().idx(req.getQuestionIdx()).build())
+                        .manager(manager)
+                        .question(question)
                         .answerContent(req.getAnswerContent())
                         .build());
 
-                Question question = questionResult.get();
                 question.setStatus(true);
                 questionRepository.save(question);
 
@@ -137,16 +135,12 @@ public class QuestionService {
             } else {
                 Answer answer = answerResult.get();
 
-                if (answer.getManager().getIdx() != req.getManagerIdx())
-                    answer.setManager(Manager.builder().idx(req.getManagerIdx()).build());
+                if (!answer.getManager().getManagerId().equals(manager.getManagerId()))
+                    answer.setManager(manager);
                 if (answer.getAnswerContent() != null)
                     answer.setAnswerContent(req.getAnswerContent());
 
                 answerRepository.save(answer);
-
-                Question question = questionResult.get();
-                question.setStatus(true);
-                questionRepository.save(question);
 
                 return BaseResponse.successResponse("수정 요청 성공", null);
             }
