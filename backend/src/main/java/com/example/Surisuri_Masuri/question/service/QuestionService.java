@@ -1,6 +1,9 @@
 package com.example.Surisuri_Masuri.question.service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
+import com.example.Surisuri_Masuri.exception.EntityException.QuestionException;
+import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.notice.model.entity.Notice;
@@ -51,6 +54,7 @@ public class QuestionService {
                 .build();
 
         return BaseResponse.successResponse("문의사항 작성 성공", postCreateQuestionRes);
+
     }
 
 
@@ -85,30 +89,32 @@ public class QuestionService {
                 Question question = result.get();
                 question.update(patchUpdateQuestionReq);
                 questionRepository.save(question);
-
-                return BaseResponse.successResponse("문의사항 수정 성공", patchUpdateQuestionReq);
             }
-            return BaseResponse.failResponse(444, "본인이 작성한 문의사항이 아닙니다");
-        } else {
-            return BaseResponse.failResponse(444,"문의사항이 존재하지 않습니다");
+            // return BaseResponse.failResponse(444, "본인이 작성한 문의사항이 아닙니다");
+            return BaseResponse.successResponse("문의사항 수정 성공", patchUpdateQuestionReq);
         }
+        else throw new ContainerException(ErrorCode.QuestionUpdate_005,
+                    String.format("Question Idx [ %s ] doesn't has Question.", patchUpdateQuestionReq.getIdx()));
+
     }
 
 
     public BaseResponse delete(User user, Integer idx) {
         Optional<Question> result = questionRepository.findById(idx);
 
-        if(result.isPresent()) {
+        if (result.isPresent()) {
             if (result.get().getUser().getIdx().equals(user.getIdx())) {
                 Question question = result.get();
                 questionRepository.delete(question);
-                return BaseResponse.successResponse("문의사항 삭제 성공", null);
             }
+            return BaseResponse.successResponse("문의사항 삭제 성공", null);
         }
-        return BaseResponse.successResponse("삭제할 문의사항이 존재하지 않습니다", null);
 
+        else {
+            throw new ContainerException(ErrorCode.QuestionDelete_002,
+                    String.format("Question Idx [ %s ] doesn't has Question.", idx));
+        }
     }
-
 
     public BaseResponse answer(QuestionAnswerReq req) {
         Optional<Question> questionResult = questionRepository.findById(req.getQuestionIdx());
@@ -145,8 +151,10 @@ public class QuestionService {
                 return BaseResponse.successResponse("수정 요청 성공", null);
             }
         }
-        return BaseResponse.failResponse(444, "질문이 존재하지 않습니다");
+        else {
+            throw new ContainerException(ErrorCode.QuestionAnswer_003,
+                    String.format("Question Idx [ %s ] doesn't has Question.", req.getQuestionIdx()));
+        }
     }
-
 }
 
