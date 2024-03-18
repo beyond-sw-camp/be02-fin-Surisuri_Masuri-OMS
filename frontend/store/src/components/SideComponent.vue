@@ -38,6 +38,14 @@
               </router-link>
             </li>
             <li class="sidebar-item">
+              <router-link class="sidebar-link" to="/orderdetail">
+                <span>
+                  <i class="ti ti-wallet"></i>
+                </span>
+                <span class="hide-menu">주문내역</span>
+              </router-link>
+            </li>
+            <li class="sidebar-item">
               <router-link class="sidebar-link" to="/stockedit">
                 <span>
                   <i class="ti ti-alert-circle"></i>
@@ -67,17 +75,7 @@
                   <i class="ti ti-typography"></i>
                 </span>
                 <span class="hide-menu">문의사항</span>
-              </router-link>
-              
-            </li>
-            <li class="sidebar-item">
-              <router-link class="sidebar-link" to="/orderdetail">
-                <span>
-                  <i class="ti ti-typography"></i>
-                </span>
-                <span class="hide-menu">주문내역</span>
-              </router-link>
-              
+              </router-link>              
             </li>
           </ul>
         </nav>
