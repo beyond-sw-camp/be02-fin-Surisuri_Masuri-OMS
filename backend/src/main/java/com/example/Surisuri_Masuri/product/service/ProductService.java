@@ -63,6 +63,8 @@ public class ProductService {
         for (Product product: result) {
             ProductListRes productListRes = ProductListRes.builder()
                     .productName(product.getProductName())
+                    .price(product.getPrice())
+                    .productIdx(product.getIdx())
                     .build();
 
             productListResList.add(productListRes);
