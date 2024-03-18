@@ -7,7 +7,7 @@
         <div class="card-body">
           <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
             <div class="mb-3 mb-sm-0">
-              <h5 class="card-title fw-semibold">많이 팔린 상품</h5>
+              <h5 class="card-title fw-semibold">상품 잔여 재고</h5>
             </div>
             
           </div>
@@ -24,17 +24,8 @@
               
               <div class="row align-items-center">
                 <div class="col-8" >
-                  <h4 class="fw-semibold mb-3">상품 잔여 재고</h4>
-                  <div class="d-flex align-items-center mb-3">
-                    <span
-                      class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
-                      <i class="ti ti-arrow-up-left text-success"></i>
-                    </span>
-                    <p class="text-dark me-1 fs-3 mb-0">+9%</p>
-                    <p class="fs-3 mb-0">last year</p>
-                  </div>
+                  <h4 class="fw-semibold mb-3">많이 팔린 상품</h4>
                   <div class="d-flex align-items-center">
-      
                   </div>
                 </div>
                 <div class="col-4">
@@ -52,23 +43,7 @@
             <div class="card-body" id = "chart-card2">
               <div class="row alig n-items-start">
                 <div class="col-8" id = "chart-card2">
-                  <h5 class="card-title mb-9 fw-semibold"> 월별 매출 </h5>
-                  <div class="d-flex align-items-center pb-1">
-                    <span
-                      class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
-                      <i class="ti ti-arrow-down-right text-danger"></i>
-                    </span>
-                    <p class="text-dark me-1 fs-3 mb-0">+9%</p>
-                    <p class="fs-3 mb-0">last month</p>
-                  </div>
-                </div>
-                <div class="col-4">
-                  <div class="d-flex justify-content-end">
-                    <div
-                      class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
-                      <i class="ti ti-currency-dollar fs-6"></i>
-                    </div>
-                  </div>
+                  <h5 class="card-title mb-9 fw-semibold">월별 매출</h5>
                 </div>
               </div>
             </div>
@@ -121,14 +96,14 @@ export default {
   data() {
     return {
       images: [
+        require("@/assets/splide1.png"),
         require("@/assets/image2.jpg"),
-        require("@/assets/image.jpg"),
       ],
       barChartData: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: ['블루마운틴 원두', '업소용 우유 (1L)', '플라스틱 빨대', '매장용 머그컵', '휘핑 크림', '시그니처 텀블러'],
         datasets: [{
           label: '# of Votes',
-          data: [12, 19, 3, 5, 2, 3],
+          data: [18, 19, 15, 12, 17, 7],
           backgroundColor: [
             'rgba(173, 216, 230, 0.2)', // 하늘색
             'rgba(0, 191, 255, 0.2)',   // 깊은 하늘색
@@ -147,7 +122,7 @@ export default {
         }]
       },
       pieChartData: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: ['아메리카노', '바닐라라떼', '토피넛라떼', '초코프라푸치노', '밀크쉐이크', '허브티'],
         datasets: [{
           data: [12, 19, 3, 5, 2, 3],
           backgroundColor: [
@@ -161,10 +136,10 @@ export default {
         }]
       },
       lineChartData: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        labels: ['1월', '2월', '3월', '4월', '5월', '6월'],
         datasets: [{
           label: 'Monthly Sales',
-          data: [65, 59, 80, 81, 56, 55],
+          data: [73, 78, 80, 85, 83, 84],
           fill: false,
           borderColor: 'rgb(75, 192, 192)',
           tension: 0.1
@@ -188,6 +163,11 @@ export default {
     },
     createBarChart() {
       const barChartOptions = {
+        plugins: {
+          legend: {
+            display: false // 이 부분을 추가하여 레전드를 숨깁니다.
+          }
+        },
         scales: {
           x: {
             grid: {
@@ -215,6 +195,11 @@ export default {
     },
     createLineChart() {
       const lineChartOptions = {
+        plugins: {
+          legend: {
+            display: false // 이 부분을 추가하여 레전드를 숨깁니다.
+          }
+        },
         scales: {
           x: {
             grid: {
