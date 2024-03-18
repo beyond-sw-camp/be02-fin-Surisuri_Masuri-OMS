@@ -40,8 +40,9 @@ public class OrdersController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/list")
-    public ResponseEntity list(Integer page, Integer size) {
-        return ResponseEntity.ok().body(ordersService.list(page, size));
+    public ResponseEntity list(@RequestHeader(value = "Authorization") String token,
+                               Integer page, Integer size) {
+        return ResponseEntity.ok().body(ordersService.list(token, page, size));
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/updatedelivery")
@@ -55,4 +56,6 @@ public class OrdersController {
 
         return ResponseEntity.ok().body(ordersService.showDeliveryStatus(ordersIdx));
     }
+
+
 }
