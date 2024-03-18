@@ -4,9 +4,14 @@ import com.example.Surisuri_Masuri.cart.model.Cart;
 import com.example.Surisuri_Masuri.cart.model.CartDetail;
 import com.example.Surisuri_Masuri.cart.repository.CartDetailRepository;
 import com.example.Surisuri_Masuri.cart.repository.CartRepository;
+import com.example.Surisuri_Masuri.cart.service.CartService;
 import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.member.Model.Entity.User;
+import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
+import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.orders.model.Orders;
 import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
+import com.example.Surisuri_Masuri.orders.model.dto.PaymentDto;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersRefundReq;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersUpdateDeliveryReq;
 import com.example.Surisuri_Masuri.orders.model.dto.response.OrdersDetailDtoRes;
@@ -42,14 +47,12 @@ public class OrdersService {
     private final OrdersDetailRepository ordersDetailRepository;
     private final CartRepository cartRepository;
     private final CartDetailRepository cartDetailRepository;
+    private final CartService cartService;
+    private final UserRepository userRepository;
+    private final ManagerRepository managerRepository;
 
     private final IamportClient iamportClient;
 
-    @Value("${imp.imp_secret}")
-    private String apiSecret;
-
-    @Value("${imp.imp_key}")
-    private String apiKey;
 
     public BaseResponse updateOrdersDelivery(OrdersUpdateDeliveryReq req) {
         Optional<Orders> ordersResult = ordersRepository.findById(req.getIdx());
@@ -146,7 +149,7 @@ public class OrdersService {
         ordersRepository.delete(ordersResult.get());
     }
 
-    public BaseResponse payment(String imp_uid) throws IamportResponseException, IOException {
+    public BaseResponse payment(User user, String imp_uid) throws IamportResponseException, IOException {
         IamportResponse<Payment> response = getPaymentInfo(imp_uid);
 
         String customDataString = response.getResponse().getCustomData();
@@ -155,8 +158,8 @@ public class OrdersService {
         String payMethod = response.getResponse().getPgProvider();
 
         Gson gson = new Gson();
-        Cart cart = gson.fromJson(customDataString, Cart.class);
-        Long cartIdx = cart.getIdx();
+        PaymentDto paymentDto = gson.fromJson(customDataString, PaymentDto.class);
+        Long cartIdx = paymentDto.getCartDtoList().get(0).getCartIdx();
 
         Long amount = response.getResponse().getAmount().longValue();
         String merchantUid = response.getResponse().getMerchantUid();
@@ -167,7 +170,7 @@ public class OrdersService {
         Integer productPrice = null;
 
         for (CartDetail cartDetail: cartDetailList) {
-            productPrice =+ cartDetail.getProduct().getPrice();
+            productPrice =+ (cartDetail.getProduct().getPrice() * cartDetail.getProductQuantity());
         }
         System.out.println("productPrice = " + productPrice);
         System.out.println("amount = " + amount);
@@ -181,8 +184,14 @@ public class OrdersService {
 
             return BaseResponse.failResponse(444, "금액 불일치");
         }
+        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
+        user = userResult.get();
 
         create(payMethod ,cartIdx, merchantUid, amount);
+
+        for (CartDetail cartDetail: cartDetailList) {
+            cartService.delete(user, cartIdx, cartDetail.getProduct().getProductName());
+        }
 
         return BaseResponse.successResponse("결제 성공", customDataString);
     }
