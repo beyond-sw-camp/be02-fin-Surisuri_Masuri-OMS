@@ -23,9 +23,9 @@ public class CartController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/list")
-    public ResponseEntity list(Long idx, Integer page, Integer size) {
+    public ResponseEntity list(@AuthenticationPrincipal User user, Integer page, Integer size) {
 
-        return ResponseEntity.ok().body(cartService.list(idx, page, size));
+        return ResponseEntity.ok().body(cartService.list(user, page, size));
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
