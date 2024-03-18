@@ -1,64 +1,70 @@
 <template>
-    <div class="container-fluid px-4">
-        
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        창고 목록
-                    </div>
-                    <div class="card-body">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">창고 이름</th>
-                                    <th scope="col">창고 주소</th>
-                                    <th scope="col">담당자</th>
-                                    <th scope="col">담당자 번호</th>
-                                    <th scope="col">창고 복잡도</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(containers, index) in containerss" :key="containers.id">
-                                    <th scope="row">{{ index + 1 }}</th>
-                                    <td>{{ containers.containerName }}</td>
-                                    <td>{{ containers.containerAddr }}</td>
-                                    <td>{{ containers.containerManger }}</td>
-                                    <td>{{ containers.managerPhone }}</td>
-                                    <td>{{ containers.containerComp }}</td>
-                                    <td>
-                                        <button @click="goToContainerDetail(containers.id)" class="btn btn-primary btn-sm">상세보기</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="container mt-4">
+      <h1 class="mb-4">창고 목록</h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">창고 이름</th>
+            <th scope="col">주소</th>
+            <th scope="col">복잡도</th>
+            <th scope="col">관리자</th>
+            <th scope="col">연락처</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(container, index) in containers" :key="container.idx">
+            <th scope="row">{{ index + 1 }}</th>
+            <td>{{ container.containerName }}</td>
+            <td>{{ container.containerAddr }}</td>
+            <td>{{ container.containerComplexity }}</td>
+            <td>{{ container.containerManager }}</td>
+            <td>{{ container.containerPhoneNo }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
-</template>
-
-<script>
-export default {
+  </template>
+  
+  <script>
+  import axios from "axios";
+  
+  export default {
     data() {
-        return {
-            containerss: [
-                { id: 1, containerName: '창고1', containerAddr: '서울' , containerManger: '김서울' , managerPhone: '010-1234-1234' , containerComp: '1'},
-                { id: 2, containerName: '창고2', containerAddr: '경기' , containerManger: '최경기' , managerPhone: '010-1234-1234' , containerComp: '0'},
-                { id: 3, containerName: '창고3', containerAddr: '대전' , containerManger: '박대전' , managerPhone: '010-1234-1234' , containerComp: '0'},
-                { id: 4, containerName: '창고4', containerAddr: '부산' , containerManger: '송부산' , managerPhone: '010-1234-1234' , containerComp: '1'},
-                { id: 5, containerName: '창고5', containerAddr: '제주' , containerManger: '이제주' , managerPhone: '010-1234-1234' , containerComp: '1'},
-                
-            ],
-        };
+      return {
+        containers: [], // 창고 목록을 저장할 배열
+        pagination: {
+          // 페이지네이션 정보를 저장할 객체
+          page: 1, // 기본 페이지 번호
+          size: 10, // 기본 페이지당 항목 수
+        },
+      };
+    },
+    created() {
+      this.fetchContainers(); // 컴포넌트 생성 시 창고 목록을 불러오도록 설정
     },
     methods: {
-        goToContainerDetail(id) {
-            this.$router.push({ name: 'ContainerDetail', params: { id: id }});
-        },
+      async fetchContainers() {
+        try {
+          const response = await axios.get("http://localhost:8080/container/list", {
+            params: this.pagination,
+          });
+          // 성공적으로 데이터를 받아온 경우, 받아온 데이터의 구조와 내용을 콘솔에 출력
+          console.log("받아온 데이터 객체 정보:", response.data);
+          this.containers = response.data.result; // 'data.result'로 수정
+        } catch (error) {
+          if (!error.response) {
+            console.error("네트워크 오류가 발생했습니다. 서버에 접근할 수 없습니다.");
+          } else if (error.response.status === 404) {
+            console.error("찾을 수 없는 리소스입니다.");
+          } else if (error.response.status === 500) {
+            console.error("서버 내부 오류가 발생했습니다.");
+          } else {
+            console.error("오류가 발생했습니다: ", error.message);
+          }
+        }
+      }
     },
-}; 
-</script>
+  };
+  </script>
+  
