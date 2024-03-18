@@ -8,14 +8,9 @@ import com.example.Surisuri_Masuri.notice.model.response.GetListNoticeRes;
 import com.example.Surisuri_Masuri.notice.model.response.PostCreateNoticeRes;
 import com.example.Surisuri_Masuri.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -76,7 +71,7 @@ public class NoticeService {
             notice.update(patchUpdateNoticeReq);
             noticeRepository.save(notice);
 
-            return BaseResponse.successResponse("공지사항 수정 성공",patchUpdateNoticeReq);
+            return BaseResponse.successResponse("공지사항 수정 성공", null);
         } else {
             return BaseResponse.successResponse("공지사항 수정 실패",null);
         }
