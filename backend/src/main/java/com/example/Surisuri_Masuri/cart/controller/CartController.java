@@ -2,12 +2,11 @@ package com.example.Surisuri_Masuri.cart.controller;
 
 import com.example.Surisuri_Masuri.cart.model.dto.request.CartCreateReq;
 import com.example.Surisuri_Masuri.cart.service.CartService;
+import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cart")
@@ -17,20 +16,21 @@ public class CartController {
     private final CartService cartService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/addcart")
-    public ResponseEntity addCart(CartCreateReq req) {
+    public ResponseEntity addCart(@AuthenticationPrincipal User user,
+                                  @RequestBody CartCreateReq req) {
 
-        return ResponseEntity.ok().body(cartService.addCart(req));
+        return ResponseEntity.ok().body(cartService.addCart(user, req));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/list")
-    public ResponseEntity list(Long idx, Integer page, Integer size) {
+    public ResponseEntity list(@AuthenticationPrincipal User user, Integer page, Integer size) {
 
-        return ResponseEntity.ok().body(cartService.list(idx, page, size));
+        return ResponseEntity.ok().body(cartService.list(user, page, size));
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
-    public ResponseEntity delete(Long idx, Long productIdx) {
+    public ResponseEntity delete(@AuthenticationPrincipal User user, Long cartIdx, String productName) {
 
-        return ResponseEntity.ok().body(cartService.delete(idx, productIdx));
+        return ResponseEntity.ok().body(cartService.delete(user, cartIdx, productName));
     }
 }
