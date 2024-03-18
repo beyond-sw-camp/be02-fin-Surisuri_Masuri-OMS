@@ -1,6 +1,9 @@
 package com.example.Surisuri_Masuri.member.Service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
+import com.example.Surisuri_Masuri.exception.EntityException.ManagerException;
+import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
@@ -41,15 +44,21 @@ public class ManagerService {
         Date create = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
         Date update = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
 
-            // 1. 이메일을 통해 이미 존재하는 회원인지 확인
-            if (managerRepository.findByManagerId(managerSignUpReq.getManagerEmail()).isPresent()) {
-                return BaseResponse.failResponse(7000, "중복된 회원이 있습니다.");
+            // 1. 이메일과 아이디를 통해 이미 존재하는 회원인지 확인
+            if (managerRepository.findByManagerId(managerSignUpReq.getManagerId()).isPresent()) {
+                throw new ManagerException(ErrorCode.ManagerRegister_006,
+                        String.format("Already exist Manager ID"));
+            }
+
+            if (managerRepository.findByManagerEmail(managerSignUpReq.getManagerEmail()).isPresent()) {
+            throw new ManagerException(ErrorCode.ManagerRegister_007,
+                    String.format("Already exist Manager Email"));
             }
 
             // 1-1. 생성하여
             Manager manager = Manager.builder()
                     .managerId(managerSignUpReq.getManagerId())
-                    .managerPassword(passwordEncoder.encode(managerSignUpReq.getManagerEmail()))
+                    .managerPassword(passwordEncoder.encode(managerSignUpReq.getManagerPassword()))
                     .managerEmail(managerSignUpReq.getManagerEmail())
                     .managerName(managerSignUpReq.getManagerName())
                     .managerPhoneNo(managerSignUpReq.getManagerPhoneNo())
@@ -85,17 +94,24 @@ public class ManagerService {
     // 로그인 기능
     public BaseResponse<LoginRes> ManagerLogin(LoginReq managerLoginReq) {
         LoginRes loginRes = null;
+
         Optional<Manager> manager = managerRepository.findByManagerId(managerLoginReq.getId());
+
         if (manager.isEmpty()) {
-            return BaseResponse.failResponse(7000, "가입되지 않은 회원입니다.");
-        } else if (manager.isPresent() && passwordEncoder.matches(managerLoginReq.getPassword(), manager.get().getPassword()))
-            ;
+            throw new ManagerException(ErrorCode.ManagerLogin_003,
+                    String.format("Wrong Id"));
+        }
+
+        if (manager.isPresent() && passwordEncoder.matches(managerLoginReq.getPassword(), manager.get().getPassword()))
         {
             loginRes = LoginRes.builder()
                     .jwtToken(JwtUtils.generateAccessToken(manager.get(), secretKey, expiredTimeMs))
                     .build();
+            return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
         }
-        return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
+
+        else throw new ManagerException(ErrorCode.ManagerLogin_004,
+                String.format("Wrong Password"));
     }
 
     public Manager getManagerByManagerId (String id){

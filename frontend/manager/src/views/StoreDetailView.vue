@@ -1,57 +1,61 @@
 <template>
-    <main>
-        <div class="container-fluid px-4">
-            <div v-if="loading" class="text-center">
-                로딩 중...
-            </div>
-            <div v-else class="card mb-4">
-                <div class="card-header">
-                    주문 상세 정보
-                </div>
-                <div class="card-body">
-                    <!-- 주문 정보 및 주문한 품목 표시 -->
-                    <!-- 생략 -->
-                </div>
-            </div>
+  <main>
+    <div class="container-fluid px-4">
+      <div v-if="loading" class="text-center">로딩 중...</div>
+      <div v-else class="card mb-4">
+        <div class="card-header">주문 상세 정보</div>
+        <div class="card-body">
+          <div v-if="orderDetails">
+            <p><strong>주문 번호:</strong> {{ orderDetails.merchantUid }}</p>
+            <p><strong>주문 일시:</strong> {{ orderDetails.createdDate }}</p>
+            <p><strong>주문 상태:</strong> {{ orderDetails.deliveryStatus }}</p>
+            <p><strong>총 금액:</strong> {{ orderDetails.totalPrice }}</p>
+            <p><strong>주문 품목:</strong></p>
+            <ul>
+              <li>{{ orderDetails.productDtoRes.productName }} - {{ orderDetails.productDtoRes.productQuantity }}개</li>
+            </ul>
+          </div>
+          <div v-else>주문 상세 정보를 찾을 수 없습니다.</div>
         </div>
-    </main>
+      </div>
+    </div>
+  </main>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-    name: "OrderDetailView",
-    data() {
-        return {
-            loading: true, // 로딩 상태
-            orderDetails: {} // 초기 상태는 비어있음
-        };
-    },
-    created() {
-        this.fetchOrderDetails();
-    },
-    methods: {
-        async fetchOrderDetails() {
-            this.loading = true;
-            const orderNumber = this.$route.params.orderNumber;
-            // 서버로부터 주문 상세 정보를 가져오는 로직 구현
-            // 예시: const response = await axios.get(`/api/orders/${orderNumber}`);
-            // this.orderDetails = response.data;
+  name: "OrderDetailView",
+  data() {
+    return {
+      loading: true, // 로딩 상태
+      orderDetails: {}, // 초기 상태는 비어있음
+    };
+  },
+  created() {
+    this.fetchOrderDetails();
+  },
+  methods: {
+    async fetchOrderDetails() {
+      this.loading = true;
+      const merchantUid = this.$route.params.merchantUid;
+      const token = sessionStorage.getItem("token");
 
-            // 임시 데이터로 대체
-            this.orderDetails = {
-                orderNumber: orderNumber,
-                orderDate: '2023-03-15',
-                paymentAmount: '60,000원',
-                deliveryStatus: '배송 중',
-                items: [
-                    { itemId: 'ITM001', name: '상품 A', quantity: 2, price: '20,000원' },
-                    { itemId: 'ITM002', name: '상품 B', quantity: 1, price: '40,000원' },
-                    // 추가 품목 데이터...
-                ],
-            };
+      try {
+        const response = await axios.get(`http://localhost:8080/orders/${merchantUid}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        this.orderDetails = response.data.result;
+        console.log(this.orderDetails);
+      } catch (error) {
+        console.error("Error fetching order details:", error);
+      }
 
-            this.loading = false;
-        }
+      this.loading = false;
     },
-}
+  },
+};
 </script>

@@ -1,6 +1,8 @@
 package com.example.Surisuri_Masuri.notice.service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
+import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.notice.model.entity.Notice;
 import com.example.Surisuri_Masuri.notice.model.request.PatchUpdateNoticeReq;
 import com.example.Surisuri_Masuri.notice.model.request.PostCreateNoticeReq;
@@ -72,8 +74,11 @@ public class NoticeService {
             noticeRepository.save(notice);
 
             return BaseResponse.successResponse("공지사항 수정 성공", null);
-        } else {
-            return BaseResponse.successResponse("공지사항 수정 실패",null);
+        }
+
+        else {
+            throw new ContainerException(ErrorCode.NoticeUpdate_002,
+                    String.format("Notice Idx [ %s ] doesn't has Notice.", patchUpdateNoticeReq.getNoticeIdx()));
         }
     }
 
@@ -85,8 +90,10 @@ public class NoticeService {
             Notice notice = result.get();
             noticeRepository.delete(notice);
             return BaseResponse.successResponse("공지사항 삭제 성공",null);
-        } else {
-            return BaseResponse.successResponse("삭제할 공지사항이 존재하지 않습니다",null);
+        }
+        else {
+            throw new ContainerException(ErrorCode.NoticeDelete_002,
+                    String.format("Notice Idx [ %s ] doesn't has Notice.", noticeIdx));
         }
 
     }

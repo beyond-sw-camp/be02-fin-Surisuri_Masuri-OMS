@@ -11,7 +11,12 @@ import com.example.Surisuri_Masuri.container.model.response.GetSingleContainerSt
 import com.example.Surisuri_Masuri.container.model.response.PostCreateContainerRes;
 import com.example.Surisuri_Masuri.container.repository.ContainerRepository;
 import com.example.Surisuri_Masuri.container.repository.ContainerStockRepository;
+import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
+import com.example.Surisuri_Masuri.exception.EntityException.ContainerStockException;
+import com.example.Surisuri_Masuri.exception.EntityException.ProductException;
+import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.product.model.Product;
+import com.example.Surisuri_Masuri.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +29,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +37,19 @@ public class ContainerService {
 
     private final ContainerRepository containerRepository;
     private final ContainerStockRepository containerStockRepository;
+    private final ProductRepository productRepository;
 
     public BaseResponse create(PostCreateContainerReq postCreateContainerReq) {
+
+        Optional<Container> test1 = containerRepository.findContainerByContainerAddr(postCreateContainerReq.getContainerAddr());
+        Optional<Container> test2 = containerRepository.findContainerByContainerName(postCreateContainerReq.getContainerName());
+
+        if(test1.isPresent())
+            throw new ContainerException(ErrorCode.ContainerCreate_003,String.format("Container Addr [ %s ] is duplicated.", postCreateContainerReq.getContainerAddr()));
+
+        if(test2.isPresent())
+            throw new ContainerException(ErrorCode.ContainerCreate_004,String.format("Container Name [ %s ] is duplicated.", postCreateContainerReq.getContainerName()));
+
 
         Container container = Container.builder()
                 .containerName(postCreateContainerReq.getContainerName())
@@ -55,6 +72,16 @@ public class ContainerService {
     }
 
     public BaseResponse createContainerProduct(ContainerCreateProductReq req) {
+
+        Optional<Container> test1 = containerRepository.findById(req.getContainerIdx());
+        Optional<Product> test2 = productRepository.findById(req.getProductIdx());
+
+        if(test1.isEmpty())
+            throw new ContainerException(ErrorCode.ContainerCreate_005,String.format("Container Idx [ %s ] is not Exist.", req.getContainerIdx()));
+
+        if(test2.isEmpty())
+            throw new ProductException(ErrorCode.ProductSearch_002,String.format("Product Idx [ %s ] is not Exist.", req.getProductIdx()));
+
 
         containerStockRepository.save(ContainerStock.builder()
                 .container(Container.builder().idx(req.getContainerIdx()).build())
@@ -95,6 +122,10 @@ public class ContainerService {
 
         List<ContainerStock> result = containerStockRepository.findByContainerIdx(containerIdx);
 
+        if(result.isEmpty())
+            throw new ContainerException(ErrorCode.ContainerCreate_005,
+                    String.format("Container Idx [ %s ] doesn't has Products.", containerIdx));
+
         List<GetSingleContainerStockRes> getSingleContainerStockResList = new ArrayList<>();
 
         for (ContainerStock containerStock : result) {
@@ -112,10 +143,17 @@ public class ContainerService {
     }
 
     public BaseResponse<List<ContainerStockDto>> discardExpiredFoodProducts() {
+
         // 현재 날짜를 기준으로 1주일 전의 날짜를 계산합니다.
         LocalDate currentDate = LocalDate.now().plusDays(7);
+
         // 유통기한이 1주일 남은 식품 상품들을 조회합니다.
         List<ContainerStock> expiredFoodProducts = containerStockRepository.findExpiredFoodProducts(currentDate);
+
+        if(expiredFoodProducts.isEmpty())
+        {
+            throw new ContainerStockException(ErrorCode.ContainerStock_002,("No Product for Discard."));
+        }
 
         // 조회된 상품들을 폐기 처리합니다.
         for (ContainerStock containerStock : expiredFoodProducts) {

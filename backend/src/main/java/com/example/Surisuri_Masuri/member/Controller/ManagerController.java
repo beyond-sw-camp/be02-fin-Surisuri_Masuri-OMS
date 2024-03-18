@@ -13,6 +13,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.validation.Valid;
+
 @RestController
 @CrossOrigin("*")
 @RequiredArgsConstructor
@@ -22,14 +24,14 @@ public class ManagerController {
 
     // 계정 생성 - Create
     @PostMapping("/manager/register")
-    public ResponseEntity ManagerSignUp(@RequestBody ManagerSignUpReq managerSignUpReq)
+    public ResponseEntity ManagerSignUp(@Valid @RequestBody ManagerSignUpReq managerSignUpReq)
     {
         return ResponseEntity.ok().body(managerService.ManagerSignUp(managerSignUpReq));
     }
 
     // 로그인 기능
     @PostMapping("/manager/login")
-    public ResponseEntity ManagerLogin(@RequestBody LoginReq loginReq)
+    public ResponseEntity ManagerLogin(@RequestBody @Valid LoginReq loginReq)
     {
         return ResponseEntity.ok().body(managerService.ManagerLogin(loginReq));
     }

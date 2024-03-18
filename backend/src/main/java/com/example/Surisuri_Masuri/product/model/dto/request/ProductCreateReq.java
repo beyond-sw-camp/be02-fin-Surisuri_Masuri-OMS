@@ -13,4 +13,5 @@ public class ProductCreateReq {
     String productName;
     Integer price;
     LocalDate exprireAt;
+    Boolean isItFood;
 }
