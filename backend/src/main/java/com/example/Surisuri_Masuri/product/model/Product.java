@@ -1,0 +1,65 @@
+package com.example.Surisuri_Masuri.product.model;
+
+import com.example.Surisuri_Masuri.cart.model.CartDetail;
+import com.example.Surisuri_Masuri.container.model.entity.ContainerStock;
+import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
+import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
+import lombok.*;
+
+import javax.persistence.*;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
+@Setter
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idx;
+
+    @Column(nullable = false)
+    private String productName;
+
+    @Column(nullable = false)
+    private Integer price;
+
+    @Column(nullable = false, updatable = false)
+    private Date createdAt;
+
+    @Column(nullable = false)
+    private Date updatedAt;
+
+    @Column(nullable = false)
+    private Boolean isItFood;
+
+    @OneToMany(mappedBy = "product")
+    private List<StoreStock> storeStocks;
+
+    @OneToMany(mappedBy = "product")
+    private List<OrdersDetail> ordersDetailList;
+
+    @OneToMany(mappedBy = "product")
+    private List<ContainerStock> containerStockList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product")
+    private List<CartDetail> cartDetailList = new ArrayList<>();
+
+    @PrePersist
+    void createdAt() {
+        this.createdAt = Timestamp.from(Instant.now());
+        this.updatedAt = Timestamp.from(Instant.now());
+    }
+
+    @PreUpdate
+    void updatedAt() {
+        this.updatedAt = Timestamp.from(Instant.now());
+    }
+}
