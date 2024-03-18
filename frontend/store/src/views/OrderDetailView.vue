@@ -32,6 +32,7 @@
                                 <th>주문번호</th>
                                 <th>상품 정보</th>
                                 <th>결제 금액</th>
+                                <th>취소</th> <!-- 여기에 취소 칸을 추가 -->
                             </tr>
                         </thead>
                         <tbody>
@@ -44,6 +45,10 @@
                                     </div>
                                 </td>
                                 <td>{{ order.totalAmount }}</td>
+                                <td>
+                                    <!-- 취소 버튼 추가, btn-danger 클래스 사용 -->
+                                    <button type="button" class="btn btn-danger">취소</button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
