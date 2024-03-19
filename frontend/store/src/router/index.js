@@ -7,8 +7,8 @@ import ResetPasswordView from '../views/ResetPasswordView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import ProductView from '../views/ProductView.vue';
 import OrderDetailView from '../views/OrderDetailView.vue';
-import NofiView from '../views/NofiView.vue';
-import NofiDetailView from '@/views/NofiDetailView.vue';
+import NoticeView from '../views/NoticeView.vue';
+import NoticeDetailView from '@/views/NoticeDetailView.vue';
 import QuestionList from '../views/QuestionList.vue';
 import QuestionDetail from '../views/QuestionDetail.vue';
 import ResetLoginView from '../views/ResetLoginView.vue';
@@ -66,14 +66,14 @@ const routes = [
     component: OrderDetailView // 로그인 컴포넌트
   },
   {
-    path: '/nofi',
-    name: 'NofiView',
-    component: NofiView,
+    path: '/notice',
+    name: 'NoticeView',
+    component: NoticeView,
 },
   {
     path: '/noticedetail',
     name: 'NoticeDetail',
-    component: NofiDetailView,
+    component: NoticeDetailView,
     props: (route) => ({ query: route.query })
   },
   {

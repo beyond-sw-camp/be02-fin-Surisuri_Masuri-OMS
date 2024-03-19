@@ -9,8 +9,8 @@
                     </div>
                     <div class="card-body">
                         <p>제목: {{ this.$route.query.title }}</p>
-                        <p>내용: {{ this.$route.query.content }}</p>
-                        <a @click="goBack" class="card-link">목록으로 돌아가기</a>
+                        <p>내용: {{ this.$route.query.content }}</p> 
+                        <a @click="goBack" class="btn btn-primary btn-sm">목록으로 돌아가기</a>
                     </div>
                 </div>
             </div>
@@ -22,7 +22,7 @@
 export default {
   methods: {
     goBack() {
-      this.$router.push('/nofi'); // 공지사항 목록 페이지로 이동
+      this.$router.push('/notice'); // 공지사항 목록 페이지로 이동
     },
   },
 };

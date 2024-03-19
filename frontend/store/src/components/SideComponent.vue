@@ -63,10 +63,10 @@
             >
           </li>
           <li data-v-2cf85266="" class="sidebar-item">
-            <a data-v-2cf85266="" href="/nofi" class="sidebar-link"
+            <a data-v-2cf85266="" href="/notice" class="sidebar-link"
               ><span data-v-2cf85266=""
                 ><i data-v-2cf85266="" class="ti ti-file-description"></i></span
-              ><span data-v-2cf85266="" class="hide-menu">공지사항</span></a
+              ><span data-v-2cf85266="" class="hide-menu">공지사항</span></a 
             >
           </li>
           <li data-v-2cf85266="" class="sidebar-item">
