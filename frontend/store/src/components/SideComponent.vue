@@ -70,7 +70,7 @@
             >
           </li>
           <li data-v-2cf85266="" class="sidebar-item">
-            <a data-v-2cf85266="" href="/inquiry" class="sidebar-link"
+            <a data-v-2cf85266="" href="/question" class="sidebar-link"
               ><span data-v-2cf85266=""
                 ><i data-v-2cf85266="" class="ti ti-typography"></i></span
               ><span data-v-2cf85266="" class="hide-menu">문의사항</span></a

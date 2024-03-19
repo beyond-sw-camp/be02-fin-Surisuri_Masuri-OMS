@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid px-4">
-    <router-link to="/inquiry/new" class="btn btn-primary mb-3">새 문의사항 작성</router-link>
+    <router-link to="/question/new" class="btn btn-primary mb-3">새 문의사항 작성</router-link>
     <div class="row">
       <div class="col">
         <div class="card">
