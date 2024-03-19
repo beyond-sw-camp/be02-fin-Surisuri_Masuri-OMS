@@ -4,69 +4,69 @@
     <div>
       <div class="brand-logo d-flex align-items-center justify-content-between">
         <router-link to="/home" class="text-nowrap logo-img">
-          <img src="../assets/Group24.png" width="100%" alt="">
+          <img src="../assets/Group24.png" width="100%" alt="" />
         </router-link>
-        <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
-        </div>
+        <div
+          class="close-btn d-xl-none d-block sidebartoggler cursor-pointer"
+          id="sidebarCollapse"
+        ></div>
       </div>
       <!-- Sidebar navigation-->
-      <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-        <ul id="sidebarnav">
-          <li class="nav-small-cap">
-            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-            <span class="hide-menu">Home</span>
+      <nav
+        data-v-2cf85266=""
+        class="sidebar-nav scroll-sidebar"
+        data-simplebar=""
+      >
+        <ul data-v-2cf85266="" id="sidebarnav">
+          <li data-v-2cf85266="" class="nav-small-cap">
+            <i data-v-2cf85266="" class="ti ti-dots nav-small-cap-icon fs-4"></i
+            ><span data-v-2cf85266="" class="hide-menu"></span>
           </li>
-          <li class="sidebar-item">
-            <router-link class="sidebar-link" to="/home">
-              <span>
-                <i class="ti ti-layout-dashboard"></i>
-              </span>
-              <span class="hide-menu">Dashboard</span>
-            </router-link>
+          <li data-v-2cf85266="" class="sidebar-item">
+            <a
+              data-v-2cf85266=""
+              aria-current="page"
+              href="/home"
+              class="router-link-active router-link-exact-active sidebar-link"
+              ><span data-v-2cf85266=""
+                ><i data-v-2cf85266="" class="ti ti-layout-dashboard"></i></span
+              ><span data-v-2cf85266="" class="hide-menu">HOME</span></a
+            >
           </li>
-          <li class="nav-small-cap">
-            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-            <span class="hide-menu">본사 관리</span>
+          <li data-v-2cf85266="" class="sidebar-item">
+            <a data-v-2cf85266="" href="/shop" class="sidebar-link"
+              ><span data-v-2cf85266=""
+                ><i data-v-2cf85266="" class="ti ti-home"></i></span
+              ><span data-v-2cf85266="" class="hide-menu">가맹점 조회</span></a
+            >
           </li>
-          <li class="sidebar-item">
-            <router-link class="sidebar-link" to="/shop">
-              <span>
-                <i class="ti ti-home"></i>
-              </span>
-              <span class="hide-menu">가맹점 조회</span>
-            </router-link>
+          <li data-v-2cf85266="" class="sidebar-item">
+            <a data-v-2cf85266="" href="/store" class="sidebar-link"
+              ><span data-v-2cf85266=""
+                ><i data-v-2cf85266="" class="ti ti-shopping-cart"></i></span
+              ><span data-v-2cf85266="" class="hide-menu">주문 내역</span></a
+            >
           </li>
-          <li class="sidebar-item">
-            <router-link class="sidebar-link" to="/store">
-              <span>
-                <i class="ti ti-shopping-cart"></i>
-              </span>
-              <span class="hide-menu">주문 내역</span>
-            </router-link>
+          <li data-v-2cf85266="" class="sidebar-item">
+            <a data-v-2cf85266="" href="/container" class="sidebar-link"
+              ><span data-v-2cf85266=""
+                ><i data-v-2cf85266="" class="ti ti-package"></i></span
+              ><span data-v-2cf85266="" class="hide-menu">창고</span></a
+            >
           </li>
-          <li class="sidebar-item">
-            <router-link class="sidebar-link" to="/container">
-              <span>
-                <i class="ti ti-package"></i>
-              </span>
-              <span class="hide-menu">창고</span>
-            </router-link>
+          <li data-v-2cf85266="" class="sidebar-item">
+            <a data-v-2cf85266="" href="/notice" class="sidebar-link"
+              ><span data-v-2cf85266=""
+                ><i data-v-2cf85266="" class="ti ti-file-description"></i></span
+              ><span data-v-2cf85266="" class="hide-menu">공지사항</span></a
+            >
           </li>
-          <li class="sidebar-item">
-            <router-link class="sidebar-link" to="/notice">
-              <span>
-                <i class="ti ti-file-description"></i>
-              </span>
-              <span class="hide-menu">공지사항</span>
-            </router-link>
-          </li>
-          <li class="sidebar-item">
-            <router-link class="sidebar-link" to="/inquiries">
-              <span>
-                <i class="ti ti-typography"></i>
-              </span>
-              <span class="hide-menu">문의사항</span>
-            </router-link>
+          <li data-v-2cf85266="" class="sidebar-item">
+            <a data-v-2cf85266="" href="/question" class="sidebar-link"
+              ><span data-v-2cf85266=""
+                ><i data-v-2cf85266="" class="ti ti-typography"></i></span
+              ><span data-v-2cf85266="" class="hide-menu">문의사항</span></a
+            >
           </li>
         </ul>
       </nav>
@@ -75,45 +75,39 @@
   </aside>
 </template>
 
-<script>
-
-</script>
+<script></script>
 
 <style scoped>
-
 .left-sidebar {
-    height: 100vh; 
-    min-width: 18%; 
-    z-index: 1000; 
-    position: relative; 
+  height: 100vh;
+  min-width: 18%;
+  z-index: 1000;
+  position: relative;
 }
 
 .left-sidebar a {
-    text-decoration: none; /* 링크의 밑줄 제거 */
-    color: inherit;
-     /* 링크 색상을 상위 요소의 색상과 동일하게 설정 */
+  text-decoration: none; /* 링크의 밑줄 제거 */
+  color: inherit;
+  /* 링크 색상을 상위 요소의 색상과 동일하게 설정 */
 }
 
-
 .sidebar-item .hide-menu {
-    font-size: 19px; /* 세부 목차 글씨 크기 조정 */
+  font-size: 19px; /* 세부 목차 글씨 크기 조정 */
 }
 
 .nav-small-cap {
-    font-size: 18px;
-    margin-top: 30px;
-    margin-bottom: 30px;
+  font-size: 18px;
+  margin-top: 30px;
+  margin-bottom: 5px;
 }
 
 /* 세부 항목 글씨 크기 및 간격 조정 */
 .sidebar-item {
-    margin-bottom: 20px; /* 항목 사이의 간격 늘리기 */
+  margin-bottom: 20px; /* 항목 사이의 간격 늘리기 */
 }
 
 .giga-coffee {
-    width: 80px;
-    height: 150px;
+  width: 80px;
+  height: 150px;
 }
-
 </style>
-

@@ -4,8 +4,8 @@ import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
 import StoreView from '../views/StoreView.vue';
 import StoreDetailView from '../views/StoreDetailView.vue'; // 확장자 .vue를 추가해 주세요.
-import AdminInquiryList from '../views/AdminInquiryList.vue';
-import AdminInquiryDetail from '../views/AdminInquiryDetail.vue';
+import QuestionList from '../views/QuestionList.vue';
+import QuestionDetail from '../views/QuestionDetail.vue';
 
 import ContainerList from '../views/ContainerList.vue';
 import ContainerDetail from '@/views/ContainerDetail.vue'; // 상대 경로와 절대 경로가 혼용되어 사용되었습니다. 프로젝트 설정에 따라 수정하세요.
@@ -37,14 +37,14 @@ const routes = [
     props: true // 주문 상세 정보를 표시할 컴포넌트
   },
   {
-    path: '/inquiries',
-    name: 'AdminInquiryList',
-    component: AdminInquiryList
+    path: '/question',
+    name: 'QuestionList',
+    component: QuestionList
   },
   {
-    path: '/inquirydetail/:idx?', // :idx가 필수 파라미터로 설정되어 있음
-    name: 'InquiryDetail',
-    component: AdminInquiryDetail,
+    path: '/questiondetail/:idx?', // :idx가 필수 파라미터로 설정되어 있음
+    name: 'QuestionDetail',
+    component: QuestionDetail,
     props: true, // props를 통해 파라미터를 컴포넌트에 전달할 수 있게 합니다.
   },
   { // 이 부분에서 수정이 필요했습니다. 쉼표가 누락되었었습니다.
