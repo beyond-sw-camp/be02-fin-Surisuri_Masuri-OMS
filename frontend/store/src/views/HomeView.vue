@@ -63,12 +63,12 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">번호</th>
                     <th scope="col">제목</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(notice, index) in notices" :key="notice.idx">
+                  <tr v-for="(notice, index) in notices.slice(0, 5)" :key="notice.idx">
                     <th scope="row">{{ index + 1 }}</th>
                     <td>
                       <!-- 문의사항 제목에 router-link 적용하여 상세 페이지로 이동 -->

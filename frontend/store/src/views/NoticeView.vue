@@ -10,10 +10,10 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
+                  <th scope="col">번호</th>
                   <th scope="col">제목</th>
                   <th scope="col">내용</th>
-                  <th scope="col">상세보기</th>
+                  <th scope="col"></th> 
                 </tr>
               </thead>
               <tbody>
