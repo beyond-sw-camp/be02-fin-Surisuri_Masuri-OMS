@@ -25,7 +25,7 @@
                   <td class="text-center">
                     <router-link
                       :to="{
-                        name: 'InquiryDetail',
+                        name: 'QuestionDetail',
                         query: {
                           idx: question.idx,
                           title: question.title,

@@ -28,16 +28,20 @@
         :readonly="!editable"
       />
     </div>
+    <!-- answerContent가 있을 때만 보이는 섹션 -->
+    <div class="mb-3" v-if="answerContent">
+      <label class="form-label">답변 내용:</label>
+      <textarea
+        class="form-control"
+        v-model="answerContent"
+        rows="3"
+        readonly
+      ></textarea>
+    </div>
     <div class="d-flex justify-content-between">
-      <router-link to="/question" class="btn btn-secondary"
-        >목록으로 돌아가기</router-link
-      >
-      <button v-if="!editable" @click="enableEditing" class="btn btn-primary">
-        수정
-      </button>
-      <button v-if="editable" @click="saveChanges" class="btn btn-success">
-        저장
-      </button>
+      <router-link to="/question" class="btn btn-secondary">목록으로 돌아가기</router-link>
+      <button v-if="!editable" @click="enableEditing" class="btn btn-primary">수정</button>
+      <button v-if="editable" @click="saveChanges" class="btn btn-success">저장</button>
       <button @click="deleteQuestion" class="btn btn-danger">삭제</button>
     </div>
   </div>
@@ -54,6 +58,7 @@ export default {
       questionContent: "",
       questionCategory: "",
       questionStatus: false,
+      answerContent: "", // 답변 내용 추가
       editable: false,
     };
   },
@@ -62,11 +67,13 @@ export default {
       this.editable = true;
     },
     async saveChanges() {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        alert("로그인이 필요합니다.");
+        return;
+      }
       try {
-        const token = sessionStorage.getItem("token");
-        console.log("사용할 토큰:", token);
-
-        const response = await axios.patch(
+        await axios.patch(
           "http://localhost:8080/question/update",
           {
             idx: this.questionIdx,
@@ -74,7 +81,7 @@ export default {
             content: this.questionContent,
             category: this.questionCategory,
             status: this.questionStatus,
-            // userIdx 제거, 토큰 인증으로 대체
+            // answerContent는 수정 대상에서 제외됩니다.
           },
           {
             headers: {
@@ -83,63 +90,53 @@ export default {
             },
           }
         );
-        console.log("문의사항 수정 응답:", response.data);
         alert("변경 사항이 저장되었습니다.");
         this.editable = false;
+        this.$router.push('/question'); // 수정 후 inquiry 목록으로 리다이렉트
       } catch (error) {
-        console.error("문의사항 수정 중 오류:", error);
-        console.log("오류 상세:", error.response ? error.response : error);
         alert(
           "문의사항 수정 중 오류가 발생했습니다: " +
-            (error.response && error.response.data
-              ? error.response.data.message
-              : error.message)
+          (error.response && error.response.data
+            ? error.response.data.message
+            : error.message)
         );
       }
     },
     async deleteQuestion() {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        alert("로그인이 필요합니다.");
+        return;
+      }
       try {
-        const token = sessionStorage.getItem("token");
-        if (!token) {
-          alert("로그인이 필요합니다.");
-          return;
-        }
-
-        const response = await axios.delete(
+        await axios.delete(
           `http://localhost:8080/question/delete?idx=${this.questionIdx}`,
           {
             headers: {
-              "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           }
         );
-
-        console.log("문의사항 삭제 응답:", response.data);
         alert("문의사항이 성공적으로 삭제되었습니다.");
-
-        this.questionIdx = "";
-        this.questionTitle = "";
-        this.questionContent = "";
-        this.questionCategory = "";
-        this.questionStatus = false;
+        this.$router.push('/question'); // 삭제 후 inquiry 목록으로 리다이렉트
       } catch (error) {
-        console.error("문의사항 삭제 중 오류:", error);
         alert(
           "문의사항 삭제 중 오류가 발생했습니다: " +
-            (error.response && error.response.data
-              ? error.response.data.message
-              : error.message)
+          (error.response && error.response.data
+            ? error.response.data.message
+            : error.message)
         );
       }
     },
   },
   mounted() {
-    this.questionIdx = this.$route.query.idx;
-    this.questionTitle = this.$route.query.title;
-    this.questionContent = this.$route.query.content;
-    this.questionCategory = this.$route.query.category;
-    this.questionStatus = this.$route.query.status === 'true';
+    const { idx, title, content, category, status, answerContent } = this.$route.query;
+    this.questionIdx = idx;
+    this.questionTitle = title;
+    this.questionContent = content;
+    this.questionCategory = category;
+    this.questionStatus = status === 'true';
+    this.answerContent = answerContent; // answerContent를 초기화합니다.
   },
 };
 </script>
