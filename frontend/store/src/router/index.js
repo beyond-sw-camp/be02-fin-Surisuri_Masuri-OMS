@@ -9,13 +9,13 @@ import ProductView from '../views/ProductView.vue';
 import OrderDetailView from '../views/OrderDetailView.vue';
 import NofiView from '../views/NofiView.vue';
 import NofiDetailView from '@/views/NofiDetailView.vue';
-import InquiryList from '../views/InquiryList.vue';
-import InquiryDetail from '../views/InquiryDetail.vue';
+import QuestionList from '../views/QuestionList.vue';
+import QuestionDetail from '../views/QuestionDetail.vue';
 import ResetLoginView from '../views/ResetLoginView.vue';
 import UserProfileView from '../views/UserProfileView.vue';
 import StockEditView from '../views/StockEditView.vue';
 import CartView from '../views/CartView.vue';
-import InquiryNew from '../views/InquiryNew.vue';
+import QuestionNew from '../views/QuestionNew.vue';
 
 
 
@@ -77,19 +77,19 @@ const routes = [
     props: (route) => ({ query: route.query })
   },
   {
-    path: '/inquiry',
-    name: 'InquiryList',
-    component: InquiryList,
+    path: '/question',
+    name: 'QuestionList',
+    component: QuestionList,
   },
   {
-    path: '/inquiry/new',
-    name: 'NewInquiry',
-    component: InquiryNew,
+    path: '/question/new',
+    name: 'QuestionNew',
+    component: QuestionNew,
   },
   {
-    path: '/inquirydetail/:idx?', // :idx가 필수 파라미터로 설정되어 있음
-    name: 'InquiryDetail',
-    component: InquiryDetail,
+    path: '/questiondetail/:idx?', // :idx가 필수 파라미터로 설정되어 있음
+    name: 'QuestionDetail',
+    component: QuestionDetail,
     // 다른 설정들...
   },
   {
