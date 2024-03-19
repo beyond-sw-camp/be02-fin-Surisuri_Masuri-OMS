@@ -37,32 +37,45 @@
   </template>
   
   <script>
-import axios from 'axios';
-
-export default {
-  data() {
-    return {
-      userName: '',
-      userEmail: '',
-    };
-  },
-  methods: {
-    async resetPassword() {
-      try {
-        // 서버로 비밀번호 재설정 요청을 보냅니다.
-        const response = await axios.post('http://localhost:8080/user/findPassword', {
-          userEmail: this.userEmail,
-        });
-
-        // 요청이 성공적으로 처리되었을 때의 로직을 여기에 작성합니다.
-        console.log('비밀번호 재설정 요청이 성공적으로 처리되었습니다.', response.data);
-
-        // 예를 들어, 사용자에게 알림을 보여줄 수 있습니다.
-      } catch (error) {
-        // 요청이 실패했을 때의 오류 처리 로직을 여기에 작성합니다.
-        console.error('비밀번호 재설정 요청 중 오류가 발생했습니다:', error.response.data);
-      }
+  import axios from 'axios';
+  
+  export default {
+    data() {
+      return {
+        userName: '',
+        userEmail: '',
+      };
     },
-  },
-};
-</script>
+    methods: {
+      async resetPassword() {
+        if (!this.userName.trim() || !this.userEmail.trim()) {
+          alert('이름과 이메일을 모두 입력해주세요.');
+          return;
+        }
+  
+        try {
+          const response = await axios.post('http://localhost:8080/user/findPassword', {
+            name: this.userName, // API 요청에 맞게 필드 이름이 수정됐는지 확인하세요.
+            email: this.userEmail, // API 요청에 맞게 필드 이름이 수정됐는지 확인하세요.
+          });
+  
+          if (response.data.success) {
+            // 성공적으로 처리되었을 때의 메시지
+            alert('비밀번호 재설정 링크가 이메일로 전송되었습니다. 메일을 확인해주세요.');
+          } else {
+            // 서버가 처리는 했으나 성공적으로 처리되지 않은 경우
+            alert('비밀번호 재설정 요청을 처리할 수 없습니다. 입력 정보를 확인해주세요.');
+          }
+        } catch (error) {
+          let errorMessage = '비밀번호 재설정 요청 중 오류가 발생했습니다.';
+          if (error.response && error.response.data && error.response.data.message) {
+            // 서버로부터 받은 오류 메시지가 있는 경우 사용
+            errorMessage += `\n${error.response.data.message}`;
+          }
+          alert(errorMessage);
+        }
+      },
+    },
+  };
+  </script>
+  

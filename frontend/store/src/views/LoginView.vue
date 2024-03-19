@@ -38,12 +38,12 @@
 
 <script>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router'; // Vue Router import 추가
+import { useRouter } from 'vue-router';
 import { useUserStore } from '/stores/userStore';
 
 export default {
   setup() {
-    const router = useRouter(); // Vue Router 사용을 위해 useRouter() 호출
+    const router = useRouter();
     const userStore = useUserStore();
 
     const userEmail = ref('');
@@ -52,12 +52,12 @@ export default {
     const loginSubmit = async () => {
       const success = await userStore.login({ id: userEmail.value, password: userPassword.value });
       if (success) {
+        alert('로그인 성공'); // 로그인 성공 알림
         console.log('로그인 성공');
-        // 홈 페이지로 이동
         router.push('/home');
       } else {
+        alert('로그인 실패. 이메일 또는 비밀번호를 확인해주세요.'); // 로그인 실패 알림
         console.log('로그인 실패');
-        // 로그인 실패 시 추가적인 처리
       }
     };
 
@@ -65,6 +65,7 @@ export default {
   },
 };
 </script>
+
 
 <style>
 #layoutAuthentication_content {
