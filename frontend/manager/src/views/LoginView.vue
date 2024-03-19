@@ -9,7 +9,7 @@
               <div class="card-body">
                 <form @submit.prevent="loginSubmit">
                   <div class="form-floating mb-3">
-                    <input v-model="userEmail" class="form-control" id="inputEmail" type="email" placeholder="" />
+                    <input v-model="userEmail" class="form-control"  placeholder="" />
                     <label for="inputEmail">Email</label>
                   </div>
                   <div class="form-floating mb-3">
@@ -54,12 +54,15 @@ export default {
         });
 
         if (success) {
+          alert('로그인 성공'); // 성공 알림
           console.log('로그인 성공');
           router.push('/home');
         } else {
+          alert('로그인 실패. 이메일 또는 비밀번호를 확인해 주세요.'); // 실패 알림
           console.log('로그인 실패');
         }
       } catch (error) {
+        alert('로그인 요청 중 오류 발생. 다시 시도해 주세요.'); // 오류 알림
         console.error('로그인 요청 중 오류 발생:', error);
       }
     };
