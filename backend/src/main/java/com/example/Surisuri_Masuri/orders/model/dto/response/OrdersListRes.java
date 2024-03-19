@@ -10,7 +10,9 @@ import java.util.Date;
 @Getter
 public class OrdersListRes {
     ProductDtoRes productDtoRes;
-    Date date;
+    Date createdDate;
     Long totalPrice;
     String payMethod;
+    String deliveryStatus;
+    String merchantUid;
 }

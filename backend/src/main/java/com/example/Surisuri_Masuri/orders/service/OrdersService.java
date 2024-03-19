@@ -4,9 +4,16 @@ import com.example.Surisuri_Masuri.cart.model.Cart;
 import com.example.Surisuri_Masuri.cart.model.CartDetail;
 import com.example.Surisuri_Masuri.cart.repository.CartDetailRepository;
 import com.example.Surisuri_Masuri.cart.repository.CartRepository;
+import com.example.Surisuri_Masuri.cart.service.CartService;
 import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.jwt.JwtUtils;
+import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
+import com.example.Surisuri_Masuri.member.Model.Entity.User;
+import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
+import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.orders.model.Orders;
 import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
+import com.example.Surisuri_Masuri.orders.model.dto.PaymentDto;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersRefundReq;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersUpdateDeliveryReq;
 import com.example.Surisuri_Masuri.orders.model.dto.response.OrdersDetailDtoRes;
@@ -42,6 +49,9 @@ public class OrdersService {
     private final OrdersDetailRepository ordersDetailRepository;
     private final CartRepository cartRepository;
     private final CartDetailRepository cartDetailRepository;
+    private final CartService cartService;
+    private final UserRepository userRepository;
+    private final ManagerRepository managerRepository;
 
     private final IamportClient iamportClient;
 
@@ -50,6 +60,39 @@ public class OrdersService {
 
     @Value("${imp.imp_key}")
     private String apiKey;
+
+    @Value("${jwt.secret-key}")
+    private String secretKey;
+
+    public BaseResponse listDetailByMerchantUid(String merchantUid, User user) {
+        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
+        user = userResult.get();
+
+        user.getStore().getOrdersList();
+        for (Orders orders: user.getStore().getOrdersList()) {
+            List<OrdersDetail> ordersDetailResult = ordersDetailRepository.findByOrdersIdx(orders.getIdx());
+
+            for (OrdersDetail ordersDetail : ordersDetailResult) {
+                if (orders.getMerchantUid().equals(merchantUid)) {
+                    OrdersListRes ordersListRes = OrdersListRes.builder()
+                            .productDtoRes(ProductDtoRes.builder()
+                                    .productName(ordersDetail.getProduct().getProductName())
+                                    .price(ordersDetail.getProduct().getPrice())
+                                    .productQuantity(ordersDetail.getProcuctQuantity())
+                                    .build())
+                            .payMethod(orders.getPayMethod())
+                            .totalPrice(orders.getTotalPrice())
+                            .createdDate(orders.getCreatedAt())
+                            .deliveryStatus(orders.getDeliveryStatus())
+                            .merchantUid(orders.getMerchantUid())
+                            .build();
+
+                    return BaseResponse.successResponse("주문 내역 조회 성공", ordersListRes);
+                }
+            }
+        }
+        return BaseResponse.failResponse(444, "merchantUid가 일치하는 주문 내역이 없습니다");
+    }
 
     public BaseResponse updateOrdersDelivery(OrdersUpdateDeliveryReq req) {
         Optional<Orders> ordersResult = ordersRepository.findById(req.getIdx());
@@ -88,33 +131,47 @@ public class OrdersService {
         return BaseResponse.successResponse("요청 성공", ordersShowDeliveryStatusRes);
     }
 
-    public BaseResponse list(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        List<Orders> ordersResult = ordersRepository.findAll();
-        List<OrdersDetail> ordersDetailsResult = ordersDetailRepository.findAll();
+    public BaseResponse list(String token, Integer page, Integer size) {
+        token = JwtUtils.replaceToken(token);
 
-        List<OrdersListRes> ordersListResList = new ArrayList<>();
+        String email = JwtUtils.getUserEmail(token, secretKey);
+        String managerId = JwtUtils.getManagerInfo(token, secretKey);
 
-        for (Orders orders: ordersResult) {
-            List<OrdersDetail> ordersDetailResult = ordersDetailRepository.findByOrdersIdx(orders.getIdx());
+        Optional<User> userResult = userRepository.findByUserEmail(email);
+        Optional<Manager> managerResult = managerRepository.findByManagerId(managerId);
+        User user = userResult.get();
 
-            for (OrdersDetail ordersDetail: ordersDetailsResult) {
-                OrdersListRes ordersListRes = OrdersListRes.builder()
-                        .productDtoRes(ProductDtoRes.builder()
-                                .productName(ordersDetail.getProduct().getProductName())
-                                .price(ordersDetail.getProduct().getPrice())
-                                .productQuantity(ordersDetail.getProcuctQuantity())
-                                .build())
-                        .payMethod(orders.getPayMethod())
-                        .totalPrice(orders.getTotalPrice())
-                        .date(orders.getCreatedAt())
-                        .build();
+        if (userResult.isPresent() || managerResult.isPresent()) {
+            Pageable pageable = PageRequest.of(page - 1, size);
+            List<Orders> ordersResult = ordersRepository.findAll();
+            List<OrdersDetail> ordersDetailsResult = ordersDetailRepository.findAll();
 
-                ordersListResList.add(ordersListRes);
+            List<OrdersListRes> ordersListResList = new ArrayList<>();
+
+            for (Orders orders : ordersResult) {
+                List<OrdersDetail> ordersDetailResult = ordersDetailRepository.findByOrdersIdx(orders.getIdx());
+
+                for (OrdersDetail ordersDetail : ordersDetailsResult) {
+                    OrdersListRes ordersListRes = OrdersListRes.builder()
+                            .productDtoRes(ProductDtoRes.builder()
+                                    .productName(ordersDetail.getProduct().getProductName())
+                                    .price(ordersDetail.getProduct().getPrice())
+                                    .productQuantity(ordersDetail.getProcuctQuantity())
+                                    .build())
+                            .payMethod(orders.getPayMethod())
+                            .totalPrice(orders.getTotalPrice())
+                            .createdDate(orders.getCreatedAt())
+                            .deliveryStatus(orders.getDeliveryStatus())
+                            .merchantUid(orders.getMerchantUid())
+                            .build();
+
+                    ordersListResList.add(ordersListRes);
+                }
             }
-        }
 
-        return BaseResponse.successResponse("상품 리스트 검색 성공", ordersListResList);
+            return BaseResponse.successResponse("상품 리스트 성공", ordersListResList);
+        }
+        return BaseResponse.failResponse(444,"상품 리스트 불러오기 싶패");
     }
 
     public void create(String payMethod, Long cartIdx, String merchantUid, Long amount) {
@@ -146,7 +203,7 @@ public class OrdersService {
         ordersRepository.delete(ordersResult.get());
     }
 
-    public BaseResponse payment(String imp_uid) throws IamportResponseException, IOException {
+    public BaseResponse payment(User user, String imp_uid) throws IamportResponseException, IOException {
         IamportResponse<Payment> response = getPaymentInfo(imp_uid);
 
         String customDataString = response.getResponse().getCustomData();
@@ -155,8 +212,8 @@ public class OrdersService {
         String payMethod = response.getResponse().getPgProvider();
 
         Gson gson = new Gson();
-        Cart cart = gson.fromJson(customDataString, Cart.class);
-        Long cartIdx = cart.getIdx();
+        PaymentDto paymentDto = gson.fromJson(customDataString, PaymentDto.class);
+        Long cartIdx = paymentDto.getCartDtoList().get(0).getCartIdx();
 
         Long amount = response.getResponse().getAmount().longValue();
         String merchantUid = response.getResponse().getMerchantUid();
@@ -167,7 +224,7 @@ public class OrdersService {
         Integer productPrice = null;
 
         for (CartDetail cartDetail: cartDetailList) {
-            productPrice =+ cartDetail.getProduct().getPrice();
+            productPrice =+ (cartDetail.getProduct().getPrice() * cartDetail.getProductQuantity());
         }
         System.out.println("productPrice = " + productPrice);
         System.out.println("amount = " + amount);
@@ -181,8 +238,14 @@ public class OrdersService {
 
             return BaseResponse.failResponse(444, "금액 불일치");
         }
+        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
+        user = userResult.get();
 
         create(payMethod ,cartIdx, merchantUid, amount);
+
+        for (CartDetail cartDetail: cartDetailList) {
+            cartService.delete(user, cartIdx, cartDetail.getProduct().getProductName());
+        }
 
         return BaseResponse.successResponse("결제 성공", customDataString);
     }
