@@ -64,6 +64,36 @@ public class OrdersService {
     @Value("${jwt.secret-key}")
     private String secretKey;
 
+    public BaseResponse listDetailByMerchantUid(String merchantUid, User user) {
+        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
+        user = userResult.get();
+
+        user.getStore().getOrdersList();
+        for (Orders orders: user.getStore().getOrdersList()) {
+            List<OrdersDetail> ordersDetailResult = ordersDetailRepository.findByOrdersIdx(orders.getIdx());
+
+            for (OrdersDetail ordersDetail : ordersDetailResult) {
+                if (orders.getMerchantUid().equals(merchantUid)) {
+                    OrdersListRes ordersListRes = OrdersListRes.builder()
+                            .productDtoRes(ProductDtoRes.builder()
+                                    .productName(ordersDetail.getProduct().getProductName())
+                                    .price(ordersDetail.getProduct().getPrice())
+                                    .productQuantity(ordersDetail.getProcuctQuantity())
+                                    .build())
+                            .payMethod(orders.getPayMethod())
+                            .totalPrice(orders.getTotalPrice())
+                            .createdDate(orders.getCreatedAt())
+                            .deliveryStatus(orders.getDeliveryStatus())
+                            .merchantUid(orders.getMerchantUid())
+                            .build();
+
+                    return BaseResponse.successResponse("주문 내역 조회 성공", ordersListRes);
+                }
+            }
+        }
+        return BaseResponse.failResponse(444, "merchantUid가 일치하는 주문 내역이 없습니다");
+    }
+
     public BaseResponse updateOrdersDelivery(OrdersUpdateDeliveryReq req) {
         Optional<Orders> ordersResult = ordersRepository.findById(req.getIdx());
         Orders orders = ordersResult.get();
