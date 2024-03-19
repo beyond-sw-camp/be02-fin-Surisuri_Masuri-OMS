@@ -57,5 +57,10 @@ public class OrdersController {
         return ResponseEntity.ok().body(ordersService.showDeliveryStatus(ordersIdx));
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/{merchantUid}")
+    public ResponseEntity listDetailByMerchantUid(@PathVariable String merchantUid,
+                                                  @AuthenticationPrincipal User user) {
 
+        return ResponseEntity.ok().body(ordersService.listDetailByMerchantUid(merchantUid, user));
+    }
 }
