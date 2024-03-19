@@ -48,6 +48,11 @@ export default {
   },
   methods: {
     async findId() {
+      if (!this.userName.trim() || !this.userPhoneNo.trim()) {
+        alert('이름과 핸드폰 번호를 모두 입력해주세요.');
+        return;
+      }
+      
       try {
         const response = await axios.get('http://localhost:8080/user/findEmail', {
           params: {
@@ -56,19 +61,27 @@ export default {
           }
         });
 
-        // 응답에서 받은 아이디를 변수에 할당합니다.
-        this.foundId = response.data.result.userEmail;
-
-        // 아이디를 화면에 보여줍니다.
-        console.log('찾은 아이디:', this.foundId);
+        if (response.data && response.data.result && response.data.result.userEmail) {
+          this.foundId = response.data.result.userEmail;
+          alert(`찾은 아이디: ${this.foundId}`); // 사용자에게 찾은 ID를 알립니다.
+        } else {
+          // 응답은 성공했으나, 유저 이메일 정보가 없는 경우
+          alert('해당 정보와 일치하는 아이디가 없습니다.');
+        }
       } catch (error) {
-        // 오류가 발생한 경우 오류를 처리합니다.
-        console.error('아이디를 찾는 동안 오류가 발생했습니다:', error);
+        let errorMessage = '아이디를 찾는 동안 오류가 발생했습니다.';
+        if (error.response && error.response.data && error.response.data.message) {
+          errorMessage += `\n${error.response.data.message}`;
+        } else {
+          errorMessage += '\n서버 오류가 발생했습니다.';
+        }
+        alert(errorMessage);
       }
     },
   },
 };
 </script>
+
 
 
 <!-- <script>

@@ -55,14 +55,25 @@ export default {
           const formData = new FormData();
           formData.append('userPassword', this.resetPasswordReq.userPassword);
           const response = await axios.patch(`http://localhost:8080/user/resetPassword/${this.$route.params.idx}`, formData);
+          
+          // 성공 알림
+          alert("비밀번호가 성공적으로 재설정되었습니다.");
           console.log(response.data);
+          
+          // 추가적으로 로그인 페이지로 리다이렉트하는 로직을 추가할 수 있습니다.
+          // this.$router.push('/login');
         } catch (error) {
+          // 실패 알림
+          alert("비밀번호 재설정 요청 실패. 다시 시도해 주세요.");
           console.error('비밀번호 재설정 요청 실패:', error);
         }
       } else {
+        // 비밀번호 불일치 알림
+        alert("입력한 비밀번호가 서로 일치하지 않습니다. 다시 확인해 주세요.");
         console.log("Passwords do not match.");
       }
     },
   },
 };
 </script>
+
