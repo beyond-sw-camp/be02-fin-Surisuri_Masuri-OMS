@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
+const baseURL = 'http://localhost:8080'
+
 export const useUserStore = defineStore({
   id: 'user',
   state: () => ({
@@ -19,7 +21,7 @@ export const useUserStore = defineStore({
   actions: {
     async createAccount() {
       try {
-        const response = await axios.post('http://192.168.0.162/user/register', this.userSignUpReq, {
+        const response = await axios.post( baseURL + '/user/register', this.userSignUpReq, {
           headers: {
             'Content-Type': 'application/json'
           }
@@ -32,7 +34,7 @@ export const useUserStore = defineStore({
     },
     async login(loginReq) {
       try {
-        const response = await axios.post('http://192.168.0.162/user/login', loginReq, {
+        const response = await axios.post( baseURL + '/user/login', loginReq, {
           headers: {
             'Content-Type': 'application/json'
           }
