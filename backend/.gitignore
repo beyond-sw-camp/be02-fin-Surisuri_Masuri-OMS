@@ -28,7 +28,6 @@ target/
 /.nb-gradle/
 build/
 !**/src/main/**/build/
-!**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
@@ -376,7 +375,7 @@ dist
 docs/_book
 
 # TODO: where does this rule come from?
-test/
+
 
 ### Vuejs ###
 # Recommended template: Node.gitignore
