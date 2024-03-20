@@ -54,7 +54,7 @@ export default {
         try {
           const formData = new FormData();
           formData.append('userPassword', this.resetPasswordReq.userPassword);
-          const response = await axios.patch(`http://localhost:8080/user/resetPassword/${this.$route.params.idx}`, formData);
+          const response = await axios.patch(`http://192.168.0.162/user/resetPassword/${this.$route.params.idx}`, formData);
           
           // 성공 알림
           alert("비밀번호가 성공적으로 재설정되었습니다.");

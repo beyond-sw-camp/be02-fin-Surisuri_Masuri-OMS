@@ -79,4 +79,27 @@ export default {
 .mt-4 {
   margin-top: 2.0rem !important; /* Adjust as necessary */
 }
+
+:root {
+  --bs-primary: #ffd54f; /* 더 어두운 노란색으로 설정 */
+  --bs-primary-hover: #ffa726; /* hover 상태에서 사용할 주황색 */
+}
+
+.btn-primary {
+  background-color: #00704a; /* 스타벅스 로고의 진한 녹색 */
+  border-color: #00704a; /* 스타벅스 로고의 진한 녹색 */
+}
+
+.btn-primary:hover {
+  background-color: #004d33; /* 로고 외곽의 더 어두운 녹색 */
+  border-color: #004d33; /* 로고 외곽의 더 어두운 녹색 */
+}
+
+a {
+  color: #004d33; /* 링크 색상도 hover와 일관성 있도록 조정 */
+}
+.right-side-container {
+ background-color: rgba(246, 245, 239, 255);
+ min-height: 100vh;
+}
 </style>

@@ -54,7 +54,7 @@ export default {
       }
       
       try {
-        const response = await axios.get('http://localhost:8080/user/findEmail', {
+        const response = await axios.get('http://192.168.0.162/user/findEmail', {
           params: {
             userName: this.userName,
             userPhoneNo: this.userPhoneNo,

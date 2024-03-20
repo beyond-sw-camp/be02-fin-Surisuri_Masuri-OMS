@@ -62,7 +62,7 @@ export default {
   methods: {
     async fetchNotices() {
       try {
-        const response = await axios.get('http://localhost:8080/notice/list', {
+        const response = await axios.get('http://192.168.0.162/notice/list', {
           params: {
             page: 1,
             size: 10,
