@@ -74,7 +74,7 @@ export default {
       }
       try {
         await axios.patch(
-          "http://localhost:8080/question/update",
+          "http://192.168.0.162/question/update",
           {
             idx: this.questionIdx,
             title: this.questionTitle,

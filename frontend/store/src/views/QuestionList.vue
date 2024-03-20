@@ -70,7 +70,7 @@
       async fetchQuestions() {
     try {
       const response = await axios.get(
-        "http://localhost:8080/question/list",
+        "http://192.168.0.162/question/list",
         {
           headers: {
             Authorization: "Bearer " + sessionStorage.getItem("token"),

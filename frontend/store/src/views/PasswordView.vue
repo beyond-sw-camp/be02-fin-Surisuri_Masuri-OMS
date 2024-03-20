@@ -54,7 +54,7 @@
         }
   
         try {
-          const response = await axios.post('http://localhost:8080/user/findPassword', {
+          const response = await axios.post('http://192.168.0.162/findPassword', {
             name: this.userName, // API 요청에 맞게 필드 이름이 수정됐는지 확인하세요.
             email: this.userEmail, // API 요청에 맞게 필드 이름이 수정됐는지 확인하세요.
           });
