@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       type: backend
-  replicas: 2
+  replicas: 3
   strategy:
     type: RollingUpdate       # 무중단 배포 방식
   minReadySeconds: 10
