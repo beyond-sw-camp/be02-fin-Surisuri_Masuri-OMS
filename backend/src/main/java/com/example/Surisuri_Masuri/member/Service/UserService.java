@@ -190,15 +190,21 @@ public class UserService implements UserDetailsService {
 
             Long idx = user3.getIdx(); // store에서 사용하는 키값
 
-            user2.setUserPassword(passwordEncoder.encode(userUpdateReq.getUserPassword()));
-            user2.setUserPhoneNo(userUpdateReq.getUserPhoneNo());
-            userRepository.save(user2);
+            if (!userUpdateReq.getUserPassword().equals("")) {
+                user2.setUserPassword(passwordEncoder.encode(userUpdateReq.getUserPassword()));
+                user2.setUserPhoneNo(userUpdateReq.getUserPhoneNo());
+                userRepository.save(user2);
+            }
 
             Optional<Store> store = storeRepository.findById(idx);
             Store store2 = store.get();
 
-            store2.setStoreAddr(userUpdateReq.getStoreAddr());
-            store2.setStorePhoneNo(userUpdateReq.getUserPhoneNo());
+            if (!userUpdateReq.getStoreAddr().equals("")) {
+                store2.setStoreAddr(userUpdateReq.getStoreAddr());
+            }
+            if (!userUpdateReq.getStorePhoneNo().equals("")) {
+                store2.setStorePhoneNo(userUpdateReq.getUserPhoneNo());
+            }
             store2.setUpdatedAt(update);
             storeRepository.save(store2);
 
