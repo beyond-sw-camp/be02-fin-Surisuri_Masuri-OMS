@@ -39,12 +39,12 @@
 <script>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '/stores/userStore';
+import { useUserStore } from '../../stores/userStore.js';
 
 export default {
   setup() {
     const router = useRouter();
-    const userStore = useUserStore();
+    const userStore = useUserStore(); // Pinia 스토어 사용
 
     const userEmail = ref('');
     const userPassword = ref('');
