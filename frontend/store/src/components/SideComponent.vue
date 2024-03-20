@@ -4,7 +4,7 @@
     <div>
       <div class="brand-logo d-flex align-items-center justify-content-between">
         <router-link to="/home" class="text-nowrap logo-img">
-          <img src="../assets/starbucks.png" width="50%" alt="" />
+          <img src="../assets/real.png" width="130%" alt="" />
         </router-link>
         <div
           class="close-btn d-xl-none d-block sidebartoggler cursor-pointer"
@@ -126,7 +126,8 @@
 }
 
 .left-sidebar .sidebar-item a:hover {
-  background-color: #00704a !important; /* 앰버 색상, 노란색 계열 */
+  background-color: #00704a !important;
+   /* 앰버 색상, 노란색 계열 */
    /* 텍스트 색상을 흰색으로 변경 */
 }
 .left-sidebar {
@@ -143,4 +144,5 @@
   margin-left: 30%
   
 }
+
 </style>
