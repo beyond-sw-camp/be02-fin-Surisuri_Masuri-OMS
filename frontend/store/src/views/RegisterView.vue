@@ -71,7 +71,7 @@
 
 <script>
 import { ref } from 'vue'; // ref 추가
-import { useUserStore } from '/stores/userStore'; // 이 경로는 프로젝트에 맞게 수정해주세요
+import { useUserStore } from '../../stores/userStore.js';
 
 export default {
   name: 'RegisterView',
