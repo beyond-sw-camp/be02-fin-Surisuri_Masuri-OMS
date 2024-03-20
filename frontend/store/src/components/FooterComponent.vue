@@ -33,6 +33,8 @@ export default {
 
 <style scoped>
 .py-4 {
-    background-color: white !important
+    background-color:rgba(246, 245, 239, 255) !important;
+    
 }
+
 </style>

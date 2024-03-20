@@ -1,4 +1,4 @@
-<template>
+<template class = "header">
 
   <header class="app-header">
     <nav class="navbar navbar-expand-lg navbar-light">
@@ -39,3 +39,9 @@ export default {
 
 
 </script>
+
+<style scoped>
+.app-header {
+  background-color:rgba(246, 245, 239, 255);
+}
+</style>
