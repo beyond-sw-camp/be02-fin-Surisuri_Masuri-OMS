@@ -4,7 +4,7 @@
     <div>
       <div class="brand-logo d-flex align-items-center justify-content-between">
         <router-link to="/home" class="text-nowrap logo-img">
-          <img src="../assets/real.png" width="130%" alt="" />
+          <img src="../assets/union.png" width="60%" alt="" />
         </router-link>
         <div
           class="close-btn d-xl-none d-block sidebartoggler cursor-pointer"
@@ -137,7 +137,8 @@
   background-color: rgba(30, 57, 50, 255);
 }
 .ti {
-  color: #e4e3cc !important; /* 모든 ti 아이콘의 색상을 하얗게 설정 */
+  color: #e4e3cc !important;
+  margin-left: 30px; /* 모든 ti 아이콘의 색상을 하얗게 설정 */
 }
 .text-nowrap { 
   margin-top: 10%;
