@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { useManagerStore } from '/stores/managerStores'; 
 
 import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
@@ -6,13 +7,13 @@ import StoreView from '../views/StoreView.vue';
 import StoreDetailView from '../views/StoreDetailView.vue'; // 확장자 .vue를 추가해 주세요.
 import QuestionList from '../views/QuestionList.vue';
 import QuestionDetail from '../views/QuestionDetail.vue';
-
 import ContainerList from '../views/ContainerList.vue';
 import ContainerDetail from '@/views/ContainerDetail.vue'; // 상대 경로와 절대 경로가 혼용되어 사용되었습니다. 프로젝트 설정에 따라 수정하세요.
 import NoticeList from '../views/NoticeList.vue';
 import NoticeDetail from '../views/NoticeDetail.vue';
 import NoticeNew from '../views/NoticeNew.vue';
 import ShopView from '../views/ShopView.vue';
+import NotFound from '../views/NotFound.vue';
 
 const routes = [
   {
@@ -78,13 +79,31 @@ const routes = [
     path: '/shop',
     name: 'shop',
     component: ShopView
-  }
+  },
+  {
+    path: '/:catchAll(.*)*', // 정의되지 않은 모든 경로를 위한 와일드카드 라우트
+    name: 'NotFound',
+    component: NotFound
+  },
   // 여기에 다른 라우트를 추가할 수 있습니다.
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  const managerStore = useManagerStore(); // Pinia store 인스턴스화
+  const isAuthenticated = managerStore.token; // 로그인 상태 확인
+  
+  if (!isAuthenticated && to.name !== 'login') { // 로그인 및 회원가입 페이지를 제외한 페이지 접근 제어
+    // 로그인 페이지로 리다이렉트
+    next({ name: 'login' });
+  } else {
+    // 접근 허용
+    next();
+  }
 });
 
 export default router;
