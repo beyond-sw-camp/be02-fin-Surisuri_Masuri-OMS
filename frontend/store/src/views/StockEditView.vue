@@ -54,7 +54,7 @@ export default {
           return;
         }
 
-        const response = await axios.get("http://192.168.0.162/stock/list", {
+        const response = await axios.get("http://localhost:8080/stock/list", {
           headers: {
             Authorization: "Bearer " + token,
           },
