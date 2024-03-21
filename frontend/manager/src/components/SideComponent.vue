@@ -4,7 +4,7 @@
     <div>
       <div class="brand-logo d-flex align-items-center justify-content-between">
         <router-link to="/home" class="text-nowrap logo-img">
-          <img src="../assets/starbucks.png" width="50%" alt="" />
+          <img src="../assets/union.png" width="50%" alt="" />
         </router-link>
         <div
           class="close-btn d-xl-none d-block sidebartoggler cursor-pointer"
