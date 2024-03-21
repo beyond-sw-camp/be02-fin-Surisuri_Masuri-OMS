@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontendManager-deployment
+  name: frontendmanager-deployment
 spec:
   replicas: 2
   strategy:
@@ -16,7 +16,7 @@ spec:
         resource: memory1
     spec:
       containers:
-        - name: frontendManager-container
+        - name: frontendmanager-container
           image: beomiya/final_manager_frontend:1.VERSION
           readinessProbe:
             httpGet:
