@@ -95,22 +95,17 @@
         </div>
       </div>
       <div class="col-lg-8 d-flex align-items-stretch">
-       
-          <swiper
-            class="mySwiper"
-            :options="{ navigation: { clickable: true } }"
-          >
-            <swiper-slide v-for="image in images" :key="image">
-              <img :src="image" alt="사진 슬라이드" />
-            </swiper-slide>
-          </swiper>
-          <div class="card-body p-4">
-            <h5 class="card-title fw-semibold mb-4"></h5>
-            <div class="table-responsive">
-              <table class="table text-nowrap mb-0 align-middle"></table>
-            </div>
+        <swiper class="mySwiper" :options="{ navigation: { clickable: true } }">
+          <swiper-slide v-for="image in images" :key="image">
+            <img :src="image" alt="사진 슬라이드" />
+          </swiper-slide>
+        </swiper>
+        <div class="card-body p-4">
+          <h5 class="card-title fw-semibold mb-4"></h5>
+          <div class="table-responsive">
+            <table class="table text-nowrap mb-0 align-middle"></table>
           </div>
-        
+        </div>
       </div>
     </div>
   </div>
@@ -150,17 +145,16 @@ export default {
             label: "재고 수량",
             data: [18, 19, 15, 12, 17, 7, 14, 16, 9, 11, 13],
             backgroundColor: [
-              "rgba(5, 61, 0, 1)", // 라이트 노란색
-              "rgba(8, 92, 0, 1)", // 앰버
-              "rgba(12, 148, 0, 1)", // 레몬 노란색
-              "rgba(124, 173, 0, 1)", // 다크 레몬
-              "rgba(51, 105, 27, 1)", // 오렌지 노란색
-              "rgba(77, 182, 32, 1)", // 진한 오렌지 노란색
-              "rgba(155, 211, 130, 1)", // 단풍 노란색
-              "rgba(2, 44, 22, 1)", // 깊은 오렌지
-              "rgba(24, 77, 15, 1)", // 단풍 오렌지
-              "rgba(44, 141, 27, 1)", // 밝은 단풍 오렌지
-              "rgba(88, 153, 77, 1)",
+              "rgba(202, 197, 137, 1)", // 라이트 노란색
+              "rgba(202, 197, 137, 1)", // 앰버
+              "rgba(202, 197, 137, 1)", // 레몬 노란색
+              "rgba(202, 197, 137, 1)", // 라이트 노란색
+              "rgba(202, 197, 137, 1)", // 라이트 노란색
+              "rgba(202, 197, 137, 1)", // 앰버
+              "rgba(202, 197, 137, 1)", // 레몬 노란색
+              "rgba(202, 197, 137, 1)",
+              "rgba(202, 197, 137, 1)", // 라이트 노란색
+               
             ],
             borderWidth: 1,
             borderRadius: {
@@ -186,11 +180,22 @@ export default {
           {
             data: [12, 19, 3, 5, 2, 3],
             backgroundColor: [
-              "rgba(88, 153, 77, 1)", // 라이트 노란색
-              "rgba(8, 92, 0, 1)", // 앰버
-              "rgba(88, 153, 77, 1)", // 레몬 노란색
-              "rgba(5, 61, 0, 1)", // 다크 레몬
-              "rgba(5, 61, 0, 1)", // 깊은 오렌지
+              /* 파스텔 노란색 */
+              "rgba(64, 224, 208, 0.6)",
+
+              /* 파스텔 녹색 */
+              "rgba(162, 210, 182, 1)",
+
+              /* 파스텔 파란색 */
+              "rgba(174, 198, 207, 1)",
+
+              /* 파스텔 핑크색 */
+              "rgba(244, 194, 194, 1)",
+
+              /* 파스텔 보라색 */
+              "rgba(204, 174, 221, 1)",
+
+              "rgba(244, 194, 194, 1)",
             ],
             borderWidth: 1,
           },
