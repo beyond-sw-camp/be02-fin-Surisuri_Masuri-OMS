@@ -70,7 +70,7 @@ export default {
     async fetchProducts() {
       try {
         const token = sessionStorage.getItem("token");
-        const response = await axios.get("http://192.168.0.162/product/list", {
+        const response = await axios.get("http://localhost:8080/product/list", {
           params: {
             page: 1,
             size: 5,
