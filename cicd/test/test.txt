@@ -1,2 +1,2 @@
 깃헙-젠킨스 테스트용
-version 1
+version 2
