@@ -26,44 +26,44 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/', // 로그인 페이지의 경로
+    path: '/',
     name: 'login',
-    component: LoginView // 로그인 컴포넌트
+    component: LoginView
   },
   {
-    path: '/password', // 로그인 페이지의 경로
+    path: '/password',
     name: 'password',
-    component: PasswordView // 로그인 컴포넌트
+    component: PasswordView
   },
   {
-    path: '/loginReset',
+    path: '/loginreset',
     name: 'loginreset',
-    component: ResetLoginView, // 수정된 부분
+    component: ResetLoginView,
   },
   {
-    path: '/password-reset',
+    path: '/passwordreset',
     name: 'passwordReset',
-    component: ResetPasswordView, // 수정된 부분
+    component: ResetPasswordView,
   },
   {
-    path: '/register', // 로그인 페이지의 경로
+    path: '/register',
     name: 'register',
-    component: RegisterView // 로그인 컴포넌트
+    component: RegisterView
   },
   {
-    path: '/userprofile', // 로그인 페이지의 경로
+    path: '/userprofile',
     name: 'userprofile',
-    component: UserProfileView // 로그인 컴포넌트
+    component: UserProfileView
   },
   {
-    path: '/product', // 로그인 페이지의 경로
+    path: '/product',
     name: 'product',
-    component: ProductView // 로그인 컴포넌트
+    component: ProductView
   },
   {
-    path: '/orderdetail', // 로그인 페이지의 경로
+    path: '/orderdetail',
     name: 'orderdetail',
-    component: OrderDetailView // 로그인 컴포넌트
+    component: OrderDetailView
   },
   {
     path: '/notice',

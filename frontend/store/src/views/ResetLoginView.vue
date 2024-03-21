@@ -38,6 +38,8 @@
 <script>
 import axios from 'axios';
 
+const baseURL = 'http://localhost:8080'
+
 export default {
   data() {
     return {
@@ -54,7 +56,7 @@ export default {
       }
       
       try {
-        const response = await axios.get('http://192.168.0.162/user/findEmail', {
+        const response = await axios.get( baseURL + '/user/findEmail', {
           params: {
             userName: this.userName,
             userPhoneNo: this.userPhoneNo,
@@ -81,38 +83,3 @@ export default {
   },
 };
 </script>
-
-
-
-<!-- <script>
-import axios from 'axios';
-
-export default {
-  data() {
-    return {
-      userName: '',
-      userPhoneNo: '',
-      foundId: '',
-    };
-  },
-  methods: {
-    async findId() {
-      try {
-        const response = await axios.get('http://localhost:8080/user/findEmail', {
-          name: this.userName,
-          phoneNumber: this.userPhoneNo,
-        });
-
-        // 응답에서 받은 아이디를 변수에 할당합니다.
-        this.foundId = response.data.userEmail;
-
-        // 아이디를 화면에 보여줍니다.
-        console.log('찾은 아이디:', this.foundId);
-      } catch (error) {
-        // 오류가 발생한 경우 오류를 처리합니다.
-        console.error('아이디를 찾는 동안 오류가 발생했습니다:', error);
-      }
-    },
-  },
-};
-</script> -->
