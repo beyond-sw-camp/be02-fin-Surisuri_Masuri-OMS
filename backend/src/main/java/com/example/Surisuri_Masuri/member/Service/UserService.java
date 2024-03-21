@@ -192,6 +192,8 @@ public class UserService implements UserDetailsService {
 
             if (!userUpdateReq.getUserPassword().equals("")) {
                 user2.setUserPassword(passwordEncoder.encode(userUpdateReq.getUserPassword()));
+                userRepository.save(user2);
+            } else if (!userUpdateReq.getUserPhoneNo().equals("")) {
                 user2.setUserPhoneNo(userUpdateReq.getUserPhoneNo());
                 userRepository.save(user2);
             }
@@ -228,28 +230,33 @@ public class UserService implements UserDetailsService {
     // 회원 비밀번호 찾기 기능
     public BaseResponse<FindUserPasswordRes> findPassword(FindUserPasswordReq findUserPasswordReq) {
 
-        Optional<User> user = userRepository.findByUserEmail(findUserPasswordReq.getUserEmail());
-        Optional<User> user2 = userRepository.findByUserName(findUserPasswordReq.getUserName());
+        Optional<User> userResult = userRepository.findByUserEmail(findUserPasswordReq.getUserEmail());
 
-        if (user.isPresent() && user2.isPresent()) {
-            User user3 = user.get();
-            Long idx = user3.getIdx();
-            String userEmail = user3.getUserEmail();
-            SendEmailReq sendEmailReq = SendEmailReq.builder()
-                    .idx(idx)
-                    .email(userEmail)
-                    .build();
+        if (userResult.isPresent()) {
+            User user = userResult.get();
 
-            // 5. 이메일 전송
-            emailService.sendEmail2(sendEmailReq);
+            if (user.getUsername() == findUserPasswordReq.getUserName()) {
 
-            FindUserPasswordRes findUserPasswordRes = FindUserPasswordRes.builder()
-                    .idx(idx)
-                    .build();
+                Long idx = user.getIdx();
+                String userEmail = user.getUserEmail();
+                SendEmailReq sendEmailReq = SendEmailReq.builder()
+                        .idx(idx)
+                        .email(userEmail)
+                        .build();
 
-            BaseResponse baseResponse = BaseResponse.successResponse("비밀번호 초기화 이메일 발송이 완료되었습니다.", findUserPasswordRes);
+                // 5. 이메일 전송
+                emailService.sendEmail2(sendEmailReq);
 
-            return baseResponse;
+                FindUserPasswordRes findUserPasswordRes = FindUserPasswordRes.builder()
+                        .idx(idx)
+                        .build();
+
+                BaseResponse baseResponse = BaseResponse.successResponse("비밀번호 초기화 이메일 발송이 완료되었습니다.", findUserPasswordRes);
+
+                return baseResponse;
+            } else {
+                return BaseResponse.failResponse(444, "wr0ong name");
+            }
 
         }
 
