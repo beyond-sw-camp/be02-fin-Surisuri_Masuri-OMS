@@ -9,11 +9,11 @@ spec:
   minReadySeconds: 10
   selector:
     matchLabels:
-      resource: memory
+      resource: memory2
   template:
     metadata:
       labels:
-        resource: memory
+        resource: memory2
     spec:
       containers:
         - name: frontendStore-container
