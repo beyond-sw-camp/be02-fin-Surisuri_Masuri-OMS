@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontendManager-deployment
+  name: frontendstore-deployment
 spec:
   replicas: 2
   strategy:
@@ -9,15 +9,15 @@ spec:
   minReadySeconds: 10
   selector:
     matchLabels:
-      resource: memory1
+      resource: memory2
   template:
     metadata:
       labels:
-        resource: memory1
+        resource: memory2
     spec:
       containers:
-        - name: frontendManager-container
-          image: beomiya/final_manager_frontend:1.VERSION
+        - name: frontendstore-container
+          image: beomiya/final_store_frontend:1.VERSION
           readinessProbe:
             httpGet:
               path: /
