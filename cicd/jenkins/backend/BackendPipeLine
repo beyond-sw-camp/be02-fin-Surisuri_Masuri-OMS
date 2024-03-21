@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+    environment {
+        dockerhubid = ''
+        dockerhubpw = ''
+    }
+    stages {
+        stage('Git Clone') {
+            steps {
+                sh 'rm -rf ./be02-fin-Surisuri_Masuri-OMS'
+                sh 'rm -rf ./be02-fin-Surisuri_Masuri-OMS@tmp'
+                // GitHub 저장소에서 코드를 클론합니다.
+                sh 'git clone -b develop https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS'
+            }
+        }
+        stage('Build') {
+            steps {
+                // Maven을 사용하여 backend를 패키지합니다.
+                dir('be02-fin-Surisuri_Masuri-OMS/backend') {
+                    sh '/usr/local/maven/bin/mvn package'
+                }
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                // Docker 이미지 빌드
+                dir('be02-fin-Surisuri_Masuri-OMS') {
+                    sh "docker build -t beomiya/final_backend:1.${BUILD_ID} ."
+                }
+            }
+        }
+        stage('Docker Push') {
+            steps {
+                // Docker 이미지를 Docker Hub에 푸시
+                sh "docker login -u $dockerhubid -p $dockerhubpw"
+                sh "docker push beomiya/final_backend:1.${BUILD_ID}"
+            }
+        }
+        stage('Send Artifacts Over SSH') {
+            steps {
+                // 빌드 아티팩트를 SSH를 통해 전송합니다.
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'K8S', // SSH Server 설정에 따라 변경하세요.
+                            transfers: [
+                                sshTransfer(
+                                    sourceFiles: 'be02-fin-Surisuri_Masuri-OMS/backend-deployment.yml',
+                                    removePrefix: 'be02-fin-Surisuri_Masuri-OMS/',
+                                    remoteDirectory: '/'
+                                )
+                            ]
+                        )
+                    ]
+                )
+            }
+        }
+        stage('Modify and Apply Deployment') {
+            steps {
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'K8S',
+                            transfers: [
+                                sshTransfer(
+                                    execCommand: '''
+                                        sed -i 's/VERSION/${BUILD_ID}/g' /root/backend-deployment.yml
+                                        kubectl apply -f /root/backend-deployment.yml
+                                    '''
+                                )
+                            ]
+                        )
+                    ]
+                )
+            }
+        }
+    }
+}
