@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useUserStore } from '/stores/userStore';
+// import { useUserStore } from '/stores/userStore';
 
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue';
@@ -132,13 +132,12 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const userStore = useUserStore();
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  const isAuthenticated = userStore.token; // Pinia 스토어에서 token 상태를 가져옵니다.
+  const isAuthenticated = sessionStorage.getItem('token'); // 세션 스토리지에서 토큰을 가져옵니다.
 
   if (requiresAuth && !isAuthenticated) {
-    // 인증이 필요하고, 사용자가 인증되지 않은 경우 로그인 페이지로 리다이렉트
-    next({ name: 'login' }); // 로그인 페이지의 name 또는 경로로 수정하세요.
+    // 인증이 필요하고, 세션 스토리지에 토큰이 없는 경우 로그인 페이지로 리다이렉트
+    next({ name: 'login' });
   } else {
     // 그 외의 경우(인증이 필요 없거나 이미 인증된 경우), 페이지 이동 허용
     next();
