@@ -1,0 +1,18 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: frontendmanager-hpa-resource-cpu
+spec:
+  maxReplicas: 10
+  minReplicas: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: frontendmanager-deployment
+  metrics:
+    - type: Resource
+      resource:
+        name: memory1
+        target:
+          type: Utilization
+          averageUtilization: 50

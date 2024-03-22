@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontendmanager-deployment
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: 10
+  selector:
+    matchLabels:
+      resource: memory1
+  template:
+    metadata:
+      labels:
+        resource: memory1
+    spec:
+      containers:
+        - name: frontendmanager-container
+          image: beomiya/final_manager_frontend:1.50
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            successThreshold: 3
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: 1Gi
+            limits:
+              memory: 2Gi
+      terminationGracePeriodSeconds: 5

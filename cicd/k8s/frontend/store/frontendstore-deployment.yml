@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontendstore-deployment
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  minReadySeconds: 10
+  selector:
+    matchLabels:
+      resource: memory2
+  template:
+    metadata:
+      labels:
+        resource: memory2
+    spec:
+      containers:
+        - name: frontendstore-container
+          image: beomiya/final_store_frontend:1.VERSION
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            successThreshold: 3
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: 1Gi
+            limits:
+              memory: 2Gi
+      terminationGracePeriodSeconds: 5
