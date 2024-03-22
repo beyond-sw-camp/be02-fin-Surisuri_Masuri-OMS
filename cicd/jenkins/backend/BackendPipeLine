@@ -7,71 +7,138 @@ pipeline {
     stages {
         stage('Git Clone') {
             steps {
-                sh 'rm -rf ./be02-fin-Surisuri_Masuri-OMS'
-                sh 'rm -rf ./be02-fin-Surisuri_Masuri-OMS@tmp'
-                // GitHub 저장소에서 코드를 클론합니다.
-                sh 'git clone -b develop https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS'
+                script {
+                    try {
+                        git branch: 'develop',
+                        credentialsId: 'github_access_token',
+                        url: 'https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS.git'
+                    } catch (Exception e) {
+                        echo "Git clone failed: ${e.message}"
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
             }
         }
+        stage('test') {
+             steps {
+                 script {
+                    try {
+                        dir('backend') {
+                            sh 'pwd'
+                            sh '/usr/local/maven/bin/mvn test'
+                            currentBuild.result = 'SUCCESS'
+                        }
+                    } catch (Exception e) {
+                        echo "Build failed: ${e.message}"
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
+             }
+         }
         stage('Build') {
             steps {
-                // Maven을 사용하여 backend를 패키지합니다.
-                dir('be02-fin-Surisuri_Masuri-OMS/backend') {
-                    sh '/usr/local/maven/bin/mvn package'
+                script {
+                    try {
+                        dir('backend') {
+                            sh '/usr/local/maven/bin/mvn package'
+                            currentBuild.result = 'SUCCESS'
+                        }
+                    } catch (Exception e) {
+                        echo "Build failed: ${e.message}"
+                        currentBuild.result = 'FAILURE'
+                    }
                 }
             }
         }
         stage('Docker Build') {
+            when {
+                expression { currentBuild.result == 'SUCCESS' }
+            }
             steps {
-                // Docker 이미지 빌드
-                dir('be02-fin-Surisuri_Masuri-OMS') {
-                    sh "docker build -t beomiya/final_backend:1.${BUILD_ID} ."
+                script {
+                    try {
+                        dir('backend') {
+                            sh "cd /var/lib/jenkins/workspace/Backend/backend/target"
+                            sh "pwd"
+                            sh "docker build -t beomiya/final_backend:1.${BUILD_ID} ."
+                            currentBuild.result = 'SUCCESS'
+                        }
+                    } catch (Exception e) {
+                        echo "Docker build failed: ${e.message}"
+                        currentBuild.result = 'FAILURE'
+                    }
                 }
             }
         }
         stage('Docker Push') {
+            when {
+                expression { currentBuild.result == 'SUCCESS' }
+            }
             steps {
-                // Docker 이미지를 Docker Hub에 푸시
-                sh "docker login -u $dockerhubid -p $dockerhubpw"
-                sh "docker push beomiya/final_backend:1.${BUILD_ID}"
+                script {
+                    try {
+                        sh "docker login -u $dockerhubid -p $dockerhubpw"
+                        sh "docker push beomiya/final_backend:1.${BUILD_ID}"
+                        currentBuild.result = 'SUCCESS'
+                    } catch (Exception e) {
+                        echo "Docker push failed: ${e.message}"
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
             }
         }
         stage('Send Artifacts Over SSH') {
+            when {
+                expression { currentBuild.result == 'SUCCESS' }
+            }
             steps {
-                // 빌드 아티팩트를 SSH를 통해 전송합니다.
-                sshPublisher(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: 'K8S', // SSH Server 설정에 따라 변경하세요.
-                            transfers: [
-                                sshTransfer(
-                                    sourceFiles: 'be02-fin-Surisuri_Masuri-OMS/backend-deployment.yml',
-                                    removePrefix: 'be02-fin-Surisuri_Masuri-OMS/',
-                                    remoteDirectory: '/'
+                script {
+                    try {
+                        sshPublisher(
+                            publishers: [
+                                sshPublisherDesc(
+                                    configName: 'K8S',
+                                    transfers: [
+                                        sshTransfer(
+                                            sourceFiles: 'be02-fin-Surisuri_Masuri-OMS/backend-deployment.yml',
+                                            removePrefix: 'be02-fin-Surisuri_Masuri-OMS/',
+                                            remoteDirectory: '/'
+                                        )
+                                    ]
                                 )
                             ]
                         )
-                    ]
-                )
+                    } catch (Exception e) {
+                        echo "SSH transfer failed: ${e.message}"
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
             }
         }
-        stage('Modify and Apply Deployment') {
+        stage('SSH Transfer and Kubernetes Deployment') {
             steps {
-                sshPublisher(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: 'K8S',
-                            transfers: [
-                                sshTransfer(
-                                    execCommand: '''
-                                        sed -i 's/VERSION/${BUILD_ID}/g' /root/backend-deployment.yml
-                                        kubectl apply -f /root/backend-deployment.yml
-                                    '''
-                                )
-                            ]
-                        )
-                    ]
-                )
+                script {
+                    sshPublisher(
+                        continueOnError: false,
+                        failOnError: true,
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'K8S',
+                                verbose: true,
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: 'cicd/k8s/backend/backend-deployment.yml',
+                                        remoteDirectory: '/root',
+                                        execCommand: 'sed -i "s/VERSION/$BUILD_NUMBER/g" /root/cicd/k8s/backend/backend-deployment.yml'
+                                    ),
+                                    sshTransfer(
+                                        execCommand: 'kubectl apply -f /root/cicd/k8s/backend/backend-deployment.yml'
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                }
             }
         }
     }
