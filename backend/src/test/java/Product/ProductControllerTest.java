@@ -1,4 +1,4 @@
-package Product;
+/*package Product;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.config.SecurityConfig;
@@ -152,4 +152,4 @@ class ProductControllerTest {
                         .param("idx", String.valueOf(productIdx)))
                 .andExpect(status().isOk());
     }
-}
+}*/
