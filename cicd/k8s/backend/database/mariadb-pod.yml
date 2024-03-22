@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mariadb-pod
+  labels:
+    app: db
+spec:
+  nodeSelector:
+    kubernetes.io/hostname: phb
+  containers:
+    - name: mariadb
+      image: mariadb:latest
+      envFrom:
+        - configMapRef:
+            name: mariadb-cm
+      volumeMounts:
+        - name: mariadb-vol
+          mountPath: /var/lib/mysql
+  volumes:
+    - name : mariadb-vol
+      persistentVolumeClaim:
+        claimName: mariadb-pvc
