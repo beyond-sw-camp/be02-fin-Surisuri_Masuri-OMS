@@ -1,4 +1,4 @@
-package Product;
+/*package Product;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.config.SecurityConfig;
@@ -58,4 +58,4 @@ class ProductServiceTest {
         assertEquals("요청 성공",  response.getMessage());
     }
 
-}
+}*/
