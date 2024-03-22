@@ -55,7 +55,7 @@
             </router-link>
           </li>
           <li class="sidebar-item">
-            <router-link class="sidebar-link" to="/inquiries">
+            <router-link class="sidebar-link" to="/question">
               <span>
                 <i class="ti ti-typography"></i>
               </span>
@@ -88,7 +88,7 @@
 
 .sidebar-item .hide-menu {
   font-size: 19px;
-  color: #c6c6bd !important;
+  color: #747474 !important;
   
    /* 세부 목차 글씨 크기 조정 */
 }
@@ -121,10 +121,10 @@
   color: rgb(255, 255, 255) !important;
 }
 .sidebar {
-  background-color: rgba(30, 57, 50, 255);
+  background-color: rgba(255, 255, 255, 1);
 }
 .ti {
-  color: #e4e3cc !important;
+  color: #000000 !important;
   margin-left: 30px; /* 모든 ti 아이콘의 색상을 하얗게 설정 */
 }
 .text-nowrap { 
