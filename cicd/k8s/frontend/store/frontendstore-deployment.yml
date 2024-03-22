@@ -22,9 +22,14 @@ spec:
             httpGet:
               path: /
               port: 80
-            initialDelaySeconds: 5    # 최초 Probe전의 지연 시간
-            periodSeconds: 2          # Probe를 체크하는 시간 간격
-            successThreshold: 3       # 성공 결과 수신 횟수
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            successThreshold: 3
           ports:
-              - containerPort: 80
+            - containerPort: 80
+          resources:
+            requests:
+              memory: 1Gi
+            limits:
+              memory: 2Gi
       terminationGracePeriodSeconds: 5
