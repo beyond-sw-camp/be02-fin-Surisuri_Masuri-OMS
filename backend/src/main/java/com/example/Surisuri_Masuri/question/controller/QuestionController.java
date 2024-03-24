@@ -34,7 +34,7 @@ public class QuestionController {
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/update")
-    public ResponseEntity update(@AuthenticationPrincipal User user, PatchUpdateQuestionReq patchUpdateQuestionReq) {
+    public ResponseEntity update(@AuthenticationPrincipal User user, @RequestBody PatchUpdateQuestionReq patchUpdateQuestionReq) {
         BaseResponse baseResponse = questionService.update(user, patchUpdateQuestionReq);
         return ResponseEntity.ok().body(baseResponse);
     }
