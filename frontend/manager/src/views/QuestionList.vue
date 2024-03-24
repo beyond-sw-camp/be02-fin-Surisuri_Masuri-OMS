@@ -15,24 +15,25 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(question, index) in questions" :key="question.idx">
+                <tr v-for="(question, index) in questions" :key="question.questionIdx">
                   <th scope="row" class="text-center align-middle">{{ index + 1 }}</th>
                   <td class="text-center align-middle">{{ question.title }}</td>
                   <td class="text-center align-middle">{{ question.category }}</td>
                   <td class="text-center align-middle">
                     <router-link
                       :to="{
-                        name: 'InquiryDetail',
+                        name: 'QuestionDetail',
                         query: {
-                          idx: question.idx,
+                          idx: question.questionIdx,
                           title: question.title,
                           content: question.content,
                           category: question.category,
-                          status: question.status
-                        }
+                          status: question.status,
+                        },
                       }"
                       class="btn btn-primary btn-sm"
-                    >상세 보기</router-link>
+                      >상세 보기</router-link
+                    >
                   </td>
                 </tr>
               </tbody>
@@ -63,29 +64,19 @@ export default {
   },
   methods: {
     async fetchQuestions() {
-  try {
-    const response = await axios.get(
-      "http://localhost:8080/question/list",
-      {
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
-        params: this.pagination, // 페이지네이션 정보를 params로 전달
+      try {
+        const response = await axios.get("http://localhost:8080/question/list", {
+          params: this.pagination, // 페이지네이션 정보를 params로 전달
+        });
+        // 응답 데이터 전체를 콘솔에 출력
+        console.log("응답 데이터:", response.data);
+
+        // 응답 데이터 구조에 맞게 questions 배열에 데이터 저장
+        this.questions = response.data.result; // 수정: 응답에서 받은 데이터를 questions 배열에 저장
+      } catch (error) {
+        console.error("문의사항 목록을 불러오는 중 오류가 발생했습니다.", error);
       }
-    );
-    // 응답 데이터 전체를 콘솔에 출력
-    console.log("응답 데이터:", response.data);
-
-    // 응답 데이터 구조에 맞게 questions 배열에 데이터 저장
-    this.questions = response.data.result; // 수정: 응답에서 받은 데이터를 questions 배열에 저장
-  } catch (error) {
-    console.error(
-      "문의사항 목록을 불러오는 중 오류가 발생했습니다.",
-      error
-    );
-  }
-},
-
+    },
   },
 };
 </script>

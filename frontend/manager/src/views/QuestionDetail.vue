@@ -14,15 +14,10 @@
       <input type="text" class="form-control" v-model="questionCategory" readonly />
     </div>
 
-    <input
-      type="text"
-      v-model="answerContent"
-      placeholder="답변을 입력하세요"
-      class="form-control mb-3"
-    />
+    <input type="text" v-model="answerContent" placeholder="답변을 입력하세요" class="form-control mb-3" />
     <button @click="submitAnswer" class="btn btn-primary">답변 제출</button>
 
-    <router-link to="/inquiries" class="btn btn-secondary mt-3">목록으로 돌아가기</router-link>
+    <router-link to="/question" class="btn btn-secondary mt-3">목록으로 돌아가기</router-link>
   </div>
 </template>
 
@@ -48,23 +43,17 @@ export default {
           alert("로그인이 필요합니다.");
           return;
         }
+        const answerReq = {
+          questionIdx: this.questionIdx,
+          answerContent: this.answerContent,
+        };
 
-        const managerIdx = 3; // managerIdx를 하드코딩하여 테스트
-
-        const response = await axios.post(
-          "http://localhost:8080/question/answer",
-          {
-            questionIdx: this.questionIdx,
-            answerContent: this.answerContent,
-            managerIdx: managerIdx, // 하드코딩된 managerIdx 사용
+        const response = await axios.post("http://localhost:8080/question/answer", answerReq, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        });
 
         console.log("답변 제출 응답:", response.data);
 
@@ -73,11 +62,12 @@ export default {
 
         alert("답변이 성공적으로 제출되었습니다.");
         // 답변 제출 후에도 내용을 초기화하지 않음
+        this.$router.push("/question");
       } catch (error) {
         console.error("답변 제출 중 오류:", error);
         alert(
           "답변 제출 중 오류가 발생했습니다: " +
-          (error.response && error.response.data ? error.response.data.message : error.message)
+            (error.response && error.response.data ? error.response.data.message : error.message)
         );
       }
     },
