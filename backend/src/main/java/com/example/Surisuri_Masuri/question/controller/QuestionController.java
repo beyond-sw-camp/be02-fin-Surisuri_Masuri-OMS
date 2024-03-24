@@ -22,8 +22,8 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
-    public ResponseEntity create(PostCreateQuestionReq postCreateQuestionReq) {
-        BaseResponse baseResponse = questionService.create(postCreateQuestionReq);
+    public ResponseEntity create(@AuthenticationPrincipal User user, @RequestBody PostCreateQuestionReq postCreateQuestionReq) {
+        BaseResponse baseResponse = questionService.create(user, postCreateQuestionReq);
         return ResponseEntity.ok().body(baseResponse);
     }
 
