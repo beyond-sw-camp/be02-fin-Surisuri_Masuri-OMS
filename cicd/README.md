@@ -34,6 +34,7 @@
 <img src = "../img/systemArchitecture.png">
 
 ### Cluster Architecture
+<img src = "">
 
 <br>
 <br>

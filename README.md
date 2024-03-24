@@ -118,9 +118,9 @@
 <br><br>
 
 ---
-<CI/CD 추가 이후>
+### CI/CD 적용 후 시스템 아키텍처
 <br>
-<img src="./img/system_architecture_cicd.png">
+<img src="./img/systemArchitecture_CICD.png">
 <br><br>
 
 #### CICD
