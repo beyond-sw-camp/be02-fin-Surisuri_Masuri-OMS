@@ -45,15 +45,15 @@
 <summary style="font-size: 18px; font-weight: bold;">DockerHub Images</summary>
 
 <h3><a href="https://hub.docker.com/repository/docker/beomiya/final_store_frontend/general">FrontEnd - Store</a></h3>
-<img src="./img/store.png">
+<img src="../img/store.png">
 <br>
 
 <h3><a href="https://hub.docker.com/repository/docker/beomiya/final_manager_frontend/general">FrontEnd - Manager</a></h3>
-<img src="./img/manager.png">
+<img src="../img/manager.png">
 <br>
 
 <h3><a href="https://hub.docker.com/repository/docker/beomiya/final_backend/general">BackEnd</a></h3>
-<img src="./img/backend.png">
+<img src="../img/backend.png">
 <br>
 
 </details>
