@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetListQuestionRes {
-
+    private Integer questionIdx;
     private String category;
     private String title;
     private String content;
     private Long userIdx;
+    private String answerContent;
 }
