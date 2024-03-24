@@ -127,9 +127,14 @@ public class QuestionService {
         }
     }
 
-    public BaseResponse answer(Manager manager, QuestionAnswerReq req) {
-        Optional<Manager> managerResult = managerRepository.findByManagerId(manager.getManagerId());
-        manager = managerResult.get();
+    public BaseResponse answer(String token, QuestionAnswerReq req) {
+        token = JwtUtils.replaceToken(token);
+        Claims managerInfo = JwtUtils.getManagerInfo2(token, secretKey);
+        String managerId = managerInfo.get("id", String.class);
+
+        Optional<Manager> managerResult = managerRepository.findByManagerId(managerId);
+        Manager manager = managerResult.get();
+
         Optional<Question> questionResult = questionRepository.findById(req.getQuestionIdx());
         Question question = questionResult.get();
 
@@ -166,4 +171,3 @@ public class QuestionService {
         }
     }
 }
-
