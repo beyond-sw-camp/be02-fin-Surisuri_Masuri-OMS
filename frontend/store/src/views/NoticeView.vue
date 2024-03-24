@@ -3,9 +3,7 @@
     <div class="row">
       <div class="col">
         <div class="card">
-          <div class="card-header">
-            공지사항
-          </div>
+          <div class="card-header">공지사항</div>
           <div class="card-body">
             <table class="table">
               <thead>
@@ -13,11 +11,11 @@
                   <th scope="col">번호</th>
                   <th scope="col">제목</th>
                   <th scope="col">내용</th>
-                  <th scope="col"></th> 
+                  <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(notice, index) in notices" :key="notice.idx">
+                <tr v-for="(notice, index) in notices" :key="notice.noticeIdx">
                   <th scope="row">{{ index + 1 }}</th>
                   <td>{{ notice.title }}</td>
                   <td>{{ notice.content }}</td>
@@ -26,11 +24,11 @@
                       :to="{
                         name: 'NoticeDetail',
                         query: {
-                          idx: notice.idx,
+                          idx: notice.noticeIdx,
                           title: notice.title,
                           content: notice.content,
-                          category: notice.category
-                        }
+                          category: notice.category,
+                        },
                       }"
                       class="btn btn-primary btn-sm"
                     >
@@ -48,7 +46,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
@@ -62,15 +60,15 @@ export default {
   methods: {
     async fetchNotices() {
       try {
-        const response = await axios.get('http://192.168.0.162/notice/list', {
+        const response = await axios.get("http://localhost:8080/notice/list", {
           params: {
             page: 1,
-            size: 10,
-          }
+            size: 5,
+          },
         });
         this.notices = response.data.result;
       } catch (error) {
-        console.error('공지사항 목록을 불러오는 중 오류가 발생했습니다.', error);
+        console.error("공지사항 목록을 불러오는 중 오류가 발생했습니다.", error);
       }
     },
   },
