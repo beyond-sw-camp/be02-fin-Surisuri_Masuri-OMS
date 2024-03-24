@@ -18,7 +18,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(order, index) in ordersDetailResult" :key="index">
+              <tr v-for="(order, index) in filteredOrders" :key="index">
                 <!-- 주문번호 클릭 이벤트 추가 -->
                 <td @click="goToOrderDetail(order)" style="cursor: pointer">{{ order.merchantUid }}</td>
                 <td>{{ order.createdDate }}</td>
@@ -40,6 +40,7 @@ export default {
   data() {
     return {
       ordersDetailResult: [], // 주문 상세 정보를 저장할 배열
+      searchQuery: "", // 검색어를 저장할 변수 추가
     };
   },
   async mounted() {
@@ -55,7 +56,17 @@ export default {
           Authorization: `Bearer ${token}`,
         },
       }); // 서버에서 주문 상세 정보 받아오기
-      this.ordersDetailResult = response.data.result; // 받아온 정보를 ordersDetailResult에 저장
+
+      // 중복된 주문번호 제거
+      const uniqueOrders = response.data.result.reduce((acc, curr) => {
+        if (!acc[curr.merchantUid]) {
+          acc[curr.merchantUid] = curr;
+        }
+        return acc;
+      }, {});
+
+      // 중복을 제거한 유일한 주문번호로 필터링하여 ordersDetailResult 업데이트
+      this.ordersDetailResult = Object.values(uniqueOrders);
     } catch (error) {
       console.error("Error fetching orders detail:", error);
     }
