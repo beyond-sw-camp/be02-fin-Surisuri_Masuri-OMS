@@ -22,7 +22,7 @@ public class StoreController {
     }
 
     // 가맹점 리스트 조회 - List
-    @PostMapping("/store/list")
+    @GetMapping("/store/list")
     public ResponseEntity StoreSearch(@RequestHeader(value = "Authorization") String token, Integer page, Integer size)
     {
         return ResponseEntity.ok().body(storeService.StoreList(token,page,size));
