@@ -30,9 +30,10 @@
 ### 💻 Architecture
 
 ---
-### [System Architecture](https:)
+### System Architecture
+<img src = "../img/systemArchitecture.png">
 
-### [Cluster Architecture](https:)
+### Cluster Architecture
 
 <br>
 <br>
