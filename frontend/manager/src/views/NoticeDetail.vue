@@ -3,6 +3,7 @@
     <div class="card">
       <div class="card-body">
         <div v-if="!isEditing">
+          <p class="card-text">공지 번호: {{ noticeIdx }}</p>
           <p class="card-text">제목: {{ title }}</p>
           <p class="card-text">내용: {{ content }}</p>
         </div>
@@ -51,20 +52,26 @@ export default {
         status: true,
       };
 
-      axios.patch("http://localhost:8080/notice/update", updateData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        console.log("수정 응답:", response);
-        alert("공지사항이 수정되었습니다.");
-        this.$router.push("/notice");
-      })
-      .catch((error) => {
-        console.error("공지사항 수정 중 오류 발생:", error);
-        alert("오류 발생: " + (error.response && error.response.data.message ? error.response.data.message : "공지사항 수정 중 오류가 발생했습니다."));
-      });
+      axios
+        .patch("http://localhost:8080/notice/update", updateData, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          console.log("수정 응답:", response);
+          alert("공지사항이 수정되었습니다.");
+          this.$router.push("/notice");
+        })
+        .catch((error) => {
+          console.error("공지사항 수정 중 오류 발생:", error);
+          alert(
+            "오류 발생: " +
+              (error.response && error.response.data.message
+                ? error.response.data.message
+                : "공지사항 수정 중 오류가 발생했습니다.")
+          );
+        });
 
       this.isEditing = false;
     },
@@ -83,12 +90,15 @@ export default {
         this.title = "";
         this.content = "";
         // 삭제 후 추가적으로 필요한 로직 처리
-        this.$router.push('/notice');
+        this.$router.push("/notice");
       } catch (error) {
         console.error("공지사항 삭제 중 오류:", error);
-        alert("공지사항 삭제 중 오류가 발생했습니다: " + (error.response && error.response.data ? error.response.data.message : error.message));
+        alert(
+          "공지사항 삭제 중 오류가 발생했습니다: " +
+            (error.response && error.response.data ? error.response.data.message : error.message)
+        );
       }
-    }
+    },
   },
 };
 </script>
