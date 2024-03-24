@@ -73,19 +73,21 @@ public class QuestionService {
 
         List<Question> questionList = questionRepository.findAll();
 
-            List<GetListQuestionRes> getListQuestionResList = new ArrayList<>();
-            for (Question question : questionList) {
-                GetListQuestionRes getListQuestionRes = GetListQuestionRes.builder()
-                        .category(question.getCategory())
-                        .title(question.getTitle())
-                        .content(question.getContent())
-                        .userIdx(question.getUser().getIdx())
-                        .build();
+        List<GetListQuestionRes> getListQuestionResList = new ArrayList<>();
+        for (Question question : questionList) {
+            GetListQuestionRes getListQuestionRes = GetListQuestionRes.builder()
+                    .questionIdx(question.getIdx())
+                    .category(question.getCategory())
+                    .title(question.getTitle())
+                    .content(question.getContent())
+                    .userIdx(question.getUser().getIdx())
+                    .answerContent(question.getAnswer().getAnswerContent())
+                    .build();
 
-                getListQuestionResList.add(getListQuestionRes);
-            }
+            getListQuestionResList.add(getListQuestionRes);
+        }
 
-            return BaseResponse.successResponse("문의사항 불러오기 성공", getListQuestionResList);
+        return BaseResponse.successResponse("문의사항 불러오기 성공", getListQuestionResList);
 
     }
 
