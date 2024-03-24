@@ -116,13 +116,47 @@ CD(Continuous Deployment/Delivery)는 CI에서 빌드된 소프트웨어를 자�
 ---
 <details>
 <summary style="font-size: 18px; font-weight: bold;">FrontEnd</summary>
-</details>
+
+GitHub 저장소에 최신 코드를 Push한다.
+
+GitHub 저장소는 WebHook을 사용하여 Jenkins에 최신 코드 Push 이벤트를 전달한다.
+
+Jenkins 파이프라인은 다음과 같은 절차에 따라 작동한다
+
+1. Jenkins 서버는 연결된 GitHub 저장소에서 최신 코드를 복제한다.
+2. FrontEnd 프로젝트의 경우 npm i 명령어를 사용하여 필요한 종속성을 설치한다.
+3. npm run build 명령어를 사용하여 프로젝트를 빌드한다.
+4. 빌드된 dist 파일을 Dockerfile에 따라 Docker 이미지를 생성한다.
+5. 생성된 Docker 이미지를 Docker Hub에 업로드하기 위해 로그인한다.
+6. Jenkins 서버는 등록된 K8S 마스터 노드에 배포에 사용할 Deployment.yml 파일을 전송한다.
+7. K8S 마스터는 전송된 Deployment.yml 파일을 kubectl apply 명령어를 사용하여 적용한다.
+8. Jenkins 서버는 작성된 파이프라인의 각 단계별 실행 결과를 Slack에 전송한다.
+
+또한, 배포 방식은 Rolling Update를 사용하여 이전 버전과 새 버전의 파드를 점진적으로 교체하여 가용성을 유지한다.
+</details> 
 
 <br>
 <br>
 
 <details>
 <summary style="font-size: 18px; font-weight: bold;">BackEnd</summary>
+
+GitHub 저장소에 최신 코드를 Push한다.
+
+GitHub 저장소는 WebHook을 사용하여 Jenkins에 최신 코드 Push 이벤트를 전달한다.
+
+Jenkins 파이프라인은 다음과 같은 절차에 따라 작동한다
+
+1. Jenkins 서버는 연결된 GitHub 저장소에서 최신 코드를 복제한다.
+2. BackEnd 프로젝트의 경우 mvn test 명령어를 사용하여 테스트를 실행하여 코드의 품질을 확인한다.
+3. 이후 테스트가 통과되면 mvn package 명령어를 실행하여 아티팩트를 생성한다.
+4. 빌드된 jar 파일을 Dockerfile에 따라 Docker 이미지를 생성한다.
+5. 생성된 Docker 이미지를 Docker Hub에 업로드하기 위해 로그인한다.
+6. Jenkins 서버는 등록된 K8S 마스터 노드에 배포에 사용할 Deployment.yml 파일을 전송한다.
+7. K8S 마스터는 전송된 Deployment.yml 파일을 kubectl apply 명령어를 사용하여 적용한다.
+8. Jenkins 서버는 작성된 파이프라인의 각 단계별 실행 결과를 Slack에 전송한다.
+
+또한, 배포 방식은 Rolling Update를 사용하여 이전 버전과 새 버전의 파드를 점진적으로 교체하여 가용성을 유지한다.
 </details>
 <br>
 <br>
