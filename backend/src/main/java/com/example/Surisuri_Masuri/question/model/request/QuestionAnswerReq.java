@@ -7,6 +7,5 @@ import lombok.Getter;
 @Getter
 public class QuestionAnswerReq {
     Integer questionIdx;
-    Long managerIdx;
     String answerContent;
 }
