@@ -22,8 +22,8 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
-    public ResponseEntity create(PostCreateQuestionReq postCreateQuestionReq) {
-        BaseResponse baseResponse = questionService.create(postCreateQuestionReq);
+    public ResponseEntity create(@AuthenticationPrincipal User user, @RequestBody PostCreateQuestionReq postCreateQuestionReq) {
+        BaseResponse baseResponse = questionService.create(user, postCreateQuestionReq);
         return ResponseEntity.ok().body(baseResponse);
     }
 
@@ -34,7 +34,7 @@ public class QuestionController {
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/update")
-    public ResponseEntity update(@AuthenticationPrincipal User user, PatchUpdateQuestionReq patchUpdateQuestionReq) {
+    public ResponseEntity update(@AuthenticationPrincipal User user, @RequestBody PatchUpdateQuestionReq patchUpdateQuestionReq) {
         BaseResponse baseResponse = questionService.update(user, patchUpdateQuestionReq);
         return ResponseEntity.ok().body(baseResponse);
     }
@@ -47,9 +47,9 @@ public class QuestionController {
 
     // TODO: 2024-03-10 관리자가 답변을 작성하는 기능 추가해야함
     @RequestMapping(method = RequestMethod.POST, value = "/answer")
-    public ResponseEntity answer(@AuthenticationPrincipal Manager manager, QuestionAnswerReq req) {
+    public ResponseEntity answer(@RequestHeader(value = "Authorization") String token, @RequestBody QuestionAnswerReq req) {
 
-        return ResponseEntity.ok().body(questionService.answer(manager, req));
+        return ResponseEntity.ok().body(questionService.answer(token, req));
     }
 
 }

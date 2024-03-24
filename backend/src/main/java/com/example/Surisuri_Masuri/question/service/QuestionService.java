@@ -3,9 +3,11 @@ package com.example.Surisuri_Masuri.question.service;
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
+import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
+import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.question.model.entity.Answer;
 import com.example.Surisuri_Masuri.question.model.entity.Question;
 import com.example.Surisuri_Masuri.question.model.request.PatchUpdateQuestionReq;
@@ -15,7 +17,9 @@ import com.example.Surisuri_Masuri.question.model.response.GetListQuestionRes;
 import com.example.Surisuri_Masuri.question.model.response.PostCreateQuestionRes;
 import com.example.Surisuri_Masuri.question.repository.AnswerRepository;
 import com.example.Surisuri_Masuri.question.repository.QuestionRepository;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,23 +34,32 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
     private final ManagerRepository managerRepository;
+    private final UserRepository userRepository;
 
-    public BaseResponse create(PostCreateQuestionReq postQuestionReq) {
+    @Value("${jwt.secret-key}")
+    private String secretKey;
 
-        Question question = Question.builder()
+    @Value("${jwt.token.expired-time-ms}")
+    private int expiredTimeMs;
+
+    public BaseResponse create(User user, PostCreateQuestionReq postQuestionReq) {
+        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
+        User foundUser = userResult.get();
+
+
+        questionRepository.save(Question.builder()
                 .category(postQuestionReq.getCategory())
                 .title(postQuestionReq.getTitle())
                 .content(postQuestionReq.getContent())
                 .status(postQuestionReq.getStatus())
-                .user(User.builder().idx(postQuestionReq.getUserIdx()).build())
-                .build();
-        questionRepository.save(question);
+                .user(foundUser)
+                .build());
 
         PostCreateQuestionRes postCreateQuestionRes = PostCreateQuestionRes.builder()
                 .category(postQuestionReq.getCategory())
                 .title(postQuestionReq.getTitle())
                 .content(postQuestionReq.getContent())
-                .userIdx(postQuestionReq.getUserIdx())
+                .userIdx(foundUser.getIdx())
                 .build();
 
         return BaseResponse.successResponse("문의사항 작성 성공", null);
@@ -60,19 +73,21 @@ public class QuestionService {
 
         List<Question> questionList = questionRepository.findAll();
 
-            List<GetListQuestionRes> getListQuestionResList = new ArrayList<>();
-            for (Question question : questionList) {
-                GetListQuestionRes getListQuestionRes = GetListQuestionRes.builder()
-                        .category(question.getCategory())
-                        .title(question.getTitle())
-                        .content(question.getContent())
-                        .userIdx(question.getUser().getIdx())
-                        .build();
+        List<GetListQuestionRes> getListQuestionResList = new ArrayList<>();
+        for (Question question : questionList) {
+            GetListQuestionRes getListQuestionRes = GetListQuestionRes.builder()
+                    .questionIdx(question.getIdx())
+                    .category(question.getCategory())
+                    .title(question.getTitle())
+                    .content(question.getContent())
+                    .userIdx(question.getUser().getIdx())
+                    .answerContent(question.getAnswer().getAnswerContent())
+                    .build();
 
-                getListQuestionResList.add(getListQuestionRes);
-            }
+            getListQuestionResList.add(getListQuestionRes);
+        }
 
-            return BaseResponse.successResponse("문의사항 불러오기 성공", getListQuestionResList);
+        return BaseResponse.successResponse("문의사항 불러오기 성공", getListQuestionResList);
 
     }
 
@@ -112,9 +127,14 @@ public class QuestionService {
         }
     }
 
-    public BaseResponse answer(Manager manager, QuestionAnswerReq req) {
-        Optional<Manager> managerResult = managerRepository.findByManagerId(manager.getManagerId());
-        manager = managerResult.get();
+    public BaseResponse answer(String token, QuestionAnswerReq req) {
+        token = JwtUtils.replaceToken(token);
+        Claims managerInfo = JwtUtils.getManagerInfo2(token, secretKey);
+        String managerId = managerInfo.get("id", String.class);
+
+        Optional<Manager> managerResult = managerRepository.findByManagerId(managerId);
+        Manager manager = managerResult.get();
+
         Optional<Question> questionResult = questionRepository.findById(req.getQuestionIdx());
         Question question = questionResult.get();
 
@@ -151,4 +171,3 @@ public class QuestionService {
         }
     }
 }
-
