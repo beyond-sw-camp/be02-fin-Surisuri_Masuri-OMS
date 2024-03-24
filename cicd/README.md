@@ -2,7 +2,7 @@
 
 ![header](https://capsule-render.vercel.app/api?type=venom&height=300&color=FFDC00&text=GIGA%20COFFEE&textBg=false&animation=fadeIn&fontColor=452613&fontSize=80&reversal=false&desc=기억%20속,%20가장%20맛있었던%20한%20모금&descAlignY=80)
 
-> <h3 style="color:black; font-family: 'Nanum Pen Script', cursive;">[플레이 데이터] 한화시스템 BEYOND SW캠프 / Team : SuriSuri_Masuri</h3>
+> <h2 style="color:black; font-family: 'Nanum Pen Script', cursive;">[플레이 데이터] 한화시스템 BEYOND SW캠프 / Team : SuriSuri_Masuri</h3>
 
 <br>
 <br>
