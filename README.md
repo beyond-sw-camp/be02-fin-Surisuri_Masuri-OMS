@@ -89,7 +89,7 @@
 ### 시스템 아키텍처
 
 ---
-<img src="./img/system_architecture_nocicd.png">
+<img src="./img/systemArchitecture.png">
 <br>
 
 #### 프론트엔드 서버
