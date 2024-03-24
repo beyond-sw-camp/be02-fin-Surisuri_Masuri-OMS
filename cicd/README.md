@@ -41,17 +41,21 @@
 
 ---
 <details>
+
 <summary style="font-size: 18px; font-weight: bold;">DockerHub Images</summary>
 
-<h3>FrontEnd</h3>
-<img width="500" alt="docker hub frontend" src="https://github.com/beyond-sw-camp/be02-fin-BuildUp-KMS/assets/105422037/e6d1b2ca-2209-4b93-8c93-a0b1d7fde036">
-
+<h3><a href="https://hub.docker.com/repository/docker/beomiya/final_store_frontend/general">FrontEnd - Store</a></h3>
+<img alt="Frontend - Store" src="C:\Users\gusqj\OneDrive\바탕 화면\be02-fin-Surisuri_Masuri-OMS\cicd\image\store.png" width="500"/>
 <br>
 
-<h3>BackEnd</h3>
-<img width="500" alt="docker hub backend" src="https://github.com/beyond-sw-camp/be02-fin-BuildUp-KMS/assets/105422037/8d33cccb-fdc8-4995-94a2-c5fabced2f8b">
-
+<h3><a href="https://hub.docker.com/repository/docker/beomiya/final_manager_frontend/general">FrontEnd - Manager</a></h3>
+<img width="500" alt="Frontend - Store" src="C:\Users\gusqj\OneDrive\바탕 화면\be02-fin-Surisuri_Masuri-OMS\cicd\image\manager.png" width="500"/>
 <br>
+
+<h3><a href="https://hub.docker.com/repository/docker/beomiya/final_backend/general">BackEnd</a></h3>
+<img width="500" alt="docker hub backend" src="C:\Users\gusqj\OneDrive\바탕 화면\be02-fin-Surisuri_Masuri-OMS\cicd\image\backend.png">
+<br>
+
 </details>
 
 <br>
@@ -77,19 +81,32 @@
 
 ---
 <details>
-<summary style="font-size: 18px; font-weight: bold;">CI</summary>
-코드를 변경했을 때 자동으로 Build되어 빠르고 안정적으로 코드를 통합할 수 있고
-항상 배포 준비가 완료된 상태를 유지할 수 있다.
+<summary style="font-size: 18px; font-weight: bold;">CI: 지속적 통합</summary>
+
+CI(Continuous Integration)는 개발자들이 코드를 변경할 때마다 자동으로 빌드되어 통합되는 프로세스를 의미한다. <br>이를 통해 여러 명의 개발자가 동시에 작업할 때 발생할 수 있는 통합 오류를 미리 발견하고 해결할 수 있다.
+
+### 주요 특징:
+- 코드 변경 시 자동으로 빌드 및 테스트
+- 빌드 실패 시 즉시 알림
+- 지속적인 통합으로 품질 향상 및 빠른 배포 가능
+
 </details>
 
 <br>
 <br>
 
 <details>
-<summary style="font-size: 18px; font-weight: bold;">CD</summary>
-개발자가 Github의 remote repository에 code를 push할 때마다 자동으로 빌드 및 배포되기 때문에
-수동 배포에 비해 시간과 노력을 크게 절약할 수 있고 사용자에게 즉각적인 업데이트를 제공할 수 있다.
+<summary style="font-size: 18px; font-weight: bold;">CD: 지속적 배포</summary>
+
+CD(Continuous Deployment/Delivery)는 CI에서 빌드된 소프트웨어를 자동으로 테스트, 패키징하여 프로덕션 환경에 자동으로 배포하는 프로세스를 의미한다.<br>이는 GitHub의 원격 저장소에 코드를 push할 때마다 자동으로 빌드 및 배포되어 사용자에게 신속한 업데이트를 제공한다.
+
+### 주요 특징:
+- 자동화된 배포 프로세스
+- 사용자 피드백에 따른 지속적인 개선
+- 빠르고 신속한 업데이트 제공으로 사용자 만족도 향상
+
 </details>
+
 
 <br>
 <br>
