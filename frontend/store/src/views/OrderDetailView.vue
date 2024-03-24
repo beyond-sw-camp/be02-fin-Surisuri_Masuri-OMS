@@ -18,6 +18,12 @@
             <div class="card-body">배송 중인 주문 수: {{ shippingOrders }}</div>
           </div>
         </div>
+        <!-- 추가: 배송 전인 주문 수 -->
+        <div class="col-xl-3 col-md-6">
+          <div class="card bg-info text-white mb-4">
+            <div class="card-body">배송 전인 주문 수: {{ nonShippingOrders }}</div>
+          </div>
+        </div>
       </div>
       <div class="card mb-4">
         <div class="card-header">
@@ -36,14 +42,22 @@
               </tr>
             </thead>
             <tbody>
+              <!-- 주문 상세 정보를 반복하여 출력 -->
               <tr v-for="(order, index) in ordersDetailResult" :key="index">
                 <td>{{ order.createdDate }}</td>
                 <td>{{ order.merchantUid }}</td>
                 <td>
+                  <!-- 상품 정보 출력 -->
                   <div>{{ order.productDtoRes.productName }} ({{ order.productDtoRes.productQuantity }}개)</div>
                 </td>
                 <td>{{ order.totalPrice }}</td>
-                <td>{{ order.deliveryStatus }}</td>
+                <!-- 배송 상태에 따라 다르게 표시 -->
+                <td v-if="order.deliveryStatus === '배송 중'">
+                  <span class="card bg-success text-center">{{ order.deliveryStatus }}</span>
+                </td>
+                <td v-else-if="order.deliveryStatus === '배송 전'">
+                  <span class="card bg-info text-center">{{ order.deliveryStatus }}</span>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -63,13 +77,14 @@ export default {
       totalOrders: 0,
       todayOrders: 0,
       shippingOrders: 0,
+      nonShippingOrders: 0, // 추가: 배송 전인 주문 수
     };
   },
   async mounted() {
     try {
       const token = sessionStorage.getItem("token");
 
-      const response = await axios.get("http://192.168.0.162/orders/list", {
+      const response = await axios.get("http://localhost:8080/orders/list", {
         params: {
           page: 1,
           size: 5,
@@ -78,7 +93,19 @@ export default {
           Authorization: `Bearer ${token}`,
         },
       }); // 서버에서 주문 상세 정보 받아오기
-      this.ordersDetailResult = response.data.result; // 받아온 정보를 ordersDetailResult에 저장
+
+      // 중복된 주문을 제거하기 위해 Set을 사용하여 주문 번호를 추출
+      const uniqueOrderNumbers = new Set();
+      const uniqueOrders = [];
+
+      response.data.result.forEach((order) => {
+        if (!uniqueOrderNumbers.has(order.merchantUid)) {
+          uniqueOrderNumbers.add(order.merchantUid);
+          uniqueOrders.push(order);
+        }
+      });
+
+      this.ordersDetailResult = uniqueOrders; // 중복 제거된 주문 정보를 저장
 
       // 전체 주문 수 설정
       this.totalOrders = this.ordersDetailResult.length;
@@ -90,6 +117,9 @@ export default {
 
       // 배송 중인 주문 수 설정
       this.shippingOrders = this.ordersDetailResult.filter((order) => order.deliveryStatus === "배송 중").length;
+
+      // 배송 전인 주문 수 설정
+      this.nonShippingOrders = this.ordersDetailResult.filter((order) => order.deliveryStatus === "배송 전").length;
     } catch (error) {
       console.error("Error fetching orders detail:", error);
     }
