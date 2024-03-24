@@ -3,9 +3,11 @@ package com.example.Surisuri_Masuri.question.service;
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
+import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
+import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.question.model.entity.Answer;
 import com.example.Surisuri_Masuri.question.model.entity.Question;
 import com.example.Surisuri_Masuri.question.model.request.PatchUpdateQuestionReq;
@@ -15,7 +17,9 @@ import com.example.Surisuri_Masuri.question.model.response.GetListQuestionRes;
 import com.example.Surisuri_Masuri.question.model.response.PostCreateQuestionRes;
 import com.example.Surisuri_Masuri.question.repository.AnswerRepository;
 import com.example.Surisuri_Masuri.question.repository.QuestionRepository;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,23 +34,32 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
     private final ManagerRepository managerRepository;
+    private final UserRepository userRepository;
 
-    public BaseResponse create(PostCreateQuestionReq postQuestionReq) {
+    @Value("${jwt.secret-key}")
+    private String secretKey;
 
-        Question question = Question.builder()
+    @Value("${jwt.token.expired-time-ms}")
+    private int expiredTimeMs;
+
+    public BaseResponse create(User user, PostCreateQuestionReq postQuestionReq) {
+        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
+        User foundUser = userResult.get();
+
+
+        questionRepository.save(Question.builder()
                 .category(postQuestionReq.getCategory())
                 .title(postQuestionReq.getTitle())
                 .content(postQuestionReq.getContent())
                 .status(postQuestionReq.getStatus())
-                .user(User.builder().idx(postQuestionReq.getUserIdx()).build())
-                .build();
-        questionRepository.save(question);
+                .user(foundUser)
+                .build());
 
         PostCreateQuestionRes postCreateQuestionRes = PostCreateQuestionRes.builder()
                 .category(postQuestionReq.getCategory())
                 .title(postQuestionReq.getTitle())
                 .content(postQuestionReq.getContent())
-                .userIdx(postQuestionReq.getUserIdx())
+                .userIdx(foundUser.getIdx())
                 .build();
 
         return BaseResponse.successResponse("문의사항 작성 성공", null);
