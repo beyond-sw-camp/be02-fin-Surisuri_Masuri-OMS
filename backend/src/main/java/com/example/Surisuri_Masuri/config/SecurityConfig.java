@@ -51,6 +51,14 @@ public class SecurityConfig {
                     .antMatchers("/manager/login").permitAll()
                     .antMatchers("/user/findPassword").permitAll()
                     .antMatchers("/user/resetPassword/{idx}").permitAll()
+                    .antMatchers("/product/**").permitAll()
+                    .antMatchers("/cart/**").permitAll()
+                    .antMatchers("/orders/**").permitAll()
+                    .antMatchers("/stock/**").permitAll()
+                    .antMatchers("/notice/**").permitAll()
+                    .antMatchers("/question/**").permitAll()
+                    .antMatchers("/store/**").permitAll()
+                    .antMatchers("/container/**").permitAll()
                     .anyRequest().authenticated();
             http.addFilterBefore(new JwtFilter(userService,managerService,secretKey), UsernamePasswordAuthenticationFilter.class);
             http.formLogin().disable();
