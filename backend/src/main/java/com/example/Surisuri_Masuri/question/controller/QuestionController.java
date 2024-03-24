@@ -47,9 +47,9 @@ public class QuestionController {
 
     // TODO: 2024-03-10 관리자가 답변을 작성하는 기능 추가해야함
     @RequestMapping(method = RequestMethod.POST, value = "/answer")
-    public ResponseEntity answer(@AuthenticationPrincipal Manager manager, QuestionAnswerReq req) {
+    public ResponseEntity answer(@RequestHeader(value = "Authorization") String token, @RequestBody QuestionAnswerReq req) {
 
-        return ResponseEntity.ok().body(questionService.answer(manager, req));
+        return ResponseEntity.ok().body(questionService.answer(token, req));
     }
 
 }
