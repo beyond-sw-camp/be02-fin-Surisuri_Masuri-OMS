@@ -38,17 +38,14 @@ public class CartService {
         Optional<Product> productResult = productRepository.findById(req.getProductIdx());
 
         Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
-        user = userResult.get();
-        Optional<Store> storeResult = storeRepository.findByStoreUuid(user.getStore().getStoreUuid());
+        User foundUser = userResult.get();
+        Optional<Store> storeResult = storeRepository.findByStoreUuid(foundUser.getStore().getStoreUuid());
 
         Store store = storeResult.get();
 
         Product product = productResult.get();
 
-        Optional<Cart> cartResult = cartRepository.findById(user.getStore().getCartList().get(0).getIdx());
-        Cart cart =  cartResult.get();
-
-        if (cart.getIdx() == null) {
+        if (foundUser.getStore().getCartList().size() == 0) {
             Cart newCart = cartRepository.save(Cart.builder()
                     .store(store)
                     .build());
@@ -68,6 +65,8 @@ public class CartService {
 
             return BaseResponse.successResponse("요청 성공", cartCreateRes);
         } else {
+            Optional<Cart> cartResult = cartRepository.findById(foundUser.getStore().getCartList().get(0).getIdx());
+            Cart cart =  cartResult.get();
 
             List<CartDetail> cartDetailResult = cartDetailRepository.findByCartIdx(cart.getIdx());
 
