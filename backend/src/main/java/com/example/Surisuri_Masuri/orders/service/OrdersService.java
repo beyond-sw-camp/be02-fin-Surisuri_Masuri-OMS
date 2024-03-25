@@ -174,14 +174,16 @@ public class OrdersService {
         return BaseResponse.failResponse(444,"상품 리스트 불러오기 싶패");
     }
 
-    public void create(String payMethod, Long cartIdx, String merchantUid, Long amount) {
+    public void create(String payMethod, Long cartIdx, String merchantUid, Long amount, Store store) {
         Optional<Cart> cartResult = cartRepository.findById(cartIdx);
         List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(cartIdx);
 
         Orders orders = ordersRepository.save(Orders.builder()
+                .store(store)
                 .payMethod(payMethod)
                 .totalPrice(amount)
                 .merchantUid(merchantUid)
+                .deliveryStatus("배송 전")
                 .build());
 
         for (CartDetail cartDetail: cartDetailList) {
