@@ -12,7 +12,7 @@ import javax.persistence.Column;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetListContainerRes {
-
+    private Integer containerIdx;
     private String containerAddr;
     private Integer containerComplexity;
     private String containerName;
