@@ -17,11 +17,10 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
-    public ResponseEntity create(PostCreateNoticeReq postCreateNoticeReq) {
+    public ResponseEntity create(@RequestBody PostCreateNoticeReq postCreateNoticeReq) {
         BaseResponse baseResponse = noticeService.create(postCreateNoticeReq);
         return ResponseEntity.ok().body(baseResponse);
     }
-
     @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ResponseEntity list(Integer page, Integer size) {
         BaseResponse baseResponse = noticeService.list(page,size);
@@ -29,7 +28,7 @@ public class NoticeController {
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/update")
-    public ResponseEntity update(PatchUpdateNoticeReq patchUpdateNoticeReq) {
+    public ResponseEntity update(@RequestBody PatchUpdateNoticeReq patchUpdateNoticeReq) {
         BaseResponse baseResponse = noticeService.update(patchUpdateNoticeReq);
         return ResponseEntity.ok().body(baseResponse);
     }
