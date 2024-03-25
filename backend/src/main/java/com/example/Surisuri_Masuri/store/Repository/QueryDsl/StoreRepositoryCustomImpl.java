@@ -16,18 +16,16 @@ public class StoreRepositoryCustomImpl extends QuerydslRepositorySupport impleme
     public StoreRepositoryCustomImpl() {
         super(Store.class);
     }
-
     @Override
     public Page<Store> findList(Pageable pageable) {
         QStore store= new QStore("store");
 
         List<Store> result = from(store)
                 .distinct()
-                .offset(pageable.getOffset())
+                .offset(pageable.getPageNumber() * pageable.getPageSize())
                 .limit(pageable.getPageSize())
-                .fetch().stream().collect(Collectors.toList());
+                .fetch();
 
-        return new PageImpl<>(result, pageable, pageable.getPageSize());
+        return new PageImpl<>(result, pageable, result.size());
     }
-
 }
