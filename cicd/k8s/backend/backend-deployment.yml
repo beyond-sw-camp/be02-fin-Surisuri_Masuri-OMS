@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: backend-container
-          image: beomiya/final_backend:1.62
+          image: beomiya/final_backend:1.VERSION
           readinessProbe:
             httpGet:
               path: /healthz
