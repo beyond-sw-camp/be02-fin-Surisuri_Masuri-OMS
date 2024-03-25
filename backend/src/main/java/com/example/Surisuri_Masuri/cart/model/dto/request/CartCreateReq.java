@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class CartCreateReq {
-    Long idx;
     Long productIdx;
     Integer productQuantity;
 }
