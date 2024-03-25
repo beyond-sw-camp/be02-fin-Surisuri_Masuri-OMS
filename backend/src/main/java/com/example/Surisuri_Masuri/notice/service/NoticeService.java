@@ -49,18 +49,19 @@ public class NoticeService {
 
         List<Notice> noticeList = noticeRepository.findAll();
 
-            List<GetListNoticeRes> getListNoticeResList = new ArrayList<>();
-            for (Notice notice : noticeList) {
-                GetListNoticeRes getListNoticeRes = GetListNoticeRes.builder()
-                        .category(notice.getCategory())
-                        .title(notice.getTitle())
-                        .content(notice.getContent())
-                        .build();
+        List<GetListNoticeRes> getListNoticeResList = new ArrayList<>();
+        for (Notice notice : noticeList) {
+            GetListNoticeRes getListNoticeRes = GetListNoticeRes.builder()
+                    .noticeIdx(notice.getNoticeIdx())
+                    .category(notice.getCategory())
+                    .title(notice.getTitle())
+                    .content(notice.getContent())
+                    .build();
 
-                getListNoticeResList.add(getListNoticeRes);
-            }
+            getListNoticeResList.add(getListNoticeRes);
+        }
 
-            return BaseResponse.successResponse("공지사항 조회 성공",getListNoticeResList);
+        return BaseResponse.successResponse("공지사항 조회 성공",getListNoticeResList);
 
     }
 
