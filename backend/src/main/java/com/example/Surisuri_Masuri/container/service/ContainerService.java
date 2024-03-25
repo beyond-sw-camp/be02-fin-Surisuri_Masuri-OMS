@@ -103,6 +103,7 @@ public class ContainerService {
         List<GetListContainerRes> getListContainerResList = new ArrayList<>();
         for (Container container : containerList) {
             GetListContainerRes getListContainernRes = GetListContainerRes.builder()
+                    .containerIdx(container.getIdx())
                     .containerName(container.getContainerName())
                     .containerAddr(container.getContainerAddr())
                     .containerManager(container.getContainerManager())
