@@ -28,7 +28,7 @@ public class NoticeController {
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/update")
-    public ResponseEntity update(PatchUpdateNoticeReq patchUpdateNoticeReq) {
+    public ResponseEntity update(@RequestBody PatchUpdateNoticeReq patchUpdateNoticeReq) {
         BaseResponse baseResponse = noticeService.update(patchUpdateNoticeReq);
         return ResponseEntity.ok().body(baseResponse);
     }
