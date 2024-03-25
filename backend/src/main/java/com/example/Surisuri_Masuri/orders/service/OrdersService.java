@@ -208,6 +208,9 @@ public class OrdersService {
     public BaseResponse payment(User user, String imp_uid) throws IamportResponseException, IOException {
         IamportResponse<Payment> response = getPaymentInfo(imp_uid);
 
+        Optional<User> userResult = userRepository.findById(user.getIdx());
+        User foundUser = userResult.get();
+
         String customDataString = response.getResponse().getCustomData();
         System.out.println(customDataString);
 
@@ -240,13 +243,11 @@ public class OrdersService {
 
             return BaseResponse.failResponse(444, "금액 불일치");
         }
-        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
-        user = userResult.get();
 
-        create(payMethod ,cartIdx, merchantUid, amount);
+        create(payMethod ,cartIdx, merchantUid, amount, foundUser.getStore());
 
         for (CartDetail cartDetail: cartDetailList) {
-            cartService.delete(user, cartIdx, cartDetail.getProduct().getProductName());
+            cartService.delete(foundUser, cartIdx, cartDetail.getProduct().getProductName());
         }
 
         return BaseResponse.successResponse("결제 성공", customDataString);
