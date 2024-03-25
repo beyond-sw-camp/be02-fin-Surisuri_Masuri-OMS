@@ -34,5 +34,5 @@ spec:
               memory: 2Gi
           envFrom:
             - configMapRef:
-              name: back-config
+                name: back-config
       terminationGracePeriodSeconds: 5
