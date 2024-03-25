@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: frontendmanager-container
-          image: beomiya/final_manager_frontend:1.50
+          image: beomiya/final_manager_frontend:1.VERSION
           readinessProbe:
             httpGet:
               path: /
