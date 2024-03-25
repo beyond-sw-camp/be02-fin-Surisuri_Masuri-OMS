@@ -22,6 +22,7 @@ import com.example.Surisuri_Masuri.orders.model.dto.response.OrdersShowDeliveryS
 import com.example.Surisuri_Masuri.orders.model.dto.response.ProductDtoRes;
 import com.example.Surisuri_Masuri.orders.repository.OrdersDetailRepository;
 import com.example.Surisuri_Masuri.orders.repository.OrdersRepository;
+import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.siot.IamportRestClient.IamportClient;
@@ -68,7 +69,6 @@ public class OrdersService {
         Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
         user = userResult.get();
 
-        user.getStore().getOrdersList();
         for (Orders orders: user.getStore().getOrdersList()) {
             List<OrdersDetail> ordersDetailResult = ordersDetailRepository.findByOrdersIdx(orders.getIdx());
 
