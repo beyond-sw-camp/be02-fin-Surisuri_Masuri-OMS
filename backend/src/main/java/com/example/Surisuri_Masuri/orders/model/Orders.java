@@ -31,7 +31,6 @@ public class Orders {
     @Column(nullable = false)
     private String deliveryStatus;
 
-    @NotBlank(message = "환불 사유를 입력하세요")
     @Column(nullable = false)
     private String refundReason;
 

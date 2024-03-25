@@ -22,6 +22,7 @@ import com.example.Surisuri_Masuri.orders.model.dto.response.OrdersShowDeliveryS
 import com.example.Surisuri_Masuri.orders.model.dto.response.ProductDtoRes;
 import com.example.Surisuri_Masuri.orders.repository.OrdersDetailRepository;
 import com.example.Surisuri_Masuri.orders.repository.OrdersRepository;
+import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.siot.IamportRestClient.IamportClient;
@@ -68,7 +69,6 @@ public class OrdersService {
         Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
         user = userResult.get();
 
-        user.getStore().getOrdersList();
         for (Orders orders: user.getStore().getOrdersList()) {
             List<OrdersDetail> ordersDetailResult = ordersDetailRepository.findByOrdersIdx(orders.getIdx());
 
@@ -174,14 +174,16 @@ public class OrdersService {
         return BaseResponse.failResponse(444,"상품 리스트 불러오기 싶패");
     }
 
-    public void create(String payMethod, Long cartIdx, String merchantUid, Long amount) {
+    public void create(String payMethod, Long cartIdx, String merchantUid, Long amount, Store store) {
         Optional<Cart> cartResult = cartRepository.findById(cartIdx);
         List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(cartIdx);
 
         Orders orders = ordersRepository.save(Orders.builder()
+                .store(store)
                 .payMethod(payMethod)
                 .totalPrice(amount)
                 .merchantUid(merchantUid)
+                .deliveryStatus("배송 전")
                 .build());
 
         for (CartDetail cartDetail: cartDetailList) {
@@ -205,6 +207,9 @@ public class OrdersService {
 
     public BaseResponse payment(User user, String imp_uid) throws IamportResponseException, IOException {
         IamportResponse<Payment> response = getPaymentInfo(imp_uid);
+
+        Optional<User> userResult = userRepository.findById(user.getIdx());
+        User foundUser = userResult.get();
 
         String customDataString = response.getResponse().getCustomData();
         System.out.println(customDataString);
@@ -238,13 +243,11 @@ public class OrdersService {
 
             return BaseResponse.failResponse(444, "금액 불일치");
         }
-        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
-        user = userResult.get();
 
-        create(payMethod ,cartIdx, merchantUid, amount);
+        create(payMethod ,cartIdx, merchantUid, amount, foundUser.getStore());
 
         for (CartDetail cartDetail: cartDetailList) {
-            cartService.delete(user, cartIdx, cartDetail.getProduct().getProductName());
+            cartService.delete(foundUser, cartIdx, cartDetail.getProduct().getProductName());
         }
 
         return BaseResponse.successResponse("결제 성공", customDataString);
