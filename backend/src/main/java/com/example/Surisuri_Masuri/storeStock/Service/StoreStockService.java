@@ -75,6 +75,7 @@ public class StoreStockService {
                     .updatedAt(update)
                     .stockQuantitiy(storeStockCreateReq.getStockQuantity())
                     .store(store2)
+                    .isDiscarded(false)
                     .expiredAt(storeStockCreateReq.getExpiredAt())
                     .build();
 
@@ -125,22 +126,24 @@ public class StoreStockService {
 
             for (StoreStock storeStock : storeStocksList) {
 
-                String productName = storeStock.getProduct().getProductName();
+                if (!storeStock.getIsDiscarded()) {
+                    String productName = storeStock.getProduct().getProductName();
 
-                StoreStockDto storeStockDto = StoreStockDto
-                        .builder()
-                        .productName(productName)
-                        .expiredAt(storeStock.getExpiredAt())
-                        .build();
+                    StoreStockDto storeStockDto = StoreStockDto
+                            .builder()
+                            .productName(productName)
+                            .expiredAt(storeStock.getExpiredAt())
+                            .build();
 
-                storeStockReadRes = StoreStockReadRes
-                        .builder()
-                        .storeStockDto(storeStockDto)
-                        .stockQuantitiy(storeStock.getStockQuantitiy())
-                        .storeStockIdx(storeStock.getIdx())
-                        .build();
+                    storeStockReadRes = StoreStockReadRes
+                            .builder()
+                            .storeStockDto(storeStockDto)
+                            .stockQuantitiy(storeStock.getStockQuantitiy())
+                            .storeStockIdx(storeStock.getIdx())
+                            .build();
 
-                storeSearchResList.add(storeStockReadRes);
+                    storeSearchResList.add(storeStockReadRes);
+                }
             }
             // DtoToRes
             return BaseResponse.successResponse("요청 성공", storeSearchResList);
