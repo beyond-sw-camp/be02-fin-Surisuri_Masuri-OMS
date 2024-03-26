@@ -46,7 +46,7 @@ public class CartSuccessControllerTest {
         BaseResponse<String> successResponse = BaseResponse.successResponse("Success", "Some result");
         when(cartService.list(any(User.class), any(Integer.class), any(Integer.class)))
                 .thenReturn(successResponse);
-        ResponseEntity<BaseResponse<String>> responseEntity = cartController.list(mockUser, 10, 10);
+        ResponseEntity<BaseResponse<String>> responseEntity = cartController.list(mockUser, 1, 10);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(successResponse, responseEntity.getBody());
     }
