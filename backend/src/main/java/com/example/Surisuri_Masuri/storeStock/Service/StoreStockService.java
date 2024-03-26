@@ -75,6 +75,7 @@ public class StoreStockService {
                     .updatedAt(update)
                     .stockQuantitiy(storeStockCreateReq.getStockQuantity())
                     .store(store2)
+                    .isDiscarded(false)
                     .expiredAt(storeStockCreateReq.getExpiredAt())
                     .build();
 
