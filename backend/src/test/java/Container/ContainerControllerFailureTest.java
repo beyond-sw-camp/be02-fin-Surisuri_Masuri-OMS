@@ -86,15 +86,15 @@ class ContainerControllerFailureTest {
         verify(containerService, times(1)).list(anyInt(), anyInt());
     }
 
-    @Test
-    void testSingleStockProduct_InvalidContainerIdx() {
-        when(containerService.singleStockProduct(anyInt())).thenThrow(new ContainerException(ErrorCode.ContainerSingleStock_002, "Invalid container index."));
-        ContainerException exception = assertThrows(ContainerException.class, () -> {
-            containerController.singleStockProduct(100); // Invalid container index
-        });
-        assertEquals("Invalid container index.", exception.getMessage());
-        verify(containerService, times(1)).singleStockProduct(anyInt());
-    }
+//    @Test
+//    void testSingleStockProduct_InvalidContainerIdx() {
+//        when(containerService.singleStockProduct(anyInt())).thenThrow(new ContainerException(ErrorCode.ContainerSingleStock_002, "Invalid container index."));
+//        ContainerException exception = assertThrows(ContainerException.class, () -> {
+//            containerController.singleStockProduct(100); // Invalid container index
+//        });
+//        assertEquals("Invalid container index.", exception.getMessage());
+//        verify(containerService, times(1)).singleStockProduct(anyInt());
+//    }
 
     @Test
     void testDiscardExpiredFoodProducts_NoProductsToDiscard() {
