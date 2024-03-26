@@ -130,14 +130,16 @@ public class ContainerService {
         List<GetSingleContainerStockRes> getSingleContainerStockResList = new ArrayList<>();
 
         for (ContainerStock containerStock : result) {
-            GetSingleContainerStockRes getSingleContainerStockRes = GetSingleContainerStockRes.builder()
-                    .containerName(containerStock.getContainer().getContainerName())
-                    .productName(containerStock.getProduct().getProductName())
-                    .productQuantity(containerStock.getProductQuantity())
-                    .expiredAt(containerStock.getExpiredAt())
-                    .build();
+            if (!containerStock.getIsDiscarded()) {
+                GetSingleContainerStockRes getSingleContainerStockRes = GetSingleContainerStockRes.builder()
+                        .containerName(containerStock.getContainer().getContainerName())
+                        .productName(containerStock.getProduct().getProductName())
+                        .productQuantity(containerStock.getProductQuantity())
+                        .expiredAt(containerStock.getExpiredAt())
+                        .build();
 
-            getSingleContainerStockResList.add(getSingleContainerStockRes);
+                getSingleContainerStockResList.add(getSingleContainerStockRes);
+            }
         }
 
         return BaseResponse.successResponse("창고 정보 조회 성공", getSingleContainerStockResList);
