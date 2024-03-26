@@ -10,6 +10,7 @@ import com.example.Surisuri_Masuri.notice.model.response.GetListNoticeRes;
 import com.example.Surisuri_Masuri.notice.model.response.PostCreateNoticeRes;
 import com.example.Surisuri_Masuri.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,8 +47,7 @@ public class NoticeService {
     public BaseResponse list(Integer page, Integer size) {
 
         Pageable pageable = PageRequest.of(page - 1, size);
-
-        List<Notice> noticeList = noticeRepository.findAll();
+        Page<Notice> noticeList = noticeRepository.findList(pageable);
 
         List<GetListNoticeRes> getListNoticeResList = new ArrayList<>();
         for (Notice notice : noticeList) {
