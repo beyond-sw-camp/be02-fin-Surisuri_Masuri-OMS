@@ -212,7 +212,6 @@ public class OrdersService {
         User foundUser = userResult.get();
 
         String customDataString = response.getResponse().getCustomData();
-        System.out.println(customDataString);
 
         String payMethod = response.getResponse().getPgProvider();
 
@@ -240,6 +239,10 @@ public class OrdersService {
                     .refundReason("결제 금액과 상품 금액 총합이 맞지 않습니다")
                     .build();
             refundRequest(ordersRefundReq);
+
+            for (CartDetail cartDetail: cartDetailList) {
+                cartService.delete(foundUser, cartIdx, cartDetail.getProduct().getProductName());
+            }
 
             return BaseResponse.failResponse(444, "금액 불일치");
         }
