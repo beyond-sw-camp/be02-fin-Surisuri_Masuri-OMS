@@ -98,7 +98,7 @@ public class OrdersService {
         Optional<Orders> ordersResult = ordersRepository.findById(req.getIdx());
         Orders orders = ordersResult.get();
 
-        orders.setDeliveryStatus(req.getDeliveryStatus());
+        orders.setDeliveryStatus(req.getDeliveryStatus().getStatus());
 
         ordersRepository.save(orders);
 
