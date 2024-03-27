@@ -2,10 +2,9 @@ package com.example.Surisuri_Masuri.question.model.entity;
 
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.question.model.request.PatchUpdateQuestionReq;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -17,7 +16,8 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Question {
+@ToString(exclude = "answer")
+public class Question   {
 
     // TODO: 2024-03-10 user 테이블과 관계 맺어야 함 
 
@@ -43,11 +43,11 @@ public class Question {
     @Column(nullable = false)
     private Date updatedAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "User_idx")
     private User user;
 
-    @OneToOne(mappedBy = "question")
+    @OneToOne(mappedBy = "question", fetch = FetchType.LAZY)
     private Answer answer;
 
     @PrePersist
