@@ -13,6 +13,7 @@ import com.example.Surisuri_Masuri.member.Model.ResDtos.*;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import com.example.Surisuri_Masuri.store.Repository.StoreRepository;
+import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +23,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,6 +52,8 @@ public class UserService implements UserDetailsService {
     private int expiredTimeMs;
 
     UserSignUpRes userSignUpRes;
+
+    List<DiscardedProduct> discardedProduct2 = new ArrayList<>();
 
     // 회원가입 기능
     public BaseResponse<UserSignUpRes> UserSignUp(UserSignUpReq userSignUpReq) {
@@ -80,6 +85,7 @@ public class UserService implements UserDetailsService {
                         .status(false)
                         .createdAt(create)
                         .updatedAt(update)
+                        .firstLogin(false)
                         .build();
 
                 userRepository.save(user);
@@ -141,10 +147,55 @@ public class UserService implements UserDetailsService {
 
         if (user.isPresent() &&
                 passwordEncoder.matches(userLoginReq.getPassword(), user.get().getPassword())
-                && user.get().getStatus().equals(true)) {
+                && user.get().getStatus().equals(true) && user.get().getFirstLogin().equals(true))
+        {
             loginRes = LoginRes.builder()
                     .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
                     .build();
+
+            return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
+        }
+
+        else if (user.isPresent() &&
+                passwordEncoder.matches(userLoginReq.getPassword(), user.get().getPassword())
+                && user.get().getStatus().equals(true) && user.get().getFirstLogin().equals(false)) // 첫번째 로그인이 아니라면 상태를 변경
+        {
+            User user2 = user.get();
+            user2.setUserFirstLogintrue(); // 상태를 변경
+
+            userRepository.save(user2);
+
+            Optional<Store> store = storeRepository.findByStoreName(user.get().getStore().getStoreName());
+
+            List<StoreStock> storeStockList = store.get().getStoreStocks();
+
+            for(int i = 0 ; i< storeStockList.size(); i++) {
+                StoreStock storeStock = storeStockList.get(i);
+
+                if (storeStock.getIsDiscarded().equals(true)) {
+                    DiscardedProduct discardedProduct = DiscardedProduct
+                            .builder()
+                            .productName(storeStock.getProduct().getProductName())
+                            .expiredDate(storeStock.getExpiredAt())
+                            .build();
+
+                    discardedProduct2.add(discardedProduct);
+                }
+
+                if (discardedProduct2.size() > 0) {
+                    loginRes = LoginRes.builder()
+                            .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
+                            .discardedProduct(discardedProduct2)
+                            .build();
+                }
+
+                else {
+                    loginRes = LoginRes.builder()
+                            .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
+                            .build();
+                }
+
+            }
 
             return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
         }
