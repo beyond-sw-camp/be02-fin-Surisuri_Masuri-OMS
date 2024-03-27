@@ -76,7 +76,7 @@ public class StoreStockService {
                     .stockQuantitiy(storeStockCreateReq.getStockQuantity())
                     .store(store2)
                     .isDiscarded(false)
-                    .expiredAt(storeStockCreateReq.getExpiredAt())
+                    .expiredAt(product2.getExpiredAt())
                     .build();
 
             StoreDto storeDto = StoreDto
