@@ -52,10 +52,16 @@
                 </td>
                 <td>{{ order.totalPrice }}</td>
                 <!-- 배송 상태에 따라 다르게 표시 -->
-                <td v-if="order.deliveryStatus === '배송 중'">
+                <td v-if="order.deliveryStatus === '출고 처리'">
                   <span class="card bg-success text-center">{{ order.deliveryStatus }}</span>
                 </td>
-                <td v-else-if="order.deliveryStatus === '배송 전'">
+                <td v-if="order.deliveryStatus === '배송 완료'">
+                  <span class="card bg-success text-center">{{ order.deliveryStatus }}</span>
+                </td>
+                <td v-if="order.deliveryStatus === '배송중'">
+                  <span class="card bg-success text-center">{{ order.deliveryStatus }}</span>
+                </td>
+                <td v-else-if="order.deliveryStatus === '배송전'">
                   <span class="card bg-info text-center">{{ order.deliveryStatus }}</span>
                 </td>
               </tr>
@@ -116,10 +122,10 @@ export default {
       this.todayOrders = this.ordersDetailResult.filter((order) => order.createdDate.slice(0, 10) === todayStr).length;
 
       // 배송 중인 주문 수 설정
-      this.shippingOrders = this.ordersDetailResult.filter((order) => order.deliveryStatus === "배송 중").length;
+      this.shippingOrders = this.ordersDetailResult.filter((order) => order.deliveryStatus === "배송중").length;
 
       // 배송 전인 주문 수 설정
-      this.nonShippingOrders = this.ordersDetailResult.filter((order) => order.deliveryStatus === "배송 전").length;
+      this.nonShippingOrders = this.ordersDetailResult.filter((order) => order.deliveryStatus === "배송전").length;
     } catch (error) {
       console.error("Error fetching orders detail:", error);
     }
