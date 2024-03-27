@@ -1,5 +1,6 @@
 package com.example.Surisuri_Masuri.product.model.dto.request;
 
+import com.example.Surisuri_Masuri.product.model.productEnum.ProductCategory;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -14,4 +15,5 @@ public class ProductCreateReq {
     Integer price;
     LocalDate expiredAt;
     Boolean isItFood;
+    ProductCategory productCategory;
 }

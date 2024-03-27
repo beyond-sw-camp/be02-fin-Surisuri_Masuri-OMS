@@ -29,11 +29,11 @@ public class Answer {
     @Column(nullable = false)
     private Date updatedAt;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Question_idx")
     private Question question;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Manager_idx")
     private Manager manager;
 
