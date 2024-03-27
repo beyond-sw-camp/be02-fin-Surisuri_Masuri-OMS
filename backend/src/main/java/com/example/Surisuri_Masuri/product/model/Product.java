@@ -2,6 +2,7 @@ package com.example.Surisuri_Masuri.product.model;
 
 import com.example.Surisuri_Masuri.cart.model.CartDetail;
 import com.example.Surisuri_Masuri.container.model.entity.ContainerStock;
+import com.example.Surisuri_Masuri.product.model.productEnum.ProductCategory;
 import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
 import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
 import lombok.*;
@@ -43,6 +44,9 @@ public class Product {
 
     @Column(nullable = false)
     private LocalDate expiredAt;
+
+    @Column(nullable = false)
+    private ProductCategory productCategory;
 
     @OneToMany(mappedBy = "product")
     private List<StoreStock> storeStocks;
