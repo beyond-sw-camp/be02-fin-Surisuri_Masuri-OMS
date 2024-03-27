@@ -35,6 +35,7 @@ public class ProductService {
                 .isItFood(req.getIsItFood())
                 .expiredAt(req.getExpiredAt())
                 .price(req.getPrice())
+                .productCategory(req.getProductCategory())
                 .build());
 
         return BaseResponse.successResponse("요청 성공", null);
@@ -74,6 +75,7 @@ public class ProductService {
                     .productIdx(product.getIdx())
                     .productName(product.getProductName())
                     .price(product.getPrice())
+                    .productCategory(product.getProductCategory())
                     .build();
 
             productReadResList.add(productReadRes);
