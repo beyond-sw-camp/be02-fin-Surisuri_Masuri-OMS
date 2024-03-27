@@ -86,8 +86,11 @@ public class QuestionService {
                     .title(question.getTitle())
                     .content(question.getContent())
                     .userIdx(question.getUser().getIdx())
-                    .answerContent(question.getAnswer().getAnswerContent())
+                    .answerContent(Optional.ofNullable(question.getAnswer())
+                            .map(Answer::getAnswerContent)
+                            .orElse(null))  // answerContent가 null인 경우 null로 설정
                     .build();
+
 
             getListQuestionResList.add(getListQuestionRes);
         }
