@@ -41,23 +41,28 @@ public class ProductService {
         return BaseResponse.successResponse("요청 성공", null);
     }
 
-    public BaseResponse search(String productName) {
-        Optional<Product> result = productRepository.findByProductName(productName);
+    public BaseResponse search(String productName, Integer page, Integer size) {
 
-        if(result.isPresent()) {
-            Product product = result.get();
-            ProductSearchRes res = ProductSearchRes.builder()
+        Pageable pageable = PageRequest.of(page-1,size);
+
+        Page<Product> result = productRepository.findByProductNameContaining(productName,pageable);
+
+        List<ProductReadRes> productReadResList = new ArrayList<>();
+
+        for (Product product : result.getContent()) {
+
+            ProductReadRes productReadRes = ProductReadRes
+                    .builder()
+                    .productIdx(product.getIdx())
                     .productName(product.getProductName())
                     .price(product.getPrice())
-                    .createdAt(product.getCreatedAt())
-                    .updatedAt(product.getUpdatedAt())
+                    .productCategory(product.getProductCategory())
                     .build();
-            return BaseResponse.successResponse("상품 검색 성공", res);
+
+            productReadResList.add(productReadRes);
         }
 
-        else
-            throw new ProductException(ErrorCode.ProductSearch_002,
-                    String.format("존재하지 않는 상품 정보"));
+        return BaseResponse.successResponse("상품 리스트 검색 성공", productReadResList);
     }
 
     public BaseResponse list(Integer page, Integer size) {
