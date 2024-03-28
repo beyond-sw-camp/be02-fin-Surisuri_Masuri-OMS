@@ -17,6 +17,7 @@ export const useUserStore = defineStore({
       storePhoneNo: '',
     },
     token: null,
+    discardedProducts: []
   }),
   actions: {
     async createAccount() {
@@ -42,6 +43,7 @@ export const useUserStore = defineStore({
         const { data } = response;
         if (data.isSuccess) {
           this.token = data.result.jwtToken;
+          this.discardedProducts = data.result.discardedProduct || [];
           // 토큰을 세션 스토리지에 저장
           sessionStorage.setItem('token', this.token);
           console.log('로그인 성공');

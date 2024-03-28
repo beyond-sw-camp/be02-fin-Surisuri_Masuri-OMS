@@ -15,6 +15,7 @@ import com.example.Surisuri_Masuri.product.repository.ProductRepository;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import com.example.Surisuri_Masuri.store.Repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -109,10 +110,14 @@ public class CartService {
         Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
         if (userResult.isPresent()) {
             user = userResult.get();
+
             Pageable pageable = PageRequest.of(page - 1, size);
+
             Optional<Cart> cartResult = cartRepository.findById(user.getStore().getCartList().get(0).getIdx());
+
             Cart cart = cartResult.get();
-            List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(cart.getIdx());
+
+            Page<CartDetail> cartDetailList = cartDetailRepository.findList(cart.getIdx(), pageable);
 
             List<CartListRes> cartListResList = new ArrayList<>();
 

@@ -13,6 +13,7 @@ describe('ProductView.vue', () => {
   });
 
   it('fetchProducts 메소드는 제품 목록을 가져온다', async () => {
+
     const products = [{ productName: 'Test Product', price: 100, stockQuantity: 1 }]; // 예상되는 응답 데이터
     mock.onGet("http://localhost:8080/product/list").reply(200, { result: products });
 

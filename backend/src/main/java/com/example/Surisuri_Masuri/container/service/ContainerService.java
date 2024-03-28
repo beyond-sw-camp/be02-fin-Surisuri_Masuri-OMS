@@ -18,6 +18,7 @@ import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.product.model.Product;
 import com.example.Surisuri_Masuri.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -98,7 +99,7 @@ public class ContainerService {
 
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        List<Container> containerList = containerRepository.findAll();
+        Page<Container> containerList = containerRepository.findList(pageable);
 
         List<GetListContainerRes> getListContainerResList = new ArrayList<>();
         for (Container container : containerList) {
@@ -119,17 +120,18 @@ public class ContainerService {
     }
 
 
-    public BaseResponse singleStockProduct(Integer containerIdx) {
+    public BaseResponse singleStockProduct(Integer containerIdx, Integer page, Integer size) {
 
-        List<ContainerStock> result = containerStockRepository.findByContainerIdx(containerIdx);
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<ContainerStock> containerStockList = containerStockRepository.findList(containerIdx, pageable);
 
-        if(result.isEmpty())
+        if(containerStockList.isEmpty())
             throw new ContainerException(ErrorCode.ContainerCreate_005,
                     String.format("Container Idx [ %s ] doesn't has Products.", containerIdx));
 
         List<GetSingleContainerStockRes> getSingleContainerStockResList = new ArrayList<>();
 
-        for (ContainerStock containerStock : result) {
+        for (ContainerStock containerStock : containerStockList) {
             if (!containerStock.getIsDiscarded()) {
                 GetSingleContainerStockRes getSingleContainerStockRes = GetSingleContainerStockRes.builder()
                         .containerName(containerStock.getContainer().getContainerName())

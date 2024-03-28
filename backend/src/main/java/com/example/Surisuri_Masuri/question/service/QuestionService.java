@@ -8,6 +8,8 @@ import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
+import com.example.Surisuri_Masuri.product.model.Product;
+import com.example.Surisuri_Masuri.product.model.dto.response.ProductReadRes;
 import com.example.Surisuri_Masuri.question.model.entity.Answer;
 import com.example.Surisuri_Masuri.question.model.entity.Question;
 import com.example.Surisuri_Masuri.question.model.request.PatchUpdateQuestionReq;
@@ -20,6 +22,7 @@ import com.example.Surisuri_Masuri.question.repository.QuestionRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -51,7 +54,7 @@ public class QuestionService {
                 .category(postQuestionReq.getCategory())
                 .title(postQuestionReq.getTitle())
                 .content(postQuestionReq.getContent())
-                .status(postQuestionReq.getStatus())
+                .status(false)
                 .user(foundUser)
                 .build());
 
@@ -67,27 +70,32 @@ public class QuestionService {
     }
 
 
-    public BaseResponse list(Integer page, Integer size) {
+    public BaseResponse<List<GetListQuestionRes>> list(Integer page, Integer size) {
 
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Pageable pageable = PageRequest.of(page-1,size);
 
-        List<Question> questionList = questionRepository.findAll();
+        Page<Question> result = questionRepository.findList(pageable);
 
         List<GetListQuestionRes> getListQuestionResList = new ArrayList<>();
-        for (Question question : questionList) {
+
+        for (Question question : result.getContent()) {
+
             GetListQuestionRes getListQuestionRes = GetListQuestionRes.builder()
                     .questionIdx(question.getIdx())
                     .category(question.getCategory())
                     .title(question.getTitle())
                     .content(question.getContent())
                     .userIdx(question.getUser().getIdx())
-                    .answerContent(question.getAnswer().getAnswerContent())
+                    .answerContent(Optional.ofNullable(question.getAnswer())
+                            .map(Answer::getAnswerContent)
+                            .orElse(null))  // answerContent가 null인 경우 null로 설정
                     .build();
+
 
             getListQuestionResList.add(getListQuestionRes);
         }
 
-        return BaseResponse.successResponse("문의사항 불러오기 성공", getListQuestionResList);
+        return BaseResponse.successResponse("문의 사항 리스트 검색 성공", getListQuestionResList);
 
     }
 
@@ -144,7 +152,6 @@ public class QuestionService {
             if (!answerResult.isPresent()) {
                 answerRepository.save(Answer.builder()
                         .manager(manager)
-                        .question(question)
                         .answerContent(req.getAnswerContent())
                         .build());
 

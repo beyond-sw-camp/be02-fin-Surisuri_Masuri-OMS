@@ -1,5 +1,6 @@
 package com.example.Surisuri_Masuri.orders.model.dto.request;
 
+import com.example.Surisuri_Masuri.orders.model.dto.deliveryEnum.DeliveryEnum;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,5 +8,14 @@ import lombok.Getter;
 @Getter
 public class OrdersUpdateDeliveryReq {
     Long idx;
-    String deliveryStatus;
+
+    private String deliveryStatus;
+
+    public DeliveryEnum getDeliveryStatus() {
+        return DeliveryEnum.fromString(deliveryStatus);
+    }
+
+    public void setDeliveryStatus(String deliveryStatus) {
+        this.deliveryStatus = deliveryStatus;
+    }
 }

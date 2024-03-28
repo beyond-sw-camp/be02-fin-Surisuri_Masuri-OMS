@@ -38,6 +38,9 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 1)
     private Boolean status;
 
+    @Column(length = 1)
+    private Boolean firstLogin;
+
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
     }
@@ -45,6 +48,16 @@ public class User implements UserDetails {
     public void setUserPhoneNo(String userPhoneNo) {
         this.userPhoneNo = userPhoneNo;
     }
+
+    public void setUserFirstLoginfalse() {
+        this.firstLogin = false;
+    }
+
+    public void setUserFirstLogintrue() {
+        this.firstLogin = true;
+    }
+
+
 
     @Column(nullable = false)
     private String userAuthority;
