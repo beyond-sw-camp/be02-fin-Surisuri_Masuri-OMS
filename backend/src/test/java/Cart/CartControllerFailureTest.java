@@ -33,19 +33,19 @@ public class CartControllerFailureTest {
     @Test(expected = CartException.class)
     public void testAddCart_CartCreate_002() {
         when(cartService.addCart(any(User.class), any(CartCreateReq.class)))
-                .thenThrow(new CartException(ErrorCode.CartCreate_002, "상품 정보가 존재하지 않습니다."));
+                .thenThrow(new CartException(ErrorCode.CartCreate_002, "카트에 상품 정보가 존재하지 않습니다."));
         cartController.addCart(mockUser, mockCartCreateReq);
     }
     @Test(expected = CartException.class)
     public void testAddCart_CartCreate_003() {
         when(cartService.addCart(any(User.class), any(CartCreateReq.class)))
-                .thenThrow(new CartException(ErrorCode.CartCreate_003, "상품을 카트에 담는 것에 실패했습니다."));
+                .thenThrow(new CartException(ErrorCode.CartCreate_003, "카트에 상품을 담는 것을 실패했습니다."));
         cartController.addCart(mockUser, mockCartCreateReq);
     }
     @Test(expected = CartException.class)
     public void testDeleteCart_CartDelete_002() {
         when(cartService.delete(any(User.class), any(Long.class), any(String.class)))
-                .thenThrow(new CartException(ErrorCode.CartDelete_002, "카트를 삭제하는 것에 실패했습니다."));
+                .thenThrow(new CartException(ErrorCode.CartDelete_002, "카트 삭제를 실패했습니다."));
         cartController.delete(mockUser, 1L, "productName");
     }
     @Test(expected = CartException.class)

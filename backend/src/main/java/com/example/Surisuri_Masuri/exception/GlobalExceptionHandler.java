@@ -17,22 +17,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidException(MethodArgumentNotValidException e) {
         ErrorCode errorCode = ErrorCode.INVALID_INPUT_VALUE;
-        BindingResult bindingResult = e.getBindingResult();
-
-        StringBuilder builder = new StringBuilder();
-        for (int i=0; i<bindingResult.getFieldErrors().size(); i++) {
-            FieldError fieldError = bindingResult.getFieldErrors().get(i);
-            builder.append("[");
-            builder.append(fieldError.getField());
-            builder.append("](은)는 ");
-            builder.append(fieldError.getDefaultMessage());
-
-            if(i<bindingResult.getFieldErrors().size()-1) {
-                builder.append(" / ");
-            }
-        }
-
-        ErrorResponse response = new ErrorResponse(errorCode.getCode(), builder.toString());
+        ErrorResponse response = new ErrorResponse(errorCode.getCode(), ErrorCode.INVALID_INPUT_VALUE.getMessage());
         return new ResponseEntity<>(response, errorCode.getStatus());
     }
 
