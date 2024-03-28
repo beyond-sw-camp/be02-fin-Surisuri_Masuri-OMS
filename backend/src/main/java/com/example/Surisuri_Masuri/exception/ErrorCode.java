@@ -10,7 +10,7 @@ public enum ErrorCode {
 
     // Common
     // 유효값 검증 관련
-    INVALID_INPUT_VALUE(900,HttpStatus.BAD_REQUEST, "입력값 검증 관련"),
+    INVALID_INPUT_VALUE(900,HttpStatus.BAD_REQUEST, "유효하지 않은 입력값입니다."),
 
     // 401
     // INVALID_TOKEN(1000,HttpStatus.UNAUTHORIZED, "잘못된 토큰입니다."),
@@ -110,11 +110,14 @@ public enum ErrorCode {
     // OrdersPayment_002(3034, HttpStatus.BAD_REQUEST, "카트가 비어있습니다."),
 
     // CartCreate
-    CartCreate_002(3035, HttpStatus.BAD_REQUEST, "상품 정보가 존재하지 않습니다."),
-    CartCreate_003(3036, HttpStatus.BAD_REQUEST, "상품을 카트에 담는 것에 실패했습니다."),
+    CartCreate_002(3035, HttpStatus.BAD_REQUEST, "카트에 상품 정보가 존재하지 않습니다."),
+    CartCreate_003(3036, HttpStatus.BAD_REQUEST, "카트에 상품을 담는 것을 실패했습니다."),
+
+    // CartAdd
+    CartAdd_001(3104, HttpStatus.BAD_REQUEST, "카트에 상품을 최소 1개 이상 추가해야 합니다."),
 
     // CartDelete
-    CartDelete_002(3037, HttpStatus.BAD_REQUEST, "카트를 삭제하는 것에 실패했습니다."),
+    CartDelete_002(3037, HttpStatus.BAD_REQUEST, "카트 삭제를 실패했습니다."),
     CartDelete_003(3038, HttpStatus.BAD_REQUEST, "카트 정보가 존재하지 않습니다."),
 
     // CartUpdate
