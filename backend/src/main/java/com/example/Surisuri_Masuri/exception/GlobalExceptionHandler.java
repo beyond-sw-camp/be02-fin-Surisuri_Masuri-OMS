@@ -13,7 +13,7 @@ import java.nio.file.AccessDeniedException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // @Valid를 통한 입력값 검증 시 발생하는 에러
+    // @Valid를 통한 입력값 검증 에러 처리
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidException(MethodArgumentNotValidException e) {
         ErrorCode errorCode = ErrorCode.INVALID_INPUT_VALUE;
@@ -22,9 +22,8 @@ public class GlobalExceptionHandler {
         StringBuilder builder = new StringBuilder();
         for (int i=0; i<bindingResult.getFieldErrors().size(); i++) {
             FieldError fieldError = bindingResult.getFieldErrors().get(i);
-            builder.append("[");
             builder.append(fieldError.getField());
-            builder.append("](은)는 ");
+            builder.append("(은)는 ");
             builder.append(fieldError.getDefaultMessage());
 
             if(i<bindingResult.getFieldErrors().size()-1) {
