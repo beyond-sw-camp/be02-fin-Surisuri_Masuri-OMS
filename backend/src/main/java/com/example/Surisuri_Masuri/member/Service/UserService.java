@@ -65,7 +65,7 @@ public class UserService implements UserDetailsService {
         // 1. 이메일을 통해 이미 존재하는 회원인지 확인
         if (userRepository.findByUserEmail(userSignUpReq.getUserEmail()).isPresent()) {
             throw new UserException(ErrorCode.UserRegister_0010,
-                    String.format("Already exist User ID"));
+                    String.format("이미 존재하는 이메일 입니다."));
         }
 
         // 2. storeUuid를 통해 이미 본사와 계약이 체결되어 uuid가 발급된 회원인지 확인
@@ -131,7 +131,7 @@ public class UserService implements UserDetailsService {
 
             }
         }
-        return BaseResponse.successResponse("이메일 인증 대기중...", userSignUpRes);
+        return BaseResponse.successResponse("이메일 인증이 완료되면 회원가입이 완료됩니다.", userSignUpRes);
     }
 
     // 로그인 기능
@@ -142,7 +142,7 @@ public class UserService implements UserDetailsService {
 
         if (user.isEmpty()) {
             throw new UserException(ErrorCode.UserLogin_003,
-                    String.format("Wrong Id"));
+                    String.format("가입되지 않은 이메일입니다."));
         }
 
         if (user.isPresent() &&
@@ -201,7 +201,7 @@ public class UserService implements UserDetailsService {
         }
 
         else throw new ManagerException(ErrorCode.UserLogin_004,
-                String.format("Wrong Password"));
+                String.format("잘못된 비밀번호입니다."));
     }
 
     // 이메일 찾기 기능
@@ -211,7 +211,7 @@ public class UserService implements UserDetailsService {
 
         if(compare1.isEmpty() || compare2.isEmpty()) {
             throw new ManagerException(ErrorCode.UserEmail_004,
-                    String.format("존재하지 않는 회원 정보"));
+                    String.format("가입되지 않은 회원입니다."));
         }
         if (compare1.equals(compare2)) {
              userFindEmailRes = UserFindEmailRes
@@ -269,12 +269,12 @@ public class UserService implements UserDetailsService {
                     .userPhoneNo(userUpdateReq.getUserPhoneNo())
                     .storePhoneNo(userUpdateReq.getStorePhoneNo())
                     .build();
-            BaseResponse baseResponse = BaseResponse.successResponse("수정된 회원정보입니다.", userUpdateRes);
+            BaseResponse baseResponse = BaseResponse.successResponse("회원 정보가 수정 되었습니다.", userUpdateRes);
 
 
             return baseResponse;
         } else {
-            return BaseResponse.failResponse(7000, "요청실패");
+            return BaseResponse.failResponse(7000, "요청 실패");
         }
     }
 
@@ -302,18 +302,18 @@ public class UserService implements UserDetailsService {
                         .idx(idx)
                         .build();
 
-                BaseResponse baseResponse = BaseResponse.successResponse("비밀번호 초기화 이메일 발송이 완료되었습니다.", findUserPasswordRes);
+                BaseResponse baseResponse = BaseResponse.successResponse("가입하신 이메일로 비밀번호 재설정 링크를 보내드렸습니다.", findUserPasswordRes);
 
                 return baseResponse;
             } else {
-                return BaseResponse.failResponse(444, "wr0ong name");
+                return BaseResponse.failResponse(444, "잘못된 이름 형식입니다.");
             }
 
         }
 
         else
             throw new ManagerException(ErrorCode.UserPassword_004,
-                    String.format("존재하지 않는 회원 정보"));
+                    String.format("가입되지 않은 회원입니다."));
 
     }
 
@@ -338,7 +338,7 @@ public class UserService implements UserDetailsService {
 
         else
             throw new ManagerException(ErrorCode.UserPassword_004,
-                    String.format("존재하지 않는 회원 정보"));
+                    String.format("가입되지 않은 회원입니다."));
 
     }
 

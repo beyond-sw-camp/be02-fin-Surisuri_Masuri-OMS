@@ -47,12 +47,12 @@ public class ManagerService {
             // 1. 이메일과 아이디를 통해 이미 존재하는 회원인지 확인
             if (managerRepository.findByManagerId(managerSignUpReq.getManagerId()).isPresent()) {
                 throw new ManagerException(ErrorCode.ManagerRegister_006,
-                        String.format("Already exist Manager ID"));
+                        String.format("이미 존재하는 아이디입니다."));
             }
 
             if (managerRepository.findByManagerEmail(managerSignUpReq.getManagerEmail()).isPresent()) {
             throw new ManagerException(ErrorCode.ManagerRegister_007,
-                    String.format("Already exist Manager Email"));
+                    String.format("이미 존재하는 이메일입니다."));
             }
 
             // 1-1. 생성하여
@@ -111,7 +111,7 @@ public class ManagerService {
         }
 
         else throw new ManagerException(ErrorCode.ManagerLogin_004,
-                String.format("Wrong Password"));
+                String.format("잘못된 비밀번호입니다."));
     }
 
     public Manager getManagerByManagerId (String id){
