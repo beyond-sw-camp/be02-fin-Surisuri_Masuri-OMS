@@ -80,7 +80,8 @@ public enum ErrorCode {
     // UserLogin
     // UserLogin_002(3021, HttpStatus.BAD_REQUEST, "잘못된 형식의 이메일입니다."),
     UserLogin_003(3022, HttpStatus.BAD_REQUEST, "가입되지 않은 이메일입니다."),
-    UserLogin_004(3023, HttpStatus.BAD_REQUEST, "잘못된 비밀번호 형식입니다."),
+    UserLogin_004(3023, HttpStatus.BAD_REQUEST, "이메일 인증이 필요합니다."),
+    UserLogin_005(3024, HttpStatus.BAD_REQUEST, "비밀번호가 틀렸습니다."),
 
     // Manager
     // ManagerRegister_002(3024, HttpStatus.BAD_REQUEST, "잘못된 형식의 사원 이름입니다."),
