@@ -18,8 +18,8 @@
                   </div>
                   <div class="d-flex justify-content-between align-items-center mt-2">
                     <div>
+                      <router-link class="small" to="/loginReset">아이디를 잊으셨나요?</router-link><br>
                       <router-link class="small me-2" to="/password">비밀번호를 잊으셨나요?</router-link>
-                      <router-link class="small" to="/loginReset">아이디를 잊으셨나요?</router-link>
                     </div>
                     <button type="submit" class="btn btn-primary">로그인</button>
                   </div>
@@ -50,7 +50,7 @@ export default {
     const userPassword = ref('');
 
     const loginSubmit = async () => {
-      const success = await userStore.login({ id: userEmail.value, password: userPassword.value });
+      const success = await userStore.login({id: userEmail.value, password: userPassword.value });
       if (success) {
         alert('로그인 성공'); // 로그인 성공 알림
         console.log('로그인 성공');
