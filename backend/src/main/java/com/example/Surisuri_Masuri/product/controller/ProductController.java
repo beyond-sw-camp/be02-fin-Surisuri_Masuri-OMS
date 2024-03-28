@@ -20,12 +20,15 @@ public class ProductController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/search")
-    public ResponseEntity search(String productName) {
-        return ResponseEntity.ok().body(productService.search(productName));
+    public ResponseEntity search(@RequestParam String productName,
+                                 @RequestParam(required = false, defaultValue = "1") Integer page,
+                                 @RequestParam(required = false, defaultValue = "10") Integer size) {
+        return ResponseEntity.ok().body(productService.search(productName,page,size));
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/list")
-    public ResponseEntity list(Integer page, Integer size) {
+    @GetMapping("/list")
+    public ResponseEntity list(@RequestParam(required = false, defaultValue = "1") Integer page,
+                               @RequestParam(required = false, defaultValue = "10") Integer size) {
         return ResponseEntity.ok().body(productService.list(page, size));
     }
 
