@@ -85,7 +85,6 @@ public class UserService implements UserDetailsService {
                         .status(false)
                         .createdAt(create)
                         .updatedAt(update)
-                        .firstLogin(false)
                         .build();
 
                 userRepository.save(user);
@@ -138,6 +137,8 @@ public class UserService implements UserDetailsService {
     public BaseResponse<LoginRes> UserLogin(LoginReq userLoginReq) {
         LoginRes loginRes = null;
 
+        discardedProduct2.clear();
+
         Optional<User> user = userRepository.findByUserEmail(userLoginReq.getId());
 
         if (user.isEmpty()) {
@@ -146,25 +147,16 @@ public class UserService implements UserDetailsService {
         }
 
         if (user.isPresent() &&
-                passwordEncoder.matches(userLoginReq.getPassword(), user.get().getPassword())
-                && user.get().getStatus().equals(true) && user.get().getFirstLogin().equals(true))
+                !passwordEncoder.matches(userLoginReq.getPassword(), user.get().getPassword()))
         {
-            loginRes = LoginRes.builder()
-                    .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
-                    .build();
-
-            return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
+            throw new UserException(ErrorCode.UserLogin_005,
+                    String.format("비밀번호가 일치하지 않습니다."));
         }
 
-        else if (user.isPresent() &&
+        if (user.isPresent() &&
                 passwordEncoder.matches(userLoginReq.getPassword(), user.get().getPassword())
-                && user.get().getStatus().equals(true) && user.get().getFirstLogin().equals(false)) // 첫번째 로그인이 아니라면 상태를 변경
+                && user.get().getStatus().equals(true))
         {
-            User user2 = user.get();
-            user2.setUserFirstLogintrue(); // 상태를 변경
-
-            userRepository.save(user2);
-
             Optional<Store> store = storeRepository.findByStoreName(user.get().getStore().getStoreName());
 
             List<StoreStock> storeStockList = store.get().getStoreStocks();
@@ -181,27 +173,22 @@ public class UserService implements UserDetailsService {
 
                     discardedProduct2.add(discardedProduct);
                 }
-
                 if (discardedProduct2.size() > 0) {
                     loginRes = LoginRes.builder()
                             .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
                             .discardedProduct(discardedProduct2)
                             .build();
                 }
-
                 else {
                     loginRes = LoginRes.builder()
                             .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
                             .build();
                 }
-
             }
-
             return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
         }
-
         else throw new ManagerException(ErrorCode.UserLogin_004,
-                String.format("잘못된 비밀번호입니다."));
+                String.format("이메일 인증이 필요합니다."));
     }
 
     // 이메일 찾기 기능
