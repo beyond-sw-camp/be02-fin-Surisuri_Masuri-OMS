@@ -19,19 +19,19 @@ public enum ErrorCode {
     INVALID_PERMISION(1001,HttpStatus.UNAUTHORIZED, "권한이 없습니다."),
 
     // 403
-    INVALID_ACCESS(1002, HttpStatus.FORBIDDEN,"액세스가 차단되었습니다."),
+    INVALID_ACCESS(1002, HttpStatus.FORBIDDEN,"접근이 차단되었습니다."),
 
     // 404
-    CONSTRAINT_VIOLATION(1003,HttpStatus.NOT_FOUND, "주소를 잘못 입력했습니다."),
+    CONSTRAINT_VIOLATION(1003,HttpStatus.NOT_FOUND, "잘못된 주소를 입력했습니다."),
 
     // 409
     // DUPLICATED_USER(1003,HttpStatus.CONFLICT,"이미 존재하는 사용자입니다."),
 
     // 500
-    INTERNAL_SERVER_ERROR(1004,HttpStatus.INTERNAL_SERVER_ERROR, "서버에서 처리할 수 없는 경우"),
+    INTERNAL_SERVER_ERROR(1004,HttpStatus.INTERNAL_SERVER_ERROR, "서버에서 처리할 수 없습니다."),
 
     // 글자수 초과
-    CommonError_01(1005, HttpStatus.BAD_REQUEST, "글자수 초과"),
+    CommonError_01(1005, HttpStatus.BAD_REQUEST, "글자수가 초과되었습니다."),
 
     //////////////////////////////////////////////////////////////////////////////////
 
@@ -76,6 +76,7 @@ public enum ErrorCode {
     // UserUpdate_003(3018, HttpStatus.BAD_REQUEST, "잘못된 형식의 주소입니다."),
     // UserUpdate_004(3019, HttpStatus.BAD_REQUEST, "잘못된 형식의 핸드폰 번호입니다"),
     // UserUpdate_005(3020, HttpStatus.BAD_REQUEST, "잘못된 형식의 전화 번호입니다."),
+    UserUpdate_001(3105, HttpStatus.BAD_REQUEST, "잘못된 형식의 회원 정보입니다."),
 
     // UserLogin
     // UserLogin_002(3021, HttpStatus.BAD_REQUEST, "잘못된 형식의 이메일입니다."),
@@ -195,20 +196,20 @@ public enum ErrorCode {
     // StoreCreate
     // StoreCreate_002(3076, HttpStatus.BAD_REQUEST, "잘못된 형식의 가맹점 이름입니다."),
     // StoreCreate_003(3077, HttpStatus.BAD_REQUEST, "잘못된 형식의 가맹점 uuid입니다."),
-    StoreCreate_004(3076, HttpStatus.BAD_REQUEST, "가입되지 않은 관리자입니다."),
+    StoreCreate_004(3076, HttpStatus.BAD_REQUEST, "가입되지 않은 본사 관리자입니다."),
 
 
     // StoreSearch
     StoreSearch_002(3078, HttpStatus.BAD_REQUEST, "잘못된 주소입니다."),
-    StoreSearch_003(3079, HttpStatus.BAD_REQUEST, "검색 결과가 존재하지 않습니다"),
-    StoreSearch_004(3079, HttpStatus.BAD_REQUEST, "가맹점 정보가 등록됬으나 유저 가입이 되지 않았습니다."),
+    StoreSearch_003(3079, HttpStatus.BAD_REQUEST, "가맹점 검색 결과가 존재하지 않습니다."),
+    StoreSearch_004(3079, HttpStatus.BAD_REQUEST, "가맹점 정보가 등록되었으나 가맹점 관리자가 가입이 되지 않았습니다."),
 
 
     // StoreList
     StoreList_002(3080, HttpStatus.BAD_REQUEST, "페이지 크기는 1 이상이어야 합니다."),
     StoreList_003(3081, HttpStatus.BAD_REQUEST, "잘못된 페이지 번호입니다."),
     StoreList_004(3082, HttpStatus.BAD_REQUEST, "요청한 페이지 범위를 초과했습니다."),
-    StoreList_005(3083, HttpStatus.BAD_REQUEST, "가입되지 않은 관리자입니다."),
+    StoreList_005(3083, HttpStatus.BAD_REQUEST, "가입되지 않은 본사 관리자입니다."),
 
     // StockCreate
     // StockCreate_002(3083, HttpStatus.BAD_REQUEST, "잘못된 형식의 상품 이름입니다."),
@@ -247,7 +248,7 @@ public enum ErrorCode {
     ContainerCreate_005(3102, HttpStatus.BAD_REQUEST, "존재하지 않는 창고 입니다."),
 
     // ContainerStock
-    ContainerStock_002(3103, HttpStatus.BAD_REQUEST, "처분할 상품이 존재하지 않습니다. ");
+    ContainerStock_002(3103, HttpStatus.BAD_REQUEST, "폐기할 상품이 존재하지 않습니다.");
 
 
 

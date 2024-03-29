@@ -65,7 +65,7 @@ public class QuestionService {
                 .userIdx(foundUser.getIdx())
                 .build();
 
-        return BaseResponse.successResponse("문의사항 작성 성공", null);
+        return BaseResponse.successResponse("문의사항 작성을 성공했습니다.", null);
 
     }
 
@@ -95,7 +95,7 @@ public class QuestionService {
             getListQuestionResList.add(getListQuestionRes);
         }
 
-        return BaseResponse.successResponse("문의 사항 리스트 검색 성공", getListQuestionResList);
+        return BaseResponse.successResponse("문의사항 목록 조회를 성공했습니다.", getListQuestionResList);
 
     }
 
@@ -109,11 +109,10 @@ public class QuestionService {
                 question.update(patchUpdateQuestionReq);
                 questionRepository.save(question);
             }
-            // return BaseResponse.failResponse(444, "본인이 작성한 문의사항이 아닙니다");
-            return BaseResponse.successResponse("문의사항 수정 성공", patchUpdateQuestionReq);
+            return BaseResponse.successResponse("문의사항 수정을 성공했습니다.", patchUpdateQuestionReq);
         }
         else throw new ContainerException(ErrorCode.QuestionUpdate_005,
-                    String.format("Question Idx [ %s ] doesn't has Question.", patchUpdateQuestionReq.getIdx()));
+                    String.format("수정할 문의사항 Idx [ %s ] 이/가 존재하지 않습니다.", patchUpdateQuestionReq.getIdx()));
 
     }
 
@@ -126,12 +125,12 @@ public class QuestionService {
                 Question question = result.get();
                 questionRepository.delete(question);
             }
-            return BaseResponse.successResponse("문의사항 삭제 성공", null);
+            return BaseResponse.successResponse("문의사항 삭제를 성공했습니다.", null);
         }
 
         else {
             throw new ContainerException(ErrorCode.QuestionDelete_002,
-                    String.format("Question Idx [ %s ] doesn't has Question.", idx));
+                    String.format("삭제할 공지사항 Idx [ %s ] 이/가 존재하지 않습니다.", idx));
         }
     }
 
@@ -158,7 +157,7 @@ public class QuestionService {
                 question.setStatus(true);
                 questionRepository.save(question);
 
-                return BaseResponse.successResponse("요청 성공", null);
+                return BaseResponse.successResponse("요청 성공했습니다.", null);
             } else {
                 Answer answer = answerResult.get();
 
@@ -169,12 +168,12 @@ public class QuestionService {
 
                 answerRepository.save(answer);
 
-                return BaseResponse.successResponse("수정 요청 성공", null);
+                return BaseResponse.successResponse("문의사항에 대한 답변이 수정 되었습니다.", null);
             }
         }
         else {
             throw new ContainerException(ErrorCode.QuestionAnswer_003,
-                    String.format("Question Idx [ %s ] doesn't has Question.", req.getQuestionIdx()));
+                    String.format("답변을 작성할 문의사항 Idx [ %s ] 이/가 존재하지 않습니다.", req.getQuestionIdx()));
         }
     }
 }

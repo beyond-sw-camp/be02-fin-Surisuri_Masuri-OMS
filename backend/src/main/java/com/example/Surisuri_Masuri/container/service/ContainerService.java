@@ -46,10 +46,10 @@ public class ContainerService {
         Optional<Container> test2 = containerRepository.findContainerByContainerName(postCreateContainerReq.getContainerName());
 
         if(test1.isPresent())
-            throw new ContainerException(ErrorCode.ContainerCreate_003,String.format("Container Addr [ %s ] is duplicated.", postCreateContainerReq.getContainerAddr()));
+            throw new ContainerException(ErrorCode.ContainerCreate_003,String.format("창고 이름 [ %s ] 이/가 중복입니다.", postCreateContainerReq.getContainerAddr()));
 
         if(test2.isPresent())
-            throw new ContainerException(ErrorCode.ContainerCreate_004,String.format("Container Name [ %s ] is duplicated.", postCreateContainerReq.getContainerName()));
+            throw new ContainerException(ErrorCode.ContainerCreate_004,String.format("창고 이름 [ %s ] 이/가 중복입니다.", postCreateContainerReq.getContainerName()));
 
 
         Container container = Container.builder()
@@ -78,10 +78,10 @@ public class ContainerService {
         Optional<Product> test2 = productRepository.findById(req.getProductIdx());
 
         if(test1.isEmpty())
-            throw new ContainerException(ErrorCode.ContainerCreate_005,String.format("Container Idx [ %s ] is not Exist.", req.getContainerIdx()));
+            throw new ContainerException(ErrorCode.ContainerCreate_005,String.format("창고 Idx [ %s ] 이/가 존재하지 않습니다.", req.getContainerIdx()));
 
         if(test2.isEmpty())
-            throw new ProductException(ErrorCode.ProductSearch_002,String.format("Product Idx [ %s ] is not Exist.", req.getProductIdx()));
+            throw new ProductException(ErrorCode.ProductSearch_002,String.format("상품 Idx [ %s ] 이/가 존재하지 않습니다.", req.getProductIdx()));
 
 
         containerStockRepository.save(ContainerStock.builder()
@@ -92,7 +92,7 @@ public class ContainerService {
                 .isDiscarded(false)
                 .build());
 
-        return BaseResponse.successResponse("창고 상품 등록 성공", null);
+        return BaseResponse.successResponse("창고 상품 등록을 성공했습니다.", null);
     }
 
     public BaseResponse list(Integer page, Integer size) {
@@ -115,7 +115,7 @@ public class ContainerService {
             getListContainerResList.add(getListContainernRes);
         }
 
-        return BaseResponse.successResponse("창고 목록 조회 성공", getListContainerResList);
+        return BaseResponse.successResponse("창고 목록 조회를 성공했습니다.", getListContainerResList);
 
     }
 
@@ -127,7 +127,7 @@ public class ContainerService {
 
         if(containerStockList.isEmpty())
             throw new ContainerException(ErrorCode.ContainerCreate_005,
-                    String.format("Container Idx [ %s ] doesn't has Products.", containerIdx));
+                    String.format("창고 Idx [ %s ] 에 상품이 존재하지 않습니다.", containerIdx));
 
         List<GetSingleContainerStockRes> getSingleContainerStockResList = new ArrayList<>();
 
@@ -144,7 +144,7 @@ public class ContainerService {
             }
         }
 
-        return BaseResponse.successResponse("창고 정보 조회 성공", getSingleContainerStockResList);
+        return BaseResponse.successResponse("창고 정보 조회를 성공했습니다.", getSingleContainerStockResList);
     }
 
     public BaseResponse<List<ContainerStockDto>> discardExpiredFoodProducts() {
@@ -157,7 +157,7 @@ public class ContainerService {
 
         if(expiredFoodProducts.isEmpty())
         {
-            throw new ContainerStockException(ErrorCode.ContainerStock_002,("No Product for Discard."));
+            throw new ContainerStockException(ErrorCode.ContainerStock_002,("폐기할 상품이 존재하지 않습니다."));
         }
 
         // 조회된 상품들을 폐기 처리합니다.
