@@ -8,6 +8,7 @@ import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.LoginReq;
+import com.example.Surisuri_Masuri.member.Model.ReqDtos.ManagerLoginReq;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.ManagerSignUpReq;
 import com.example.Surisuri_Masuri.member.Model.ResDtos.LoginRes;
 import com.example.Surisuri_Masuri.member.Model.ResDtos.ManagerSignUpRes;
@@ -92,7 +93,7 @@ public class ManagerService {
     }
 
     // 로그인 기능
-    public BaseResponse<LoginRes> ManagerLogin(LoginReq managerLoginReq) {
+    public BaseResponse<LoginRes> ManagerLogin(ManagerLoginReq managerLoginReq) {
         LoginRes loginRes = null;
 
         Optional<Manager> manager = managerRepository.findByManagerId(managerLoginReq.getId());
