@@ -60,7 +60,6 @@ public enum ErrorCode {
     // UserRegister_011(3009, HttpStatus.BAD_REQUEST, "잘못된 형식의 핸드폰 번호입니다."),
     // UserRegister_012(3010, HttpStatus.BAD_REQUEST, "잘못된 형식의 매장 전화 번호입니다."),
 
-
     // UserEmail 찾기
     // UserEmail_002(3011, HttpStatus.BAD_REQUEST, "잘못된 형식의 이름입니다."),
     // UserEmail_003(3012, HttpStatus.BAD_REQUEST, "잘못된 형식의 전화번호입니다."),
@@ -76,6 +75,7 @@ public enum ErrorCode {
     // UserUpdate_003(3018, HttpStatus.BAD_REQUEST, "잘못된 형식의 주소입니다."),
     // UserUpdate_004(3019, HttpStatus.BAD_REQUEST, "잘못된 형식의 핸드폰 번호입니다"),
     // UserUpdate_005(3020, HttpStatus.BAD_REQUEST, "잘못된 형식의 전화 번호입니다."),
+    UserUpdate_001(3105, HttpStatus.BAD_REQUEST, "잘못된 회원 정보를 입력했습니다."),
 
     // UserLogin
     // UserLogin_002(3021, HttpStatus.BAD_REQUEST, "잘못된 형식의 이메일입니다."),
