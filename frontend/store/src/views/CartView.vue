@@ -17,32 +17,44 @@
         <input type="number" v-model.number="item.productQuantity" min="1" />
       </div>
       <div class="product-removal">
-        <button @click="removeItem(index)" class="btn btn-danger">Remove</button>
+        <button @click="removeItem(index)" class="btn btn-danger">
+          Remove
+        </button>
       </div>
-      <div class="product-line-price">{{ (item.price * item.productQuantity).toFixed(2) }}</div>
+      <div class="product-line-price">
+        {{ (item.price * item.productQuantity).toFixed(2) }}
+      </div>
     </div>
 
     <div class="totals">
       <div class="totals-item totals-item-total">
         <label>Grand Total</label>
-        <div class="totals-value" id="cart-total">{{ grandTotal.toFixed(2) }}</div>
+        <div class="totals-value" id="cart-total">
+          {{ grandTotal.toFixed(2) }}
+        </div>
       </div>
     </div>
 
-    <button class="checkout" v-if="grandTotal > 0" @click="processKakaoPay()">Checkout</button>
+    <button class="checkout" v-if="grandTotal > 0" @click="processKakaoPay()">
+      Checkout
+    </button>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import { ref, computed, onMounted } from "vue";
+import { getErrorMessage } from "../utils/error.js";
 
 export default {
   name: "CartPage",
   setup() {
     const cartItems = ref([]);
     const grandTotal = computed(() =>
-      cartItems.value.reduce((total, item) => total + item.price * item.productQuantity, 0)
+      cartItems.value.reduce(
+        (total, item) => total + item.price * item.productQuantity,
+        0
+      )
     );
 
     const token = sessionStorage.getItem("token");
@@ -53,7 +65,8 @@ export default {
     var minutes = today.getMinutes(); // 분
     var seconds = today.getSeconds(); // 초
     var milliseconds = today.getMilliseconds();
-    var makeMerchantUid = `${hours}` + `${minutes}` + `${seconds}` + `${milliseconds}`;
+    var makeMerchantUid =
+      `${hours}` + `${minutes}` + `${seconds}` + `${milliseconds}`;
 
     IMP.init("imp06283542");
 
@@ -63,7 +76,7 @@ export default {
 
     onMounted(async () => {
       try {
-        const response = await axios.get("http://192.168.0.162/cart/list", {
+        const response = await axios.get("http://192.168.0.45/cart/list", {
           params: {
             // idx: 1, // 여기에 카트 ID를 넣어주세요
             page: 1, // 여기에 페이지 번호를 넣어주세요
@@ -80,25 +93,31 @@ export default {
 
         // 응답 데이터 처리
         console.log(response.data.result);
+        
         // 여기에 응답 데이터를 처리하는 코드를 작성하세요
       } catch (error) {
-        // 오류 처리
         console.error("Error fetching cart list:", error);
+        // 여기서 getErrorMessage 함수를 사용하여 적절한 에러 메시지를 얻음
+        const message = getErrorMessage(error.response.data.errorCode); // 가정: error.response.data.errorCode가 에러 코드를 포함
+        alert(message); // 에러 메시지를 사용자에게 알림
       }
     });
 
     async function removeItem(index) {
       try {
         // 삭제 요청 보내기
-        const response = await axios.delete("http://192.168.0.162/cart/delete", {
-          params: {
-            cartIdx: cartItems.value[index].cartIdx,
-            productName: cartItems.value[index].productName,
-          },
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.delete(
+          "http://192.168.0.45/cart/delete",
+          {
+            params: {
+              cartIdx: cartItems.value[index].cartIdx,
+              productName: cartItems.value[index].productName,
+            },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         cartItems.value.splice(index, 1);
 
@@ -109,6 +128,9 @@ export default {
         }
       } catch (error) {
         console.error("Error removing item:", error);
+        // removeItem 함수 내에서도 같은 방식으로 에러 메시지 처리
+        const message = getErrorMessage(error.response.data.errorCode);
+        alert(message);
       }
     }
 
@@ -138,7 +160,7 @@ export default {
             if (rsp.success) {
               var imp_uid = rsp.imp_uid;
               // AJAX나 fetch API를 사용하여 imp_uid를 서버로 전달
-              fetch("http://192.168.0.162/orders/payment", {
+              fetch("http://192.168.0.45/orders/payment", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -162,6 +184,9 @@ export default {
         );
       } catch (error) {
         console.error("Error processing KakaoPay:", error);
+        // processKakaoPay 내에서 에러 처리
+        const message = getErrorMessage(error.response.data.errorCode);
+        alert(message);
       }
     }
 
@@ -256,7 +281,8 @@ Side note: I know that this style of nesting in SASS doesn't result in the most 
 /* Body/Header stuff */
 body {
   padding: 0px 30px 30px 20px;
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
   font-weight: 100;
 }
 
