@@ -29,9 +29,9 @@ spec:
             - containerPort: 8080
           resources:
             requests:
-              memory: 1Gi
-            limits:
               memory: 2Gi
+            limits:
+              memory: 3Gi
           envFrom:
             - configMapRef:
                 name: back-config
