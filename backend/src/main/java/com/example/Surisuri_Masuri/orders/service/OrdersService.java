@@ -6,6 +6,10 @@ import com.example.Surisuri_Masuri.cart.repository.CartDetailRepository;
 import com.example.Surisuri_Masuri.cart.repository.CartRepository;
 import com.example.Surisuri_Masuri.cart.service.CartService;
 import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.container.model.entity.Container;
+import com.example.Surisuri_Masuri.container.model.entity.ContainerStock;
+import com.example.Surisuri_Masuri.container.repository.ContainerRepository;
+import com.example.Surisuri_Masuri.container.repository.ContainerStockRepository;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
@@ -23,6 +27,9 @@ import com.example.Surisuri_Masuri.orders.model.dto.response.ProductDtoRes;
 import com.example.Surisuri_Masuri.orders.repository.OrdersDetailRepository;
 import com.example.Surisuri_Masuri.orders.repository.OrdersRepository;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
+import com.example.Surisuri_Masuri.store.Repository.StoreRepository;
+import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
+import com.example.Surisuri_Masuri.storeStock.Repository.StoreStockRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.siot.IamportRestClient.IamportClient;
@@ -31,6 +38,7 @@ import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,6 +46,7 @@ import org.springframework.stereotype.Service;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +62,10 @@ public class OrdersService {
     private final CartService cartService;
     private final UserRepository userRepository;
     private final ManagerRepository managerRepository;
+    private final ContainerRepository containerRepository;
+    private final ContainerStockRepository containerStockRepository;
+    private final StoreRepository storeRepository;
+    private final StoreStockRepository storeStockRepository;
 
     private final IamportClient iamportClient;
 
@@ -87,7 +100,7 @@ public class OrdersService {
                             .merchantUid(orders.getMerchantUid())
                             .build();
 
-                    return BaseResponse.successResponse("주문 내역 조회 성공", ordersListRes);
+                    return BaseResponse.successResponse("주문 내역 조회를 성공했습니다.", ordersListRes);
                 }
             }
         }
@@ -95,14 +108,119 @@ public class OrdersService {
     }
 
     public BaseResponse updateOrdersDelivery(OrdersUpdateDeliveryReq req) {
-        Optional<Orders> ordersResult = ordersRepository.findById(req.getIdx());
+        Optional<Orders> ordersResult = ordersRepository.findById(req.getOrdersIdx());
         Orders orders = ordersResult.get();
 
-        orders.setDeliveryStatus(req.getDeliveryStatus().getStatus());
+        Integer containerIdx = null;
+
+        if (req.getDeliveryStatus().equals("출고 처리")) {
+            // 창고 재고 변경
+            for (OrdersDetail ordersDetail : ordersResult.get().getOrdersDetailList()) {
+                containerIdx = selectContainer(ordersDetail.getProduct().getProductName(), ordersDetail.getOrders().getStore().getStoreAddr());
+                Optional<Container> containerResult = containerRepository.findById(containerIdx);
+                Container container = containerResult.get();
+                for (ContainerStock containerStock : container.getContainerStockList()) {
+                    if (containerStock.getProduct() == ordersDetail.getProduct()) {
+                        Optional<ContainerStock> containerStockResult = containerStockRepository.findById(containerStock.getIdx());
+                        Long quantity = containerStockResult.get().getProductQuantity() - ordersDetail.getProcuctQuantity();
+                        containerStockResult.get().setProductQuantity(quantity);
+                        containerStockRepository.save(containerStockResult.get());
+
+                        orders.setDeliveryStatus(req.getDeliveryStatus().getStatus());
+
+                        ordersRepository.save(orders);
+
+                        return BaseResponse.successResponse("배송 상태 변경 성공", null);
+                    }
+                }
+            }
+
+        } else if (req.getDeliveryStatus().equals("배송 완료")) {
+            // 가맹점 재고 변경
+            for (OrdersDetail ordersDetail : ordersResult.get().getOrdersDetailList()) {
+                // 플래그
+                boolean flag = false;
+
+                Optional<Store> storeResult = storeRepository.findById(orders.getStore().getIdx());
+                containerIdx = selectContainer(ordersDetail.getProduct().getProductName(), storeResult.get().getStoreAddr());
+                Store store = storeResult.get();
+
+                // 창고 상품의 유효기간 가져오기 위한 쿼리
+                List<LocalDate> containerStockResult = containerStockRepository
+                        .findByContainerIdxAndProductName(containerIdx, ordersDetail.getProduct().getProductName());
+
+                for (StoreStock storeStock : store.getStoreStocks()) {
+                    if (storeStock.getProduct() == ordersDetail.getProduct()
+                            && storeStock.getExpiredAt().equals(containerStockResult.get(0))) {
+                        Optional<StoreStock> storeStockResult = storeStockRepository.findById(storeStock.getIdx());
+                        Long quantity = storeStockResult.get().getStockQuantitiy() + ordersDetail.getProcuctQuantity();
+                        storeStockResult.get().setStockQuantitiy(quantity);
+                        storeStockRepository.save(storeStockResult.get());
+
+                        orders.setDeliveryStatus(req.getDeliveryStatus().getStatus());
+
+                        ordersRepository.save(orders);
+
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag) {
+                    storeStockRepository.save(StoreStock.builder()
+                            .store(store)
+                            .product(ordersDetail.getProduct())
+                            .stockQuantitiy(ordersDetail.getProcuctQuantity().longValue())
+                            .expiredAt(containerStockResult.get(0))
+                            .isDiscarded(false)
+                            .build());
+
+                    orders.setDeliveryStatus(req.getDeliveryStatus().getStatus());
+
+                    ordersRepository.save(orders);
+                }
+            }
+            return BaseResponse.successResponse("배송 상태 변경 성공", null);
+        }
+
+            orders.setDeliveryStatus(req.getDeliveryStatus().getStatus());
 
         ordersRepository.save(orders);
 
-        return BaseResponse.successResponse("배송 상태 변경 성공", null);
+        return BaseResponse.successResponse("배송 상태 변경을 성공했습니다.", null);
+    }
+
+    public Integer selectContainer(String productName, String storeAddr) {
+        // 경기도 서울 인천 / 강원도 / 충청남북 대전 / 전라남북 / 경상남북 부산 대구 / 제주
+        List<Container> containerList = containerRepository.findAll();
+        for (Container container : containerList) {
+            String containerRegion = getRegionFromAddr(container.getContainerAddr());
+            String storeRegion = getRegionFromAddr(storeAddr);
+
+            if (containerRegion.equals(storeRegion)) {
+                for (ContainerStock containerStock : container.getContainerStockList()) {
+                    if (containerStock.getProduct().getProductName().equals(productName)) {
+                        return container.getIdx();
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private String getRegionFromAddr(String address) {
+
+        // 주소의 첫 번째 토큰을 추출하여 지역을 판단
+        String[] tokens = address.split("\\s+");
+
+        // 주소의 시작 부분에 따라 지역을 판단하여 반환
+        if (tokens[0].equals("서울시")) {
+            return "경기도";
+        } else if (tokens[0].equals("부산시")) {
+            return "경상남도";
+        }
+
+        return tokens[0];
     }
 
     public BaseResponse showDeliveryStatus(Long ordersIdx) {
@@ -128,7 +246,7 @@ public class OrdersService {
                 .updatedAt(orders.getUpdatedAt())
                 .build();
 
-        return BaseResponse.successResponse("요청 성공", ordersShowDeliveryStatusRes);
+        return BaseResponse.successResponse("요청 성공했습니다.", ordersShowDeliveryStatusRes);
     }
 
     public BaseResponse list(String token, Integer page, Integer size) {
@@ -141,15 +259,15 @@ public class OrdersService {
         Optional<Manager> managerResult = managerRepository.findByManagerId(managerId);
         User user = userResult.get();
 
-        if (userResult.isPresent() || managerResult.isPresent()) {
+        if (managerResult.isPresent()) {
             Pageable pageable = PageRequest.of(page - 1, size);
-            List<Orders> ordersResult = ordersRepository.findAll();
-            List<OrdersDetail> ordersDetailsResult = ordersDetailRepository.findAll();
+
+            Page<Orders> ordersResult = ordersRepository.findList(pageable);
 
             List<OrdersListRes> ordersListResList = new ArrayList<>();
 
             for (Orders orders : ordersResult) {
-                List<OrdersDetail> ordersDetailResult = ordersDetailRepository.findByOrdersIdx(orders.getIdx());
+                Page<OrdersDetail> ordersDetailsResult = ordersDetailRepository.findListByOrdersIdx(orders.getIdx(), pageable);
 
                 for (OrdersDetail ordersDetail : ordersDetailsResult) {
                     OrdersListRes ordersListRes = OrdersListRes.builder()
@@ -169,9 +287,38 @@ public class OrdersService {
                 }
             }
 
-            return BaseResponse.successResponse("상품 리스트 성공", ordersListResList);
+            return BaseResponse.successResponse("상품 리스트 불러오기 성공", ordersListResList);
+
+        } else if (userResult.isPresent()) {
+            Pageable pageable = PageRequest.of(page - 1, size);
+
+            Page<Orders> ordersResult = ordersRepository.findListByUserIdx(user.getIdx(), pageable);
+
+            List<OrdersListRes> ordersListResList = new ArrayList<>();
+
+            for (Orders orders : ordersResult) {
+                Page<OrdersDetail> ordersDetailsResult = ordersDetailRepository.findListByOrdersIdx(orders.getIdx(), pageable);
+
+                for (OrdersDetail ordersDetail : ordersDetailsResult) {
+                    OrdersListRes ordersListRes = OrdersListRes.builder()
+                            .productDtoRes(ProductDtoRes.builder()
+                                    .productName(ordersDetail.getProduct().getProductName())
+                                    .price(ordersDetail.getProduct().getPrice())
+                                    .productQuantity(ordersDetail.getProcuctQuantity())
+                                    .build())
+                            .payMethod(orders.getPayMethod())
+                            .totalPrice(orders.getTotalPrice())
+                            .createdDate(orders.getCreatedAt())
+                            .deliveryStatus(orders.getDeliveryStatus())
+                            .merchantUid(orders.getMerchantUid())
+                            .build();
+
+                    ordersListResList.add(ordersListRes);
+                }
+            }
+            return BaseResponse.successResponse("상품 목록 조회를 성공했습니다.", ordersListResList);
         }
-        return BaseResponse.failResponse(444,"상품 리스트 불러오기 싶패");
+        return BaseResponse.failResponse(444,"상품 목록 조회를 실패했습니다.");
     }
 
     public void create(String payMethod, Long cartIdx, String merchantUid, Long amount, Store store) {

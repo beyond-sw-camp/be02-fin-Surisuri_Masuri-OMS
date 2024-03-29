@@ -38,26 +38,31 @@ public class ProductService {
                 .productCategory(req.getProductCategory())
                 .build());
 
-        return BaseResponse.successResponse("요청 성공", null);
+        return BaseResponse.successResponse("요청 성공했습니다.", null);
     }
 
-    public BaseResponse search(String productName) {
-        Optional<Product> result = productRepository.findByProductName(productName);
+    public BaseResponse search(String productName, Integer page, Integer size) {
 
-        if(result.isPresent()) {
-            Product product = result.get();
-            ProductSearchRes res = ProductSearchRes.builder()
+        Pageable pageable = PageRequest.of(page-1,size);
+
+        Page<Product> result = productRepository.findByProductNameContaining(productName,pageable);
+
+        List<ProductReadRes> productReadResList = new ArrayList<>();
+
+        for (Product product : result.getContent()) {
+
+            ProductReadRes productReadRes = ProductReadRes
+                    .builder()
+                    .productIdx(product.getIdx())
                     .productName(product.getProductName())
                     .price(product.getPrice())
-                    .createdAt(product.getCreatedAt())
-                    .updatedAt(product.getUpdatedAt())
+                    .productCategory(product.getProductCategory())
                     .build();
-            return BaseResponse.successResponse("상품 검색 성공", res);
+
+            productReadResList.add(productReadRes);
         }
 
-        else
-            throw new ProductException(ErrorCode.ProductSearch_002,
-                    String.format("존재하지 않는 상품 정보"));
+        return BaseResponse.successResponse("상품 검색을 성공했습니다.", productReadResList);
     }
 
     public BaseResponse list(Integer page, Integer size) {
@@ -81,7 +86,7 @@ public class ProductService {
             productReadResList.add(productReadRes);
         }
 
-        return BaseResponse.successResponse("상품 리스트 검색 성공", productReadResList);
+        return BaseResponse.successResponse("상품 목록 조회를 성공했습니다.", productReadResList);
 
     }
 
@@ -98,10 +103,10 @@ public class ProductService {
             }
             productRepository.save(product);
 
-            return BaseResponse.successResponse("상품 수정 성공", null);
+            return BaseResponse.successResponse("상품 수정을 성공했습니다.", null);
         }
 
-        else throw new ProductException(ErrorCode.ProductUpdate_002, String.format("존재하지 않는 상품 정보"));
+        else throw new ProductException(ErrorCode.ProductUpdate_002, String.format("상품이 존재하지 않습니다."));
 
     }
 
@@ -113,9 +118,9 @@ public class ProductService {
 
             productRepository.delete(product);
 
-            return BaseResponse.successResponse("상품 삭제 성공", null);
+            return BaseResponse.successResponse("상품 삭제를 성공했습니다.", null);
         }
 
-        else throw new ProductException(ErrorCode.ProductDelete_002, String.format("존재하지 않는 상품 정보"));
+        else throw new ProductException(ErrorCode.ProductDelete_002, String.format("상품이 존재하지 않습니다."));
     }
 }

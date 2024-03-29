@@ -77,11 +77,11 @@ public class StoreService {
                     .storeName(storeCreateReq.getStoreName())
                     .build();
 
-            return BaseResponse.successResponse("요청 성공", storeCreateRes);
+            return BaseResponse.successResponse("요청 성공했습니다.", storeCreateRes);
         }
         else {
             throw new StoreException(ErrorCode.StoreCreate_004,
-                    String.format("UnRegistered Manager"));
+                    String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
 
@@ -117,11 +117,11 @@ public class StoreService {
             storeSearchResList.add(storeReadRes);
         }
         // DtoToRes
-        return BaseResponse.successResponse("요청 성공", storeSearchResList);
+        return BaseResponse.successResponse("요청 성공했습니다.", storeSearchResList);
         }
         else {
             throw new StoreException(ErrorCode.StoreList_005,
-                    String.format("UnRegistered Manager"));
+                    String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
 
@@ -143,7 +143,7 @@ public class StoreService {
                 if(store2.getStorePhoneNo() == null)
                 {
                     throw new StoreException(ErrorCode.StoreSearch_004,
-                            String.format("There's no Registered User"));
+                            String.format("가맹점 정보가 등록되었으나 가맹점 관리자가 가입이 되지 않았습니다."));
                 }
                 storeReadRes = StoreReadRes
                         .builder()
@@ -156,8 +156,8 @@ public class StoreService {
             }
             if (store.isEmpty())
                 throw new StoreException(ErrorCode.StoreSearch_003,
-                        String.format("There's no Registered Store"));
+                        String.format("가맹점 검색 결과가 존재하지 않습니다"));
         }
-        return BaseResponse.successResponse("요청 성공", storeReadRes);
+        return BaseResponse.successResponse("요청 성공했습니다.", storeReadRes);
     }
 }

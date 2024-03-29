@@ -10,6 +10,7 @@ import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -42,6 +43,9 @@ public class Container {
 
     @Column(nullable = false)
     private Date updatedAt;
+
+    @OneToMany(mappedBy = "container")
+    private List<ContainerStock> containerStockList;
 
     @PrePersist
     void createdAt() {
