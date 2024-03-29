@@ -38,6 +38,7 @@ import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -258,15 +259,15 @@ public class OrdersService {
         Optional<Manager> managerResult = managerRepository.findByManagerId(managerId);
         User user = userResult.get();
 
-        if (userResult.isPresent() || managerResult.isPresent()) {
+        if (managerResult.isPresent()) {
             Pageable pageable = PageRequest.of(page - 1, size);
-            List<Orders> ordersResult = ordersRepository.findAll();
-            List<OrdersDetail> ordersDetailsResult = ordersDetailRepository.findAll();
+
+            Page<Orders> ordersResult = ordersRepository.findList(pageable);
 
             List<OrdersListRes> ordersListResList = new ArrayList<>();
 
             for (Orders orders : ordersResult) {
-                List<OrdersDetail> ordersDetailResult = ordersDetailRepository.findByOrdersIdx(orders.getIdx());
+                Page<OrdersDetail> ordersDetailsResult = ordersDetailRepository.findListByOrdersIdx(orders.getIdx(), pageable);
 
                 for (OrdersDetail ordersDetail : ordersDetailsResult) {
                     OrdersListRes ordersListRes = OrdersListRes.builder()
@@ -286,7 +287,37 @@ public class OrdersService {
                 }
             }
 
-            return BaseResponse.successResponse("상품 리스트 성공", ordersListResList);
+            return BaseResponse.successResponse("상품 리스트 불러오기 성공", ordersListResList);
+
+        } else if (userResult.isPresent()) {
+            Pageable pageable = PageRequest.of(page - 1, size);
+
+            Page<Orders> ordersResult = ordersRepository.findListByUserIdx(user.getIdx(), pageable);
+
+            List<OrdersListRes> ordersListResList = new ArrayList<>();
+
+            for (Orders orders : ordersResult) {
+                Page<OrdersDetail> ordersDetailsResult = ordersDetailRepository.findListByOrdersIdx(orders.getIdx(), pageable);
+
+                for (OrdersDetail ordersDetail : ordersDetailsResult) {
+                    OrdersListRes ordersListRes = OrdersListRes.builder()
+                            .productDtoRes(ProductDtoRes.builder()
+                                    .productName(ordersDetail.getProduct().getProductName())
+                                    .price(ordersDetail.getProduct().getPrice())
+                                    .productQuantity(ordersDetail.getProcuctQuantity())
+                                    .build())
+                            .payMethod(orders.getPayMethod())
+                            .totalPrice(orders.getTotalPrice())
+                            .createdDate(orders.getCreatedAt())
+                            .deliveryStatus(orders.getDeliveryStatus())
+                            .merchantUid(orders.getMerchantUid())
+                            .build();
+
+                    ordersListResList.add(ordersListRes);
+                }
+            }
+
+            return BaseResponse.successResponse("상품 리스트 불러오기 성공", ordersListResList);
         }
         return BaseResponse.failResponse(444,"상품 리스트 불러오기 싶패");
     }
