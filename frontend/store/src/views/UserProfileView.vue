@@ -48,7 +48,7 @@
 <script>
 import axios from 'axios';
 
-const baseURL = 'http://192.168.0.45/api'
+const baseURL = 'http://121.140.125.34:11113/api'
 
 export default {
   data() {

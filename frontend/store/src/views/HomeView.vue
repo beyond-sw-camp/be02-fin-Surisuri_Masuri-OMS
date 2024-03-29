@@ -324,7 +324,7 @@ export default {
     },
     async fetchNotices() {
       try {
-        const response = await axios.get("http://192.168.0.45/api/notice/list", {
+        const response = await axios.get("http://121.140.125.34:11113/api/notice/list", {
           params: {
             page: 1,
             size: 10,
