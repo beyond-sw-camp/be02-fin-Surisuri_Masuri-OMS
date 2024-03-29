@@ -226,7 +226,7 @@ public class UserService implements UserDetailsService {
             User user2 = user.get();
             User user3 = user.get();
 
-            Long idx = user3.getStore().getIdx(); // store에서 사용하는 키값
+            Long idx = user3.getIdx(); // store에서 사용하는 키값
 
             if (!userUpdateReq.getUserPassword().equals("")) {
                 user2.setUserPassword(passwordEncoder.encode(userUpdateReq.getUserPassword()));
@@ -243,7 +243,7 @@ public class UserService implements UserDetailsService {
                 store2.setStoreAddr(userUpdateReq.getStoreAddr());
             }
             if (!userUpdateReq.getStorePhoneNo().equals("")) {
-                store2.setStorePhoneNo(userUpdateReq.getStorePhoneNo());
+                store2.setStorePhoneNo(userUpdateReq.getUserPhoneNo());
             }
             store2.setUpdatedAt(update);
             storeRepository.save(store2);
@@ -260,10 +260,9 @@ public class UserService implements UserDetailsService {
 
 
             return baseResponse;
+        } else {
+            return BaseResponse.failResponse(7000, "요청 실패");
         }
-        else
-            throw new ManagerException(ErrorCode.UserUpdate_001,
-                    String.format("잘못된 형식의 회원 정보입니다."));
     }
 
     // 회원 비밀번호 찾기 기능
@@ -293,14 +292,16 @@ public class UserService implements UserDetailsService {
                 BaseResponse baseResponse = BaseResponse.successResponse("가입하신 이메일로 비밀번호 재설정 링크를 보내드렸습니다.", findUserPasswordRes);
 
                 return baseResponse;
+            } else {
+                return BaseResponse.failResponse(444, "잘못된 이름 형식입니다.");
             }
-            else
-                throw new ManagerException(ErrorCode.UserEmail_004,
-                        String.format("가입되지 않은 이메일입니다."));
+
         }
+
         else
             throw new ManagerException(ErrorCode.UserPassword_004,
                     String.format("가입되지 않은 회원입니다."));
+
     }
 
     // 비밀번호 재설정 기능
