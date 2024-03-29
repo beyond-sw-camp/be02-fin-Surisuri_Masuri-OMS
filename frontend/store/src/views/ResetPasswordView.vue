@@ -39,7 +39,7 @@
 <!-- <script>
 import axios from 'axios';
 
-const baseURL = 'http://localhost:8080'
+const baseURL = 'http://121.140.125.34:11113/api'
 
 export default {
   data() {
@@ -80,7 +80,7 @@ export default {
 <script>
 import axios from 'axios';
 
-const baseURL = 'http://localhost:8080';
+const baseURL = 'http://121.140.125.34:11113/api';
 
 export default {
   data() {

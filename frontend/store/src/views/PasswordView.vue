@@ -38,8 +38,9 @@
 
 <script>
 import axios from 'axios';
+import { getErrorMessage } from '../utils/error.js'; // 에러 메시지 처리 함수 임포트
 
-const baseURL = 'http://localhost:8080';
+const baseURL = 'http://121.140.125.34:11113/api';
 
 export default {
   data() {
@@ -73,13 +74,11 @@ export default {
           alert('비밀번호 재설정 요청을 처리할 수 없습니다. 입력 정보를 확인해주세요.');
         }
       } catch (error) {
-        let errorMessage = '비밀번호 재설정 요청 중 오류가 발생했습니다.';
-        if (error.response && error.response.data && error.response.data.message) {
-          errorMessage += `\n${error.response.data.message}`;
-        }
-        alert(errorMessage);
+        const errorMessage = getErrorMessage(error.response && error.response.data ? error.response.data.errorCode : null);
+        alert(`비밀번호 재설정 요청 중 오류가 발생했습니다.\n${errorMessage}`);
       }
     },
   },
 };
 </script>
+

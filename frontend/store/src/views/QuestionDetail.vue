@@ -33,7 +33,7 @@
 
 <script>
 import axios from "axios";
-
+import { getErrorMessage } from "../utils/error.js";
 export default {
   data() {
     return {
@@ -58,7 +58,7 @@ export default {
       }
       try {
         await axios.patch(
-          "http://localhost:8080/question/update",
+          "http://121.140.125.34:11113/api/question/update",
           {
             idx: this.questionIdx,
             title: this.questionTitle,
@@ -78,10 +78,8 @@ export default {
         this.editable = false;
         this.$router.push("/question"); // 수정 후 inquiry 목록으로 리다이렉트
       } catch (error) {
-        alert(
-          "문의사항 수정 중 오류가 발생했습니다: " +
-            (error.response && error.response.data ? error.response.data.message : error.message)
-        );
+        const message = getErrorMessage(error.response && error.response.data ? error.response.data.errorCode : null);
+        alert("문의사항 수정 중 오류가 발생했습니다: " + message);
       }
     },
     async deleteQuestion() {
@@ -91,18 +89,16 @@ export default {
         return;
       }
       try {
-        await axios.delete(`http://localhost:8080/question/delete?idx=${this.questionIdx}`, {
+        await axios.delete(`http://121.140.125.34:11113/api/question/delete?idx=${this.questionIdx}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         alert("문의사항이 성공적으로 삭제되었습니다.");
         this.$router.push("/question"); // 삭제 후 inquiry 목록으로 리다이렉트
-      } catch (error) {
-        alert(
-          "문의사항 삭제 중 오류가 발생했습니다: " +
-            (error.response && error.response.data ? error.response.data.message : error.message)
-        );
+      }catch (error) {
+        const message = getErrorMessage(error.response && error.response.data ? error.response.data.errorCode : null);
+        alert("문의사항 삭제 중 오류가 발생했습니다: " + message);
       }
     },
   },

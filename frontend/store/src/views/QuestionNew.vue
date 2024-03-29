@@ -43,7 +43,7 @@ export default {
           return;
         }
 
-        await axios.post('http://192.168.0.162/question/create', this.question, {
+        await axios.post('http://121.140.125.34:11113/api/question/create', this.question, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`

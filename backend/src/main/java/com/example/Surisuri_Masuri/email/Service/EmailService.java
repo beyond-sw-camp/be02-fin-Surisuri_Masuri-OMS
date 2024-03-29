@@ -33,7 +33,7 @@ public class EmailService {
 
         // UUID도 생성하여 추가적으로 메일 전송
         String uuid = UUID.randomUUID().toString();
-        message.setText("http://localhost:8080/user/confirm?email="
+        message.setText("http://121.140.125.34:11113/api/user/confirm?email="
                 + sendEmailReq.getEmail()
                 + "&authority=" + sendEmailReq.getAuthority()
                 + "&token=" + uuid

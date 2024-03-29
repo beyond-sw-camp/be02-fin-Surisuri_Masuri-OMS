@@ -54,7 +54,7 @@ export default {
           return;
         }
 
-        const response = await axios.get("http://localhost:8080/stock/list", {
+        const response = await axios.get("http://121.140.125.34:11113/api/stock/list", {
           headers: {
             Authorization: "Bearer " + token,
           },
@@ -94,7 +94,7 @@ export default {
         });
 
         const response = await axios.patch(
-          "http://localhost:8080/stock/update",
+          "http://121.140.125.34:11113/api/stock/update",
           {
             idx: product.storeStockIdx,
             stockQuantity: product.stockQuantitiy,

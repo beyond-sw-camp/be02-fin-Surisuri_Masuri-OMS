@@ -48,6 +48,7 @@
 <script>
 import axios from "axios";
 import CartButtonComponent from "@/components/CartButtonComponent.vue";
+import { getErrorMessage } from "../utils/error.js";
 
 export default {
   name: "ProductView",
@@ -70,7 +71,7 @@ export default {
     async fetchProducts() {
       try {
         const token = sessionStorage.getItem("token");
-        const response = await axios.get("http://localhost:8080/product/list", {
+        const response = await axios.get("http://121.140.125.34:11113/api/product/list", {
           params: {
             page: 1,
             size: 5,
@@ -88,7 +89,7 @@ export default {
       try {
         const token = sessionStorage.getItem("token");
         // GET 요청을 보내고 응답을 변수에 저장합니다.
-        const response = await axios.get("http://localhost:8080/orders/list", {
+        const response = await axios.get("http://121.140.125.34:11113/api/orders/list", {
           params: {
             page: 1,
             size: 5,
@@ -109,36 +110,43 @@ export default {
       }
     },
     async addToCart(product) {
-      try {
-        const token = sessionStorage.getItem("token");
-        // CartCreateReq 객체 생성
-        var CartCreateReq = {
-          idx: null,
-          productIdx: product.productIdx,
-          productQuantity: product.purchaseQuantity,
-        };
+  try {
+    const token = sessionStorage.getItem("token");
+    var CartCreateReq = {
+      idx: null,
+      productIdx: product.productIdx,
+      productQuantity: product.purchaseQuantity,
+    };
 
-        // axios를 사용하여 POST 요청을 보냅니다.
-        const response = await axios.post("http://localhost:8080/cart/addcart", CartCreateReq, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+    const response = await axios.post("http://121.140.125.34:11113/api/cart/addcart", CartCreateReq, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-        // 서버로부터 응답을 받은 경우
-        console.log("장바구니에 제품이 추가되었습니다:", response.data);
-        // 성공적으로 장바구니에 제품이 추가되었음을 사용자에게 알립니다.
-        alert(`${product.productName} ${product.purchaseQuantity}개가 장바구니에 추가되었습니다.`);
-        // 카트 아이템 카운트를 업데이트합니다.
-        this.cartItemCount += product.purchaseQuantity;
-      } catch (error) {
-        // 오류가 발생한 경우
-        console.error("장바구니에 제품을 추가하는 중 오류가 발생했습니다:", error);
-        // 오류 메시지를 사용자에게 알립니다.
-        alert("장바구니에 제품을 추가하는 중 오류가 발생했습니다.");
-      }
-    },
+    // 서버로부터 응답을 받은 경우
+    console.log("장바구니에 제품이 추가되었습니다:", response.data);
+    alert(`${product.productName} ${product.purchaseQuantity}개가 장바구니에 추가되었습니다.`);
+    this.cartItemCount += product.purchaseQuantity;
+  } catch (error) {
+    console.error("장바구니에 제품을 추가하는 중 오류가 발생했습니다:", error);
+
+    // getErrorMessage를 사용하여 오류 메시지 처리
+    let errorMessage;
+    // error.response가 존재하는지와 함께, error.response.data와 error.response.data.errorCode가 있는지 확인
+    if (error.response && error.response.data && error.response.data.errorCode) {
+      errorMessage = getErrorMessage(error.response.data.errorCode);
+    } else {
+      // 오류에 대한 자세한 정보가 없을 경우 일반적인 오류 메시지 제공
+      errorMessage = "장바구니에 제품을 추가하는 중 오류가 발생했습니다. 다시 시도해주세요.";
+    }
+
+    // 최종적으로 결정된 오류 메시지를 사용자에게 알림
+    alert(errorMessage);
+  }
+}
+
   },
 };
 </script>
