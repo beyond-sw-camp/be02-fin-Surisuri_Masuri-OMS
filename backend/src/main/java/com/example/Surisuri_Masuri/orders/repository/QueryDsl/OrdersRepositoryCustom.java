@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 public interface OrdersRepositoryCustom {
     public Page<Orders> findList(Pageable pageable);
 
+    public Page<Orders> findListByUserIdx(Long userIdx, Pageable pageable);
 }

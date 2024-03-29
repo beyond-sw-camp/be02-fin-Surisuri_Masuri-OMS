@@ -27,4 +27,17 @@ public class OrdersRepositoryCustomImpl extends QuerydslRepositorySupport implem
         return new PageImpl<>(result, pageable, result.size());
     }
 
+    @Override
+    public Page<Orders> findListByUserIdx(Long userIdx, Pageable pageable) {
+        QOrders orders= new QOrders("orders");
+
+        List<Orders> result = from(orders)
+                .where(orders.store.user.idx.eq(userIdx))
+                .distinct()
+                .offset(pageable.getPageNumber() * pageable.getPageSize())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(result, pageable, result.size());
+    }
 }
