@@ -46,7 +46,7 @@ public class OrdersController {
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/updatedelivery")
-    public ResponseEntity updateOrdersDelivery(OrdersUpdateDeliveryReq req) {
+    public ResponseEntity updateOrdersDelivery(@RequestBody OrdersUpdateDeliveryReq req) {
 
         return ResponseEntity.ok().body(ordersService.updateOrdersDelivery(req));
     }

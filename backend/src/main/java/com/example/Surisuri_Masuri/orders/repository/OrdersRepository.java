@@ -1,11 +1,8 @@
 package com.example.Surisuri_Masuri.orders.repository;
 
-import com.example.Surisuri_Masuri.cart.model.CartDetail;
 import com.example.Surisuri_Masuri.orders.model.Orders;
-import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
+import com.example.Surisuri_Masuri.orders.repository.QueryDsl.OrdersRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
-public interface OrdersRepository extends JpaRepository<Orders, Long> {
+public interface OrdersRepository extends JpaRepository<Orders, Long>, OrdersRepositoryCustom {
 }
