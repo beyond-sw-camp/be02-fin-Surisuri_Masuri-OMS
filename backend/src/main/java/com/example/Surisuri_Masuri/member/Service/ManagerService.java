@@ -88,7 +88,7 @@ public class ManagerService {
                 .managerId(manager.getManagerId())
                 .build();
 
-        return BaseResponse.successResponse("회원가입 완료", managerSignUpRes);
+        return BaseResponse.successResponse("회원 가입이 완료되었습니다.", managerSignUpRes);
     }
 
     // 로그인 기능
@@ -99,7 +99,7 @@ public class ManagerService {
 
         if (manager.isEmpty()) {
             throw new ManagerException(ErrorCode.ManagerLogin_003,
-                    String.format("Wrong Id"));
+                    String.format("가입되지 않은 이메일입니다."));
         }
 
         if (manager.isPresent() && passwordEncoder.matches(managerLoginReq.getPassword(), manager.get().getPassword()))

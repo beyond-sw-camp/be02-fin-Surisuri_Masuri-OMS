@@ -263,7 +263,7 @@ public class UserService implements UserDetailsService {
         }
         else
             throw new ManagerException(ErrorCode.UserUpdate_001,
-                    String.format("잘못된 회원 정보를 입력했습니다."));
+                    String.format("잘못된 형식의 회원 정보입니다."));
     }
 
     // 회원 비밀번호 찾기 기능
@@ -293,18 +293,14 @@ public class UserService implements UserDetailsService {
                 BaseResponse baseResponse = BaseResponse.successResponse("가입하신 이메일로 비밀번호 재설정 링크를 보내드렸습니다.", findUserPasswordRes);
 
                 return baseResponse;
-            } else {
-
-                throw new ManagerException(ErrorCode.UserLogin_003,
-                        String.format("가입되지 않은 이메일입니다."));
             }
-
+            else
+                throw new ManagerException(ErrorCode.UserEmail_004,
+                        String.format("가입되지 않은 이메일입니다."));
         }
-
         else
             throw new ManagerException(ErrorCode.UserPassword_004,
                     String.format("가입되지 않은 회원입니다."));
-
     }
 
     // 비밀번호 재설정 기능

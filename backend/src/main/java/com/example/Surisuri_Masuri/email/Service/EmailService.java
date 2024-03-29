@@ -29,7 +29,7 @@ public class EmailService {
     public void sendEmail(SendEmailReq sendEmailReq) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(sendEmailReq.getEmail());
-        message.setSubject("[혼자 만들어보는 백엔드] 이메일 인증");
+        message.setSubject("[GIGA COFFEE] 이메일 인증을 완료해주세요 ^3^");
 
         // UUID도 생성하여 추가적으로 메일 전송
         String uuid = UUID.randomUUID().toString();
@@ -47,7 +47,7 @@ public class EmailService {
     public void sendEmail2(SendEmailReq sendEmailReq) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(sendEmailReq.getEmail());
-        message.setSubject("비밀번호 초기화용 이메일입니다.");
+        message.setSubject("비밀번호 재설정 요청 이메일입니다.");
 
         message.setText("http://localhost:8081/passwordReset/"
                 + sendEmailReq.getIdx()
@@ -73,7 +73,7 @@ public class EmailService {
             EmailVerify emailVerify = result.get();
             if(emailVerify.getJwt().equals(emailConfirmReq.getJwt()) && emailVerify.getUuid().equals(emailConfirmReq.getToken())) {
                 update(emailConfirmReq.getEmail(), emailConfirmReq.getAuthority());
-                return new RedirectView("http://www.naver.com");
+                return new RedirectView("http://192.168.0.45/");
             }
         }
         return new RedirectView("http://localhost:3000/emailCertError");

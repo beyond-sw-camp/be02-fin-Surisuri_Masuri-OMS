@@ -8,6 +8,10 @@ import com.example.Surisuri_Masuri.cart.model.dto.response.CartListRes;
 import com.example.Surisuri_Masuri.cart.repository.CartDetailRepository;
 import com.example.Surisuri_Masuri.cart.repository.CartRepository;
 import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.exception.EntityException.CartException;
+import com.example.Surisuri_Masuri.exception.EntityException.ManagerException;
+import com.example.Surisuri_Masuri.exception.EntityException.UserException;
+import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.product.model.Product;
@@ -36,6 +40,7 @@ public class CartService {
     private final UserRepository userRepository;
 
     public BaseResponse addCart(User user, CartCreateReq req) {
+
         Optional<Product> productResult = productRepository.findById(req.getProductIdx());
 
         Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
@@ -64,7 +69,7 @@ public class CartService {
                     .productQuantity(cartDetail.getProductQuantity())
                     .build();
 
-            return BaseResponse.successResponse("요청 성공", cartCreateRes);
+            return BaseResponse.successResponse("요청 성공했습니다.", cartCreateRes);
         } else {
             Optional<Cart> cartResult = cartRepository.findById(foundUser.getStore().getCartList().get(0).getIdx());
             Cart cart =  cartResult.get();
@@ -84,7 +89,7 @@ public class CartService {
                                 .productQuantity(cartDetail.getProductQuantity())
                                 .build();
 
-                        return BaseResponse.successResponse("요청 성공", cartCreateRes);
+                        return BaseResponse.successResponse("요청 성공했습니다.", cartCreateRes);
                     }
                 }
             }
@@ -102,7 +107,7 @@ public class CartService {
                     .productQuantity(cartDetail.getProductQuantity())
                     .build();
 
-            return BaseResponse.successResponse("요청 성공", cartCreateRes);
+            return BaseResponse.successResponse("요청 성공했습니다.", cartCreateRes);
         }
     }
 
@@ -132,9 +137,9 @@ public class CartService {
                 cartListResList.add(cartListRes);
             }
 
-            return BaseResponse.successResponse("카트 리스트 검색 성공", cartListResList);
+            return BaseResponse.successResponse("카트 목록 조회를 성공했습니다.", cartListResList);
         }
-        return BaseResponse.successResponse("카트 리스트가 존재하지 않습니다", null);
+        return BaseResponse.successResponse("카트 목록이 존재하지 않습니다", null);
     }
 
 
@@ -152,13 +157,16 @@ public class CartService {
                     if (cartDetail.getProduct().getProductName().equals(productName)) {
                         cartDetailRepository.delete(cartDetail);
 
-                        return BaseResponse.successResponse("카트 상품 삭제 성공", null);
+                        return BaseResponse.successResponse("카트에 담긴 상품을 삭제했습니다.", null);
                     }
                 }
-                return BaseResponse.successResponse("카트에 존재하지 않는 상품", null);
-            }
-            return BaseResponse.failResponse(444, "해당 유저의 카트가 아닙니다");
-        }
-        return BaseResponse.failResponse(444, "토큰이 없습니다");
+                return BaseResponse.successResponse("카트에 존재하지 않는 상품입니다.", null);
+
+            } else
+                throw new ManagerException(ErrorCode.CartDelete_003,
+                        String.format("카트 정보가 존재하지 않습니다."));
+        } else
+            throw new ManagerException(ErrorCode.INVALID_PERMISION,
+                    String.format("권한이 없습니다."));
     }
 }
