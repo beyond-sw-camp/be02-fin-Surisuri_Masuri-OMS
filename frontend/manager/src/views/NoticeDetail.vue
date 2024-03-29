@@ -53,7 +53,7 @@ export default {
       };
 
       axios
-        .patch("http://localhost:8080/notice/update", updateData, {
+        .patch("http://121.140.125.34:11114/api/notice/update", updateData, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -82,7 +82,7 @@ export default {
           return;
         }
 
-        const response = await axios.delete(`http://localhost:8080/notice/delete?noticeIdx=${this.noticeIdx}`);
+        const response = await axios.delete(`http://121.140.125.34:11114/api/notice/delete?noticeIdx=${this.noticeIdx}`);
         console.log("공지사항 삭제 응답:", response.data);
         alert("공지사항이 성공적으로 삭제되었습니다.");
 

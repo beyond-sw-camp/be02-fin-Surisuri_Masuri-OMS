@@ -35,7 +35,7 @@ export default {
   methods: {
     async submitNotice() {
       try {
-        const response = await axios.post('http://localhost:8080/notice/create', this.notice, {
+        const response = await axios.post('http://192.168.0.44/api/notice/create', this.notice, {
           headers: {
             'Content-Type': 'application/json',
           },
