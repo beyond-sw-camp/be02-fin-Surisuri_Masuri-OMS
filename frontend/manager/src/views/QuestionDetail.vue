@@ -48,7 +48,7 @@ export default {
           answerContent: this.answerContent,
         };
 
-        const response = await axios.post("http://localhost:8080/question/answer", answerReq, {
+        const response = await axios.post("http://192.168.0.44/api/question/answer", answerReq, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
