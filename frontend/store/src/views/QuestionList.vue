@@ -69,7 +69,7 @@ export default {
   methods: {
     async fetchQuestions() {
       try {
-        const response = await axios.get("http://192.168.0.45/question/list", {
+        const response = await axios.get("http://192.168.0.45/api/question/list", {
           headers: {
             Authorization: "Bearer " + sessionStorage.getItem("token"),
           },

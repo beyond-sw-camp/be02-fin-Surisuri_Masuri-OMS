@@ -39,7 +39,7 @@
 import axios from 'axios';
 import { getErrorMessage } from '../utils/error.js'; // 에러 메시지 처리 함수 임포트
 
-const baseURL = 'http://192.168.0.45';
+const baseURL = 'http://192.168.0.45/api';
 
 export default {
   data() {

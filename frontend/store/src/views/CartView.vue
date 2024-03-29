@@ -76,7 +76,7 @@ export default {
 
     onMounted(async () => {
       try {
-        const response = await axios.get("http://192.168.0.45/cart/list", {
+        const response = await axios.get("http://192.168.0.45/api/cart/list", {
           params: {
             // idx: 1, // 여기에 카트 ID를 넣어주세요
             page: 1, // 여기에 페이지 번호를 넣어주세요
@@ -107,7 +107,7 @@ export default {
       try {
         // 삭제 요청 보내기
         const response = await axios.delete(
-          "http://192.168.0.45/cart/delete",
+          "http://192.168.0.45/api/cart/delete",
           {
             params: {
               cartIdx: cartItems.value[index].cartIdx,
@@ -160,7 +160,7 @@ export default {
             if (rsp.success) {
               var imp_uid = rsp.imp_uid;
               // AJAX나 fetch API를 사용하여 imp_uid를 서버로 전달
-              fetch("http://192.168.0.45/orders/payment", {
+              fetch("http://192.168.0.45/api/orders/payment", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",

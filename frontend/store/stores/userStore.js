@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
-const baseURL = 'http://192.168.0.45'
+const baseURL = 'http://192.168.0.45/api'
 
 export const useUserStore = defineStore({
   id: "user",
