@@ -18,6 +18,13 @@ spec:
       containers:
         - name: backend-container
           image: beomiya/final_backend:1.VERSION
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            successThreshold: 3
           ports:
             - containerPort: 8080
           resources:
