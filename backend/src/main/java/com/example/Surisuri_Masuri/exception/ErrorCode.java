@@ -60,7 +60,6 @@ public enum ErrorCode {
     // UserRegister_011(3009, HttpStatus.BAD_REQUEST, "잘못된 형식의 핸드폰 번호입니다."),
     // UserRegister_012(3010, HttpStatus.BAD_REQUEST, "잘못된 형식의 매장 전화 번호입니다."),
 
-
     // UserEmail 찾기
     // UserEmail_002(3011, HttpStatus.BAD_REQUEST, "잘못된 형식의 이름입니다."),
     // UserEmail_003(3012, HttpStatus.BAD_REQUEST, "잘못된 형식의 전화번호입니다."),
