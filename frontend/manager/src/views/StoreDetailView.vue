@@ -43,7 +43,7 @@ export default {
       const token = sessionStorage.getItem("token");
 
       try {
-        const response = await axios.get(`http://192.168.0.44/api/orders/${merchantUid}`, {
+        const response = await axios.get(`http://121.140.125.34:11114/api/orders/${merchantUid}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

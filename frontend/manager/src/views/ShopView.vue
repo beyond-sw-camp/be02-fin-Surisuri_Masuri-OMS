@@ -55,7 +55,7 @@ export default {
         async fetchShops() {
             try {
                 const token = sessionStorage.getItem('token');
-                const response = await axios.get('http://192.168.0.44/api/store/list', {
+                const response = await axios.get('http://121.140.125.34:11114/api/store/list', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     },
