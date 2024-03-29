@@ -9,7 +9,7 @@ export const useManagerStore = defineStore({
   actions: {
     async login({ id, password }) {
       try {
-        const response = await axios.post('http://localhost:8080/manager/login', { id, password });
+        const response = await axios.post('http://192.168.0.44/api/manager/login', { id, password });
         const { data } = response;
         if (data.isSuccess) {
           this.token = data.result.jwtToken;
