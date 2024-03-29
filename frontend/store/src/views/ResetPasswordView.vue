@@ -80,7 +80,7 @@ export default {
 <script>
 import axios from 'axios';
 
-const baseURL = 'http://localhost:8080';
+const baseURL = 'http://192.168.0.45';
 
 export default {
   data() {
