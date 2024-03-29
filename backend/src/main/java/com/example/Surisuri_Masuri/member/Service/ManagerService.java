@@ -99,7 +99,7 @@ public class ManagerService {
 
         if (manager.isEmpty()) {
             throw new ManagerException(ErrorCode.ManagerLogin_003,
-                    String.format("가입되지 않은 이메일입니다."));
+                    String.format("잘못된 아이디입니다."));
         }
 
         if (manager.isPresent() && passwordEncoder.matches(managerLoginReq.getPassword(), manager.get().getPassword()))

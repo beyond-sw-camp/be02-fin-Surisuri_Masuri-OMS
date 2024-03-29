@@ -51,7 +51,7 @@ public enum ErrorCode {
     // UserRegister_007(3005, HttpStatus.BAD_REQUEST, "잘못된 형식의 storeUuid입니다."),
     UserRegister_008(3006, HttpStatus.BAD_REQUEST, "존재하지 않는 storeUuid입니다."),
     UserRegister_009(3007, HttpStatus.CONFLICT, "가게 정보가 이미 등록되어있습니다."),
-    UserRegister_0010(3007, HttpStatus.CONFLICT, "이미 존재하는 이메일입니다."),
+    UserRegister_0010(3008, HttpStatus.CONFLICT, "이미 존재하는 이메일입니다."),
 
     // Store Addr
     // UserRegister_010(3008, HttpStatus.BAD_REQUEST, "잘못된 형식의 주소 정보입니다."),
@@ -81,7 +81,7 @@ public enum ErrorCode {
     // UserLogin_002(3021, HttpStatus.BAD_REQUEST, "잘못된 형식의 이메일입니다."),
     UserLogin_003(3022, HttpStatus.BAD_REQUEST, "가입되지 않은 이메일입니다."),
     UserLogin_004(3023, HttpStatus.BAD_REQUEST, "이메일 인증이 필요합니다."),
-    UserLogin_005(3024, HttpStatus.BAD_REQUEST, "비밀번호가 틀렸습니다."),
+    UserLogin_005(3024, HttpStatus.BAD_REQUEST, "잘못된 비밀번호입니다."),
 
     // Manager
     // ManagerRegister_002(3024, HttpStatus.BAD_REQUEST, "잘못된 형식의 사원 이름입니다."),
@@ -93,7 +93,7 @@ public enum ErrorCode {
 
     // ManagerLogin
     // ManagerLogin_002(3028, HttpStatus.BAD_REQUEST, "잘못된 형식의 이메일입니다."),
-    ManagerLogin_003(3029, HttpStatus.BAD_REQUEST, "가입되지 않은 이메일입니다."),
+    ManagerLogin_003(3029, HttpStatus.BAD_REQUEST, "잘못된 아이디입니다."),
     ManagerLogin_004(3030, HttpStatus.BAD_REQUEST, "잘못된 비밀번호입니다."),
 
     // Delivery
