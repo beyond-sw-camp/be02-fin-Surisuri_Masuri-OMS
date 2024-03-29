@@ -159,31 +159,36 @@ public class UserService implements UserDetailsService {
         {
             Optional<Store> store = storeRepository.findByStoreName(user.get().getStore().getStoreName());
 
-            List<StoreStock> storeStockList = store.get().getStoreStocks();
+            if (!store.get().getStoreStocks().isEmpty()) {
+                List<StoreStock> storeStockList = store.get().getStoreStocks();
 
-            for(int i = 0 ; i< storeStockList.size(); i++) {
-                StoreStock storeStock = storeStockList.get(i);
+                for (int i = 0; i < storeStockList.size(); i++) {
+                    StoreStock storeStock = storeStockList.get(i);
 
-                if (storeStock.getIsDiscarded().equals(true)) {
-                    DiscardedProduct discardedProduct = DiscardedProduct
-                            .builder()
-                            .productName(storeStock.getProduct().getProductName())
-                            .expiredDate(storeStock.getExpiredAt())
-                            .build();
+                    if (storeStock.getIsDiscarded().equals(true)) {
+                        DiscardedProduct discardedProduct = DiscardedProduct
+                                .builder()
+                                .productName(storeStock.getProduct().getProductName())
+                                .expiredDate(storeStock.getExpiredAt())
+                                .build();
 
-                    discardedProduct2.add(discardedProduct);
+                        discardedProduct2.add(discardedProduct);
+                    }
+                    if (discardedProduct2.size() > 0) {
+                        loginRes = LoginRes.builder()
+                                .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
+                                .discardedProduct(discardedProduct2)
+                                .build();
+                    } else {
+                        loginRes = LoginRes.builder()
+                                .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
+                                .build();
+                    }
                 }
-                if (discardedProduct2.size() > 0) {
-                    loginRes = LoginRes.builder()
-                            .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
-                            .discardedProduct(discardedProduct2)
-                            .build();
-                }
-                else {
-                    loginRes = LoginRes.builder()
-                            .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
-                            .build();
-                }
+            } else {
+                loginRes = LoginRes.builder()
+                        .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
+                        .build();
             }
             return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
         }
