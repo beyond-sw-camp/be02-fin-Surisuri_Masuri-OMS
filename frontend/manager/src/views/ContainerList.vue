@@ -50,7 +50,7 @@ export default {
   methods: {
     async fetchContainers() {
       try {
-        const response = await axios.get("http://localhost:8080/container/list", {
+        const response = await axios.get("http://121.140.125.34:11114/api/container/list", {
           params: this.pagination,
         });
         // 성공적으로 데이터를 받아온 경우, 받아온 데이터의 구조와 내용을 콘솔에 출력

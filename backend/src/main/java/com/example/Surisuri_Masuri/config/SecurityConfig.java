@@ -59,6 +59,7 @@ public class SecurityConfig {
                     .antMatchers("/question/**").permitAll()
                     .antMatchers("/store/**").permitAll()
                     .antMatchers("/container/**").permitAll()
+                    .antMatchers("/healthz").permitAll()
                     .anyRequest().authenticated();
             http.addFilterBefore(new JwtFilter(userService,managerService,secretKey), UsernamePasswordAuthenticationFilter.class);
             http.formLogin().disable();
