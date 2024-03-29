@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 @Data
 public class ManagerSignUpReq {
 
-    @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "영어와 숫자만 가능합니다.")
+    @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "아이디는 영문자와 숫자를 포함해야 합니다.")
     private String managerId;
 
     @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$")

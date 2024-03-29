@@ -40,7 +40,7 @@ public class NoticeService {
                 .content(postCreateNoticeReq.getContent())
                 .build();
 
-        return BaseResponse.successResponse("공지사항 작성 성공", postCreateNoticeRes);
+        return BaseResponse.successResponse("공지사항 작성을 성공했습니다.", postCreateNoticeRes);
     }
 
 
@@ -61,7 +61,7 @@ public class NoticeService {
             getListNoticeResList.add(getListNoticeRes);
         }
 
-        return BaseResponse.successResponse("공지사항 조회 성공",getListNoticeResList);
+        return BaseResponse.successResponse("공지사항 조회를 성공했습니다.",getListNoticeResList);
 
     }
 
@@ -74,12 +74,12 @@ public class NoticeService {
             notice.update(patchUpdateNoticeReq);
             noticeRepository.save(notice);
 
-            return BaseResponse.successResponse("공지사항 수정 성공", null);
+            return BaseResponse.successResponse("공지사항 수정을 성공했습니다.", null);
         }
 
         else {
             throw new ContainerException(ErrorCode.NoticeUpdate_002,
-                    String.format("Notice Idx [ %s ] doesn't has Notice.", patchUpdateNoticeReq.getNoticeIdx()));
+                    String.format("공지사항 Idx [ %s ] 이/가 존재하지 않습니다.", patchUpdateNoticeReq.getNoticeIdx()));
         }
     }
 
@@ -90,11 +90,11 @@ public class NoticeService {
         if(result.isPresent()) {
             Notice notice = result.get();
             noticeRepository.delete(notice);
-            return BaseResponse.successResponse("공지사항 삭제 성공",null);
+            return BaseResponse.successResponse("공지사항 삭제를 성공했습니다.",null);
         }
         else {
             throw new ContainerException(ErrorCode.NoticeDelete_002,
-                    String.format("Notice Idx [ %s ] doesn't has Notice.", noticeIdx));
+                    String.format("공지사항 Idx [ %s ] 이/가 존재하지 않습니다.", noticeIdx));
         }
 
     }

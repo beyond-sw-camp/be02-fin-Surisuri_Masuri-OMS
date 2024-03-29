@@ -8,6 +8,7 @@ import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.LoginReq;
+import com.example.Surisuri_Masuri.member.Model.ReqDtos.ManagerLoginReq;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.ManagerSignUpReq;
 import com.example.Surisuri_Masuri.member.Model.ResDtos.LoginRes;
 import com.example.Surisuri_Masuri.member.Model.ResDtos.ManagerSignUpRes;
@@ -88,18 +89,18 @@ public class ManagerService {
                 .managerId(manager.getManagerId())
                 .build();
 
-        return BaseResponse.successResponse("회원가입 완료", managerSignUpRes);
+        return BaseResponse.successResponse("회원 가입이 완료되었습니다.", managerSignUpRes);
     }
 
     // 로그인 기능
-    public BaseResponse<LoginRes> ManagerLogin(LoginReq managerLoginReq) {
+    public BaseResponse<LoginRes> ManagerLogin(ManagerLoginReq managerLoginReq) {
         LoginRes loginRes = null;
 
         Optional<Manager> manager = managerRepository.findByManagerId(managerLoginReq.getId());
 
         if (manager.isEmpty()) {
             throw new ManagerException(ErrorCode.ManagerLogin_003,
-                    String.format("Wrong Id"));
+                    String.format("잘못된 아이디입니다."));
         }
 
         if (manager.isPresent() && passwordEncoder.matches(managerLoginReq.getPassword(), manager.get().getPassword()))

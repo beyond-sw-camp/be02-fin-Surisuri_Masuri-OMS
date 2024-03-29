@@ -29,7 +29,7 @@ public class StoreSchedulingService {
 
         if(expiredFoodProducts.isEmpty())
         {
-            throw new ContainerStockException(ErrorCode.ContainerStock_002,("No Product for Discard."));
+            throw new ContainerStockException(ErrorCode.ContainerStock_002,("폐기할 상품이 존재하지 않습니다."));
         }
 
         // 조회된 상품들을 폐기 처리합니다.
@@ -51,7 +51,7 @@ public class StoreSchedulingService {
             discardedProductsDTO.add(dto);
         }
 
-        return BaseResponse.successResponse("유통기한이 1주일 남은 식품 상품들을 폐기 처리하였습니다.", discardedProductsDTO);
+        return BaseResponse.successResponse("유통 기한이 1주일 남은 식품들을 폐기 처리하였습니다.", discardedProductsDTO);
     }
 
 }

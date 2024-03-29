@@ -100,7 +100,7 @@ public class OrdersService {
                             .merchantUid(orders.getMerchantUid())
                             .build();
 
-                    return BaseResponse.successResponse("주문 내역 조회 성공", ordersListRes);
+                    return BaseResponse.successResponse("주문 내역 조회를 성공했습니다.", ordersListRes);
                 }
             }
         }
@@ -186,7 +186,7 @@ public class OrdersService {
 
         ordersRepository.save(orders);
 
-        return BaseResponse.successResponse("배송 상태 변경 성공", null);
+        return BaseResponse.successResponse("배송 상태 변경을 성공했습니다.", null);
     }
 
     public Integer selectContainer(String productName, String storeAddr) {
@@ -246,7 +246,7 @@ public class OrdersService {
                 .updatedAt(orders.getUpdatedAt())
                 .build();
 
-        return BaseResponse.successResponse("요청 성공", ordersShowDeliveryStatusRes);
+        return BaseResponse.successResponse("요청 성공했습니다.", ordersShowDeliveryStatusRes);
     }
 
     public BaseResponse list(String token, Integer page, Integer size) {
@@ -316,10 +316,9 @@ public class OrdersService {
                     ordersListResList.add(ordersListRes);
                 }
             }
-
-            return BaseResponse.successResponse("상품 리스트 불러오기 성공", ordersListResList);
+            return BaseResponse.successResponse("상품 목록 조회를 성공했습니다.", ordersListResList);
         }
-        return BaseResponse.failResponse(444,"상품 리스트 불러오기 싶패");
+        return BaseResponse.failResponse(444,"상품 목록 조회를 실패했습니다.");
     }
 
     public void create(String payMethod, Long cartIdx, String merchantUid, Long amount, Store store) {

@@ -36,28 +36,32 @@
   </div>
 </template>
 
+User
 <script>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useUserStore } from '../../stores/userStore.js';
-
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "../../stores/userStore.js";
+import { getErrorMessage } from "../utils/error.js";
 export default {
   setup() {
     const router = useRouter();
     const userStore = useUserStore(); // Pinia 스토어 사용
 
-    const userEmail = ref('');
-    const userPassword = ref('');
+    const userEmail = ref("");
+    const userPassword = ref("");
 
     const loginSubmit = async () => {
-      const success = await userStore.login({id: userEmail.value, password: userPassword.value });
-      if (success) {
-        alert('로그인 성공'); // 로그인 성공 알림
-        console.log('로그인 성공');
-        router.push('/home');
+      const result = await userStore.login({
+        id: userEmail.value,
+        password: userPassword.value,
+      });
+      if (result === true) {
+        alert("로그인 성공"); // 로그인 성공 알림
+        router.push("/home");
       } else {
-        alert('로그인 실패. 이메일 또는 비밀번호를 확인해주세요.'); // 로그인 실패 알림
-        console.log('로그인 실패');
+        // getErrorMessage 함수를 사용하여 에러 메시지를 얻음
+        const errorMessage = getErrorMessage(result); // 결과값이 에러 코드일 것임
+        alert(errorMessage); // 에러 메시지를 알림 창으로 표시
       }
     };
 
@@ -65,7 +69,6 @@ export default {
   },
 };
 </script>
-
 
 <style>
 #layoutAuthentication_content {

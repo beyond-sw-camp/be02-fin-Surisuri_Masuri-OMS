@@ -159,31 +159,36 @@ public class UserService implements UserDetailsService {
         {
             Optional<Store> store = storeRepository.findByStoreName(user.get().getStore().getStoreName());
 
-            List<StoreStock> storeStockList = store.get().getStoreStocks();
+            if (!store.get().getStoreStocks().isEmpty()) {
+                List<StoreStock> storeStockList = store.get().getStoreStocks();
 
-            for(int i = 0 ; i< storeStockList.size(); i++) {
-                StoreStock storeStock = storeStockList.get(i);
+                for (int i = 0; i < storeStockList.size(); i++) {
+                    StoreStock storeStock = storeStockList.get(i);
 
-                if (storeStock.getIsDiscarded().equals(true)) {
-                    DiscardedProduct discardedProduct = DiscardedProduct
-                            .builder()
-                            .productName(storeStock.getProduct().getProductName())
-                            .expiredDate(storeStock.getExpiredAt())
-                            .build();
+                    if (storeStock.getIsDiscarded().equals(true)) {
+                        DiscardedProduct discardedProduct = DiscardedProduct
+                                .builder()
+                                .productName(storeStock.getProduct().getProductName())
+                                .expiredDate(storeStock.getExpiredAt())
+                                .build();
 
-                    discardedProduct2.add(discardedProduct);
+                        discardedProduct2.add(discardedProduct);
+                    }
+                    if (discardedProduct2.size() > 0) {
+                        loginRes = LoginRes.builder()
+                                .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
+                                .discardedProduct(discardedProduct2)
+                                .build();
+                    } else {
+                        loginRes = LoginRes.builder()
+                                .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
+                                .build();
+                    }
                 }
-                if (discardedProduct2.size() > 0) {
-                    loginRes = LoginRes.builder()
-                            .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
-                            .discardedProduct(discardedProduct2)
-                            .build();
-                }
-                else {
-                    loginRes = LoginRes.builder()
-                            .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
-                            .build();
-                }
+            } else {
+                loginRes = LoginRes.builder()
+                        .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
+                        .build();
             }
             return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
         }
@@ -263,7 +268,7 @@ public class UserService implements UserDetailsService {
         }
         else
             throw new ManagerException(ErrorCode.UserUpdate_001,
-                    String.format("잘못된 회원 정보를 입력했습니다."));
+                    String.format("잘못된 형식의 회원 정보입니다."));
     }
 
     // 회원 비밀번호 찾기 기능
@@ -293,11 +298,10 @@ public class UserService implements UserDetailsService {
                 BaseResponse baseResponse = BaseResponse.successResponse("가입하신 이메일로 비밀번호 재설정 링크를 보내드렸습니다.", findUserPasswordRes);
 
                 return baseResponse;
-            } else {
-
-                throw new ManagerException(ErrorCode.UserLogin_003,
-                        String.format("가입되지 않은 이메일입니다."));
             }
+            else
+                throw new ManagerException(ErrorCode.UserEmail_004,
+                        String.format("가입되지 않은 이메일입니다."));
 
         }
 
