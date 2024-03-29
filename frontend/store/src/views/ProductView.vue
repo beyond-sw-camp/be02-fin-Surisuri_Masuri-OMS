@@ -71,7 +71,7 @@ export default {
     async fetchProducts() {
       try {
         const token = sessionStorage.getItem("token");
-        const response = await axios.get("http://192.168.0.45/product/list", {
+        const response = await axios.get("http://121.140.125.34:11113/api/product/list", {
           params: {
             page: 1,
             size: 5,
@@ -89,7 +89,7 @@ export default {
       try {
         const token = sessionStorage.getItem("token");
         // GET 요청을 보내고 응답을 변수에 저장합니다.
-        const response = await axios.get("http://192.168.0.45/orders/list", {
+        const response = await axios.get("http://121.140.125.34:11113/api/orders/list", {
           params: {
             page: 1,
             size: 5,
@@ -118,7 +118,7 @@ export default {
       productQuantity: product.purchaseQuantity,
     };
 
-    const response = await axios.post("http://192.168.0.45/cart/addcart", CartCreateReq, {
+    const response = await axios.post("http://121.140.125.34:11113/api/cart/addcart", CartCreateReq, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

@@ -58,7 +58,7 @@ export default {
       }
       try {
         await axios.patch(
-          "http://192.168.0.45/question/update",
+          "http://121.140.125.34:11113/api/question/update",
           {
             idx: this.questionIdx,
             title: this.questionTitle,
@@ -89,7 +89,7 @@ export default {
         return;
       }
       try {
-        await axios.delete(`http://192.168.0.45/question/delete?idx=${this.questionIdx}`, {
+        await axios.delete(`http://121.140.125.34:11113/api/question/delete?idx=${this.questionIdx}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
