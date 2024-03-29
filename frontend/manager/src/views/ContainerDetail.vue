@@ -42,7 +42,7 @@ export default {
     async fetchData(containerIdx) {
       try {
         // 두 번째 템플릿으로 전달된 컨테이너의 idx 값을 사용하여 데이터를 받아옴
-        const response = await axios.get(`http://localhost:8080/container/singlestock?containerIdx=${containerIdx}`);
+        const response = await axios.get(`http://192.168.0.44/api/container/singlestock?containerIdx=${containerIdx}`);
         this.containerss = response.data.result; // 받아온 데이터를 containerss에 저장
       } catch (error) {
         console.error("Error fetching data:", error);
