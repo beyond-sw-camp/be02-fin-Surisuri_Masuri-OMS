@@ -30,7 +30,7 @@ public class ContainerSchedulingService {
 
         if(expiredFoodProducts.isEmpty())
         {
-            throw new ContainerStockException(ErrorCode.ContainerStock_002,("No Product for Discard."));
+            throw new ContainerStockException(ErrorCode.ContainerStock_002,("페기할 상품이 존재하지 않습니다."));
         }
 
         // 조회된 상품들을 폐기 처리합니다.
