@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 @Builder
 public class LoginReq {
 
-    @Pattern(regexp = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$", message = "올바른 이메일 형식(test@example.com)으로 입력해야 합니다.")
+    @Pattern(regexp = "^[a-zA-Z0-9]{4,12}$", message = "아이디는 영문자와 숫자를 포함한 4~12글자여야 합니다.")
     String id;
 
     @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$",message = "잘못된 비밀번호 형식입니다.")
