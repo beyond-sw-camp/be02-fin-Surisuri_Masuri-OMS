@@ -152,6 +152,7 @@ public class QuestionService {
                 answerRepository.save(Answer.builder()
                         .manager(manager)
                         .answerContent(req.getAnswerContent())
+                        .question(question)
                         .build());
 
                 question.setStatus(true);
