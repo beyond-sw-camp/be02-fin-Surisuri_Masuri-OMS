@@ -28,9 +28,10 @@
 <br>
 
 ### 💻 Architecture
-<img src = "../img/systemArchitecture.png">
 ---
+
 ### System Architecture
+<img src = "../img/systemArchitecture.png">
 
 ### Cluster Architecture
 <img src = "">
