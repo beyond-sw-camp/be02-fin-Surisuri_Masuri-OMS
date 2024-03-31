@@ -139,7 +139,8 @@ public class CartService {
 
             return BaseResponse.successResponse("카트 목록 조회를 성공했습니다.", cartListResList);
         }
-        return BaseResponse.successResponse("카트 목록이 존재하지 않습니다", null);
+        throw new ManagerException(ErrorCode.CartList_004,
+                String.format("카트 목록 조회에 실패했습니다."));
     }
 
 
@@ -160,8 +161,8 @@ public class CartService {
                         return BaseResponse.successResponse("카트에 담긴 상품을 삭제했습니다.", null);
                     }
                 }
-                return BaseResponse.successResponse("카트에 존재하지 않는 상품입니다.", null);
-
+                throw new ManagerException(ErrorCode.CartDelete_003,
+                        String.format("카트 정보가 존재하지 않습니다."));
             } else
                 throw new ManagerException(ErrorCode.CartDelete_003,
                         String.format("카트 정보가 존재하지 않습니다."));

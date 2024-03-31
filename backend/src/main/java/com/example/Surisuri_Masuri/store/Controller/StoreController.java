@@ -29,7 +29,7 @@ public class StoreController {
     }
 
     // 가맹점 검색 조회 - Search
-    @PostMapping("/store/search")
+    @GetMapping("/store/search")
     public ResponseEntity StoreSearch(@RequestHeader(value = "Authorization") String token, @RequestBody StoreSearchReq storeSearchReq)
     {
         return ResponseEntity.ok().body(storeService.StoreSearch(token,storeSearchReq));
