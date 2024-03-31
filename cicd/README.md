@@ -28,7 +28,7 @@
 <br>
 
 ### 💻 Architecture
-
+<img src = "../img/systemArchitecture.png">
 ---
 ### System Architecture
 
