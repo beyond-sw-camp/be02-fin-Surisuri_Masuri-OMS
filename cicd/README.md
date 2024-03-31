@@ -31,7 +31,6 @@
 
 ---
 ### System Architecture
-<img src = "../img/systemArchitecture.png">
 
 ### Cluster Architecture
 <img src = "">
