@@ -112,6 +112,7 @@ public enum ErrorCode {
 
     // OrdersPayment
     OrdersPayment_001(3109, HttpStatus.BAD_REQUEST, "금액이 일치하지 않습니다."),
+    OrdersPayment_002(3117, HttpStatus.BAD_REQUEST, "결제를 실패했습니다."),
 
     //RefundRequest
     RefundRequest_001(3110, HttpStatus.BAD_REQUEST, "배송이 이미 시작되어 주문 취소가 불가능합니다."),
