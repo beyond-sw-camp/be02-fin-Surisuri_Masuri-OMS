@@ -1,6 +1,8 @@
 package com.example.Surisuri_Masuri.orders.controller;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.exception.EntityException.UserException;
+import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersRefundReq;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersUpdateDeliveryReq;
@@ -24,8 +26,8 @@ public class OrdersController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return ResponseEntity.ok().body(BaseResponse.failResponse(500,"결제 실패"));
+        throw new UserException(ErrorCode.OrdersPayment_002,
+                String.format("결제를 실패했습니다."));
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/refund")
@@ -35,8 +37,8 @@ public class OrdersController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return ResponseEntity.ok().body(BaseResponse.failResponse(500,"결제 실패"));
+        throw new UserException(ErrorCode.OrdersPayment_002,
+                String.format("결제를 실패했습니다."));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/list")

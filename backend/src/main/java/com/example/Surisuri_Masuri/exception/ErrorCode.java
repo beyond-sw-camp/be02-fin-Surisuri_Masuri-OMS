@@ -101,14 +101,21 @@ public enum ErrorCode {
     // Delivery_003(3032, HttpStatus.BAD_REQUEST, "잘못된 형식의 날짜 값입니다."),
 
     // OrdersList
-    // OrdersList_002(3033, HttpStatus.BAD_REQUEST, "잘못된 페이지 번호입니다."),
+    OrdersList_001(3108, HttpStatus.BAD_REQUEST, "상품 목록이 존재하지 않습니다."),
 
     // OrdersCreate
     OrdersCreate_002(3033, HttpStatus.BAD_REQUEST, "카트 정보가 존재하지 않습니다."),
     OrdersCreate_003(3034, HttpStatus.BAD_REQUEST, "카트가 비어있습니다."),
 
+    //OrdersMerchant
+    OrdersMerchant_001(3107, HttpStatus.BAD_REQUEST, "merchantUid가 일치하는 주문 내역이 없습니다."),
+
     // OrdersPayment
-    // OrdersPayment_002(3034, HttpStatus.BAD_REQUEST, "카트가 비어있습니다."),
+    OrdersPayment_001(3109, HttpStatus.BAD_REQUEST, "금액이 일치하지 않습니다."),
+    OrdersPayment_002(3117, HttpStatus.BAD_REQUEST, "결제를 실패했습니다."),
+
+    //RefundRequest
+    RefundRequest_001(3110, HttpStatus.BAD_REQUEST, "배송이 이미 시작되어 주문 취소가 불가능합니다."),
 
     // CartCreate
     CartCreate_002(3035, HttpStatus.BAD_REQUEST, "카트에 상품 정보가 존재하지 않습니다."),
@@ -128,6 +135,7 @@ public enum ErrorCode {
     // CartList
     CartList_002(3041, HttpStatus.BAD_REQUEST, "카트 정보가 존재하지 않습니다."),
     CartList_003(3042, HttpStatus.BAD_REQUEST, "카트 정보 조회에 실패했습니다."),
+    CartList_004(3106, HttpStatus.BAD_REQUEST, "카트 목록 조회에 실패했습니다."),
 
     // NoticeCreate
     // NoticeCreate_002(3043, HttpStatus.BAD_REQUEST, "잘못된 형식의 카테고리입니다."),
@@ -230,6 +238,15 @@ public enum ErrorCode {
 
     // StockDelete
     StockDelete_002(3093, HttpStatus.BAD_REQUEST, "재고 정보가 존재하지 않습니다."),
+
+    // StoreStock
+    StoreStock_001(3111, HttpStatus.BAD_REQUEST, "가맹점 재고 등록을 실패했습니다."),
+    StoreStock_002(3112, HttpStatus.BAD_REQUEST, "가맹점 재고 목록을 조회를 실패했습니다."),
+    StoreStock_003(3113, HttpStatus.BAD_REQUEST, "가맹점 재고 단일 조회를 실패했습니다."),
+    StoreStock_004(3114, HttpStatus.BAD_REQUEST, "가맹점 재고 수정을 실패했습니다."),
+    StoreStock_005(3115, HttpStatus.BAD_REQUEST, "가맹점 재고 삭제를 실패했습니다."),
+    StoreStock_006(3116, HttpStatus.BAD_REQUEST, "폐기 처리 대상이 존재하지 않습니다."),
+
 
     // ContainerList
     ContainerList_002(3094, HttpStatus.BAD_REQUEST, "페이지 크기는 1 이상이어야 합니다."),
