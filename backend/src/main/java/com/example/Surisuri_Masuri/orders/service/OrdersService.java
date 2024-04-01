@@ -10,6 +10,8 @@ import com.example.Surisuri_Masuri.container.model.entity.Container;
 import com.example.Surisuri_Masuri.container.model.entity.ContainerStock;
 import com.example.Surisuri_Masuri.container.repository.ContainerRepository;
 import com.example.Surisuri_Masuri.container.repository.ContainerStockRepository;
+import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
+import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
@@ -104,7 +106,8 @@ public class OrdersService {
                 }
             }
         }
-        return BaseResponse.failResponse(444, "merchantUid가 일치하는 주문 내역이 없습니다");
+        throw new ContainerException(ErrorCode.OrdersMerchant_001,
+                String.format("merchantUid가 일치하는 주문 내역이 없습니다."));
     }
 
     public BaseResponse updateOrdersDelivery(OrdersUpdateDeliveryReq req) {
@@ -318,7 +321,8 @@ public class OrdersService {
             }
             return BaseResponse.successResponse("상품 목록 조회를 성공했습니다.", ordersListResList);
         }
-        return BaseResponse.failResponse(444,"상품 목록 조회를 실패했습니다.");
+        throw new ContainerException(ErrorCode.OrdersList_001,
+                String.format("상품 목록이 존재하지 않습니다."));
     }
 
     public void create(String payMethod, Long cartIdx, String merchantUid, Long amount, Store store) {
@@ -390,8 +394,8 @@ public class OrdersService {
             for (CartDetail cartDetail: cartDetailList) {
                 cartService.delete(foundUser, cartIdx, cartDetail.getProduct().getProductName());
             }
-
-            return BaseResponse.failResponse(444, "금액 불일치");
+            throw new ContainerException(ErrorCode.OrdersPayment_001,
+                    String.format("금액이 일치하지 않습니다."));
         }
 
         create(payMethod ,cartIdx, merchantUid, amount, foundUser.getStore());
@@ -417,7 +421,10 @@ public class OrdersService {
             orders = ordersResult.get();
 
             if (!orders.getDeliveryStatus().equals("배송 전")) {
-                return BaseResponse.failResponse(444, "배송이 이미 시작되어 주문 취소가 불가능합니다");
+
+                throw new ContainerException(ErrorCode.RefundRequest_001,
+                        String.format("배송이 이미 시작되어 주문 취소가 불가능합니다."));
+
             }
         }
 
