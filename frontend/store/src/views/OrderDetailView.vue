@@ -67,6 +67,20 @@
               </tr>
             </tbody>
           </table>
+          <nav aria-label="Order pagination">
+      <ul class="pagination justify-content-end">
+        <li class="page-item" :class="{ disabled: currentPage <= 1 }">
+          <button class="page-link" @click="prevPage" :disabled="currentPage <= 1">&laquo;</button>
+        </li>
+        <!-- 현재 페이지 표시, 선택적으로 다른 페이지 번호도 표시 가능 -->
+        <li class="page-item active" aria-current="page">
+          <span class="page-link">{{ currentPage }}</span>
+        </li>
+        <li class="page-item" :class="{ disabled: currentPage >= totalPages }">
+          <button class="page-link" @click="nextPage" :disabled="currentPage >= totalPages">&raquo;</button>
+        </li>
+      </ul>
+    </nav>
         </div>
       </div>
     </div>
@@ -79,59 +93,73 @@ import axios from "axios";
 export default {
   data() {
     return {
-      ordersDetailResult: [], // 주문 상세 정보를 저장할 배열
+      ordersDetailResult: [],
       totalOrders: 0,
       todayOrders: 0,
       shippingOrders: 0,
-      nonShippingOrders: 0, // 추가: 배송 전인 주문 수
+      nonShippingOrders: 0,
+      currentPage: 1, // 현재 페이지 번호
+      pageSize: 5, // 페이지 당 주문 수
+      totalPages: 25, // 전체 페이지 수
     };
   },
   async mounted() {
-    try {
-      const token = sessionStorage.getItem("token");
+    this.fetchOrders(); // 페이지 마운트 시 주문 목록 불러오기
+  },
+  methods: {
+    async fetchOrders() {
+      try {
+        const token = sessionStorage.getItem("token");
+        const response = await axios.get("http://121.140.125.34:11113/api/orders/list", {
+          params: {
+            page: this.currentPage,
+            size: this.pageSize,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      const response = await axios.get("http://121.140.125.34:11113/api/orders/list", {
-        params: {
-          page: 1,
-          size: 5,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }); // 서버에서 주문 상세 정보 받아오기
+        // 여기서 전체 주문 수와 전체 페이지 수 계산 (예: response에서 전체 주문 수 받아오기)
+        this.totalPages = Math.ceil(response.data.totalCount / this.pageSize); // totalCount는 예시입니다.
 
-      // 중복된 주문을 제거하기 위해 Set을 사용하여 주문 번호를 추출
-      const uniqueOrderNumbers = new Set();
-      const uniqueOrders = [];
+        const uniqueOrderNumbers = new Set();
+        const uniqueOrders = [];
 
-      response.data.result.forEach((order) => {
-        if (!uniqueOrderNumbers.has(order.merchantUid)) {
-          uniqueOrderNumbers.add(order.merchantUid);
-          uniqueOrders.push(order);
-        }
-      });
+        response.data.result.forEach((order) => {
+          if (!uniqueOrderNumbers.has(order.merchantUid)) {
+            uniqueOrderNumbers.add(order.merchantUid);
+            uniqueOrders.push(order);
+          }
+        });
 
-      this.ordersDetailResult = uniqueOrders; // 중복 제거된 주문 정보를 저장
+        this.ordersDetailResult = uniqueOrders;
 
-      // 전체 주문 수 설정
-      this.totalOrders = this.ordersDetailResult.length;
-
-      // 오늘 주문 수 설정
-      const today = new Date();
-      const todayStr = today.toISOString().slice(0, 10);
-      this.todayOrders = this.ordersDetailResult.filter((order) => order.createdDate.slice(0, 10) === todayStr).length;
-
-      // 배송 중인 주문 수 설정
-      this.shippingOrders = this.ordersDetailResult.filter((order) => order.deliveryStatus === "배송중").length;
-
-      // 배송 전인 주문 수 설정
-      this.nonShippingOrders = this.ordersDetailResult.filter((order) => order.deliveryStatus === "배송전").length;
-    } catch (error) {
-      console.error("Error fetching orders detail:", error);
-    }
+        this.totalOrders = this.ordersDetailResult.length;
+        this.calculateOrderStatistics(); // 주문 통계 계산을 별도의 메소드로 분리
+      } catch (error) {
+        console.error("Error fetching orders detail:", error);
+      }
+    },
+    calculateOrderStatistics() {
+      // 오늘 주문 수, 배송 중인 주문 수, 배송 전인 주문 수 계산하는 로직을 여기로 이동
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+        this.fetchOrders();
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.fetchOrders();
+      }
+    },
   },
 };
 </script>
+
 
 <style scoped>
 /* 필요한 스타일 추가 */

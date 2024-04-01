@@ -142,7 +142,7 @@ export default {
 
       const result = await userStore.createAccount();
       if (result === true) {
-        alert("회원가입이 성공적으로 완료되었습니다.");
+        alert("회원가입이 성공적으로 완료되었습니다. 이메일 인증을 완료해주세요");
         router.push('/login');
       } else {
         const errorMessage = getErrorMessage(result); // 에러 코드를 이용해 에러 메시지를 얻음
