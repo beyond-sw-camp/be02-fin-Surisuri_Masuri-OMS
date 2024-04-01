@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia';
-import axios from 'axios';
+import { defineStore } from "pinia";
+import axios from "axios";
 
-const baseURL = 'http://121.140.125.34:11113/api'
+const baseURL = "http://localhost:8080";
 
 export const useUserStore = defineStore({
   id: "user",
@@ -31,10 +31,15 @@ export const useUserStore = defineStore({
           }
         );
         console.log("회원가입 성공", response.data);
-        // 성공 처리 로직 추가
+        if (response.data.isSuccess) {
+          // isSuccess 값이 true인 경우, 회원가입 성공으로 간주
+          return true; // 성공적으로 회원가입 완료
+        } else {
+          
+          return response.data.code || "unknown_error";
+        }
       } catch (error) {
         console.error("회원가입 실패", error);
-        // 여기서 에러 코드 추출
         if (error.response && error.response.data && error.response.data.code) {
           // 서버로부터 받은 응답에서 에러 코드가 있을 경우
           return error.response.data.code; // 에러 코드 반환
@@ -42,6 +47,7 @@ export const useUserStore = defineStore({
         return "unknown_error"; // 에러 코드가 없는 경우 기본 에러 코드 반환
       }
     },
+
     async login(loginReq) {
       try {
         const response = await axios.post(`${baseURL}/user/login`, loginReq, {
