@@ -1,6 +1,8 @@
 package com.example.Surisuri_Masuri.storeStock.Service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
+import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
+import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
@@ -95,10 +97,11 @@ public class StoreStockService {
                     .expiredAt(storeStock.getExpiredAt())
                     .storeStockIdx(storeStock.getIdx())
                     .build();
-            return BaseResponse.successResponse("수정된 회원정보입니다.", storeStockCreateRes);
+            return BaseResponse.successResponse("가맹점 재고 등록을 성공했습니다.", storeStockCreateRes);
         }
         else
-            return BaseResponse.failResponse(7000, "잘못된 요청입니다");
+        throw new ContainerException(ErrorCode.StoreStock_001,
+                String.format("가맹점 재고 등록을 실패했습니다."));
     }
 
     // 가맹점 재고 리스트 조회
@@ -146,10 +149,11 @@ public class StoreStockService {
                 }
             }
             // DtoToRes
-            return BaseResponse.successResponse("요청 성공", storeSearchResList);
+            return BaseResponse.successResponse("가맹점 재고 목록을 조회했습니다.", storeSearchResList);
         }
-        else return BaseResponse.failResponse(7000, "요청 실패");
-
+        else
+        throw new ContainerException(ErrorCode.StoreStock_002,
+                String.format("가맹점 재고 목록을 조회를 실패했습니다."));
     }
 
     // 가맹점 재고 단일 조회
@@ -185,10 +189,11 @@ public class StoreStockService {
                     .build();
 
             // DtoToRes
-            return BaseResponse.successResponse("요청 성공", storeStockSearchRes);
+            return BaseResponse.successResponse("가맹점 재고 단일 조회를 성공했습니다.", storeStockSearchRes);
         }
-        else return BaseResponse.failResponse(7000, "요청 실패");
-
+        else
+        throw new ContainerException(ErrorCode.StoreStock_003,
+                String.format("가맹점 재고 단일 조회를 실패했습니다."));
     }
 
     // 가맹점 재고 수정
@@ -218,7 +223,7 @@ public class StoreStockService {
                             .build();
 
                     // DtoToRes
-                    return BaseResponse.successResponse("요청 성공", storeStockUpdateRes);
+                    return BaseResponse.successResponse("가맹점 재고 수정을 성공했습니다.", storeStockUpdateRes);
                 }
             }
 
@@ -231,10 +236,12 @@ public class StoreStockService {
 //
 //            storeStockRepository.save(storeStock2);
 
-            return BaseResponse.failResponse(444, "회원 정보가 존재하지 않습니다");
+            throw new ContainerException(ErrorCode.UserEmail_004,
+                    String.format("가입되지 않은 회원입니다."));
         }
-        else return BaseResponse.failResponse(7000, "요청 실패");
-
+        else
+        throw new ContainerException(ErrorCode.StoreStock_004,
+                String.format("가맹점 재고 수정을 실패했습니다."));
     }
     // 가맹점 재고 삭제
     @Transactional
@@ -258,10 +265,11 @@ public class StoreStockService {
                     .build();
 
             // DtoToRes
-            return BaseResponse.successResponse("요청 성공", storeStockDeleteRes);
+            return BaseResponse.successResponse("가맹점 재고를 삭제를 성공했습니다.", storeStockDeleteRes);
         }
-        else return BaseResponse.failResponse(7000, "요청 실패");
-
+        else
+        throw new ContainerException(ErrorCode.StoreStock_005,
+                String.format("가맹점 재고 삭제를 실패했습니다."));
     }
 
     @Transactional
@@ -312,7 +320,8 @@ public class StoreStockService {
 
             return BaseResponse.successResponse("유통기한이 1주일 남은 음식 재고들을 폐기 처리했습니다.", expiredStocks);
         } else {
-            return BaseResponse.failResponse(7000, "요청 실패");
+            throw new ContainerException(ErrorCode.StoreStock_006,
+                    String.format("폐기 처리 대상이 존재하지 않습니다."));
         }
     }
 
