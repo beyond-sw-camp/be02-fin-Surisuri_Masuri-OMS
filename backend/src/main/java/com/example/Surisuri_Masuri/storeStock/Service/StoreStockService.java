@@ -17,6 +17,9 @@ import com.example.Surisuri_Masuri.storeStock.Model.ResDtos.*;
 import com.example.Surisuri_Masuri.storeStock.Repository.StoreStockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -117,17 +120,17 @@ public class StoreStockService {
 
         if (user.isPresent()) {
 
-            Store store2 = store.get();
+//            Store store2 = store.get();
 
-            List<StoreStock> storeStocksList = store2.getStoreStocks();
+//            List<StoreStock> storeStocksList = store2.getStoreStocks();
 
-            // Pageable pageable = PageRequest.of(page-1,size);
+            Pageable pageable = PageRequest.of(page-1,size);
 
-            // Page<StoreStock> result = storeStockRepository.findList(pageable);
+            Page<StoreStock> result = storeStockRepository.findList(pageable);
 
             List<StoreStockReadRes> storeSearchResList = new ArrayList<>();
 
-            for (StoreStock storeStock : storeStocksList) {
+            for (StoreStock storeStock : result) {
 
                 if (!storeStock.getIsDiscarded()) {
                     String productName = storeStock.getProduct().getProductName();
