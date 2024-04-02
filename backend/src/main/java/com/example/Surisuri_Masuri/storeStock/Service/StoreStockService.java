@@ -119,11 +119,6 @@ public class StoreStockService {
         Optional<Store> store = storeRepository.findByStoreUuid(storeUuid);
 
         if (user.isPresent()) {
-
-//            Store store2 = store.get();
-
-//            List<StoreStock> storeStocksList = store2.getStoreStocks();
-
             Pageable pageable = PageRequest.of(page-1,size);
 
             Page<StoreStock> result = storeStockRepository.findList(pageable);
@@ -132,24 +127,22 @@ public class StoreStockService {
 
             for (StoreStock storeStock : result) {
 
-                if (!storeStock.getIsDiscarded()) {
-                    String productName = storeStock.getProduct().getProductName();
+                String productName = storeStock.getProduct().getProductName();
 
-                    StoreStockDto storeStockDto = StoreStockDto
-                            .builder()
-                            .productName(productName)
-                            .expiredAt(storeStock.getExpiredAt())
-                            .build();
+                StoreStockDto storeStockDto = StoreStockDto
+                        .builder()
+                        .productName(productName)
+                        .expiredAt(storeStock.getExpiredAt())
+                        .build();
 
-                    storeStockReadRes = StoreStockReadRes
-                            .builder()
-                            .storeStockDto(storeStockDto)
-                            .stockQuantitiy(storeStock.getStockQuantitiy())
-                            .storeStockIdx(storeStock.getIdx())
-                            .build();
+                storeStockReadRes = StoreStockReadRes
+                        .builder()
+                        .storeStockDto(storeStockDto)
+                        .stockQuantitiy(storeStock.getStockQuantitiy())
+                        .storeStockIdx(storeStock.getIdx())
+                        .build();
 
-                    storeSearchResList.add(storeStockReadRes);
-                }
+                storeSearchResList.add(storeStockReadRes);
             }
             // DtoToRes
             return BaseResponse.successResponse("가맹점 재고 목록을 조회했습니다.", storeSearchResList);
