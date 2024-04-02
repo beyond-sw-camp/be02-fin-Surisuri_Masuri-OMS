@@ -1,5 +1,6 @@
 package com.example.Surisuri_Masuri.storeStock.Repository.QueryDsl;
 
+import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import com.example.Surisuri_Masuri.storeStock.Model.Entity.QStoreStock;
 import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
 import org.springframework.data.domain.Page;
@@ -17,17 +18,16 @@ public class StoreStockRepositoryCustomImpl extends QuerydslRepositorySupport im
     }
 
     @Override
-    public Page<StoreStock> findList(Pageable pageable) {
-        QStoreStock storeStock= new QStoreStock("storeStock");
+    public Page<Store> findList(Pageable pageable) {
+        QStore store= new QStore("store");
 
-        List<StoreStock> result = from(storeStock)
-                .where(storeStock.isDiscarded.eq(false))
+        List<Store> result = from(store)
+                .where(store.storeAddr.isNotNull())
                 .distinct()
-                .offset(pageable.getOffset())
+                .offset(pageable.getPageNumber() * pageable.getPageSize())
                 .limit(pageable.getPageSize())
-                .fetch().stream().collect(Collectors.toList());
+                .fetch();
 
-        return new PageImpl<>(result, pageable, pageable.getPageSize());
+        return new PageImpl<>(result, pageable, result.size());
     }
-
 }
