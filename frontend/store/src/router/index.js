@@ -42,8 +42,9 @@ const routes = [
     name: 'loginreset',
     component: ResetLoginView,
   },
+  
   {
-    path: '/passwordreset',
+    path: '/passwordreset/:idx',
     name: 'passwordReset',
     component: ResetPasswordView,
   },
