@@ -40,7 +40,7 @@ public class UserService implements UserDetailsService {
 
     private final EmailService emailService;
 
-    Optional<User> compare1;
+    List<User> compare1;
     Optional<User> compare2;
 
     UserFindEmailRes userFindEmailRes;
@@ -201,18 +201,22 @@ public class UserService implements UserDetailsService {
         compare1 = userRepository.findByUserName(userFindEmailReq.getUserName());
         compare2 = userRepository.findByUserPhoneNo(userFindEmailReq.getUserPhoneNo());
 
-        if(compare1.isEmpty() || compare2.isEmpty()) {
+        if (compare1.isEmpty() || compare2.isEmpty()) {
             throw new ManagerException(ErrorCode.UserEmail_004,
                     String.format("가입되지 않은 회원입니다."));
         }
-        if (compare1.equals(compare2)) {
-             userFindEmailRes = UserFindEmailRes
-                    .builder()
-                    .userEmail(compare1.get().getUserEmail())
-                    .build();
-        }
-            return BaseResponse.successResponse("요청하신 회원 정보입니다.", userFindEmailRes);
 
+        for (User user :compare1) {
+            if (user.equals(compare2.get())) {
+                userFindEmailRes = UserFindEmailRes
+                        .builder()
+                        .userEmail(user.getUserEmail())
+                        .build();
+                return BaseResponse.successResponse("요청하신 회원 정보입니다.", userFindEmailRes);
+            }
+        }
+        throw new ManagerException(ErrorCode.UserEmail_004,
+                String.format("가입되지 않은 회원입니다."));
     }
 
     // 회원정보 수정 기능
@@ -274,12 +278,17 @@ public class UserService implements UserDetailsService {
     // 회원 비밀번호 찾기 기능
     public BaseResponse<FindUserPasswordRes> findPassword(FindUserPasswordReq findUserPasswordReq) {
 
+        List<User> userResults = userRepository.findByUserName(findUserPasswordReq.getUserName());
         Optional<User> userResult = userRepository.findByUserEmail(findUserPasswordReq.getUserEmail());
 
-        if (userResult.isPresent()) {
-            User user = userResult.get();
+        if(userResults.isEmpty() || userResult.isEmpty()) {
+            throw new ManagerException(ErrorCode.UserEmail_004,
+                    String.format("가입되지 않은 회원입니다."));
+        }
 
-            if (user.getUsername() == findUserPasswordReq.getUserName()) {
+        for (User user:userResults) {
+
+            if (user.equals(userResult.get())) {
 
                 Long idx = user.getIdx();
                 String userEmail = user.getUserEmail();
@@ -299,15 +308,10 @@ public class UserService implements UserDetailsService {
 
                 return baseResponse;
             }
-            else
-                throw new ManagerException(ErrorCode.UserEmail_004,
-                        String.format("가입되지 않은 이메일입니다."));
 
         }
-
-        else
-            throw new ManagerException(ErrorCode.UserPassword_004,
-                    String.format("가입되지 않은 회원입니다."));
+        throw new ManagerException(ErrorCode.UserEmail_004,
+                String.format("가입되지 않은 이메일입니다."));
 
     }
 
