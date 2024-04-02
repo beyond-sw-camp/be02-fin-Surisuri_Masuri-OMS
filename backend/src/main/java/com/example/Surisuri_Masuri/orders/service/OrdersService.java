@@ -334,7 +334,7 @@ public class OrdersService {
                 .payMethod(payMethod)
                 .totalPrice(amount)
                 .merchantUid(merchantUid)
-                .deliveryStatus("배송 전")
+                .deliveryStatus("배송전")
                 .build());
 
         for (CartDetail cartDetail: cartDetailList) {
