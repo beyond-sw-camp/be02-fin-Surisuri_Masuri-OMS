@@ -21,6 +21,7 @@ public class StoreRepositoryCustomImpl extends QuerydslRepositorySupport impleme
         QStore store= new QStore("store");
 
         List<Store> result = from(store)
+                .where(store.storeAddr.isNotNull())
                 .distinct()
                 .offset(pageable.getPageNumber() * pageable.getPageSize())
                 .limit(pageable.getPageSize())
