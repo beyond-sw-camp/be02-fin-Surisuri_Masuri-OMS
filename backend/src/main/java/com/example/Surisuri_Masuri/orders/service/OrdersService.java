@@ -80,11 +80,12 @@ public class OrdersService {
     @Value("${jwt.secret-key}")
     private String secretKey;
 
-    public BaseResponse listDetailByMerchantUid(String merchantUid, User user) {
-        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
-        user = userResult.get();
+    public BaseResponse listDetailByMerchantUid(String merchantUid, Manager manager) {
+        Optional<Manager> managerResult = managerRepository.findByManagerId(manager.getManagerId());
 
-        for (Orders orders: user.getStore().getOrdersList()) {
+        List<Orders> ordersList = ordersRepository.findAll();
+
+        for (Orders orders: ordersList) {
             List<OrdersDetail> ordersDetailResult = ordersDetailRepository.findByOrdersIdx(orders.getIdx());
 
             for (OrdersDetail ordersDetail : ordersDetailResult) {
