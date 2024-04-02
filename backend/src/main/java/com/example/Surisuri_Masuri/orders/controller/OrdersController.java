@@ -1,8 +1,8 @@
 package com.example.Surisuri_Masuri.orders.controller;
 
-import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.exception.EntityException.UserException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
+import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersRefundReq;
 import com.example.Surisuri_Masuri.orders.model.dto.request.OrdersUpdateDeliveryReq;
@@ -61,8 +61,8 @@ public class OrdersController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{merchantUid}")
     public ResponseEntity listDetailByMerchantUid(@PathVariable String merchantUid,
-                                                  @AuthenticationPrincipal User user) {
+                                                  @AuthenticationPrincipal Manager manager) {
 
-        return ResponseEntity.ok().body(ordersService.listDetailByMerchantUid(merchantUid, user));
+        return ResponseEntity.ok().body(ordersService.listDetailByMerchantUid(merchantUid, manager));
     }
 }
