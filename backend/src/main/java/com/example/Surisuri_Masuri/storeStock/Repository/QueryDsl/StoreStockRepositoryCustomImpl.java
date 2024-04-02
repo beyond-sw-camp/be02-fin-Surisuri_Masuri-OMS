@@ -21,6 +21,7 @@ public class StoreStockRepositoryCustomImpl extends QuerydslRepositorySupport im
         QStoreStock storeStock= new QStoreStock("storeStock");
 
         List<StoreStock> result = from(storeStock)
+                .where(storeStock.isDiscarded.eq(false))
                 .distinct()
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
