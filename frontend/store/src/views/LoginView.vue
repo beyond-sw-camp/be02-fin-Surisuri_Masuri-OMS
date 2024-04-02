@@ -18,7 +18,7 @@
                   </div>
                   <div class="d-flex justify-content-between align-items-center mt-2">
                     <div>
-                      <router-link class="small" to="/loginReset">아이디를 잊으셨나요?</router-link><br>
+                      <router-link class="small" to="/loginreset">아이디를 잊으셨나요?</router-link><br>
                       <router-link class="small me-2" to="/password">비밀번호를 잊으셨나요?</router-link>
                     </div>
                     <button type="submit" class="btn btn-primary">로그인</button>
