@@ -260,7 +260,6 @@ public class OrdersService {
 
         Optional<User> userResult = userRepository.findByUserEmail(email);
         Optional<Manager> managerResult = managerRepository.findByManagerId(managerId);
-        User user = userResult.get();
 
         if (managerResult.isPresent()) {
             Pageable pageable = PageRequest.of(page - 1, size);
@@ -293,6 +292,8 @@ public class OrdersService {
             return BaseResponse.successResponse("상품 리스트 불러오기 성공", ordersListResList);
 
         } else if (userResult.isPresent()) {
+            User user = userResult.get();
+
             Pageable pageable = PageRequest.of(page - 1, size);
 
             Page<Orders> ordersResult = ordersRepository.findListByUserIdx(user.getIdx(), pageable);
