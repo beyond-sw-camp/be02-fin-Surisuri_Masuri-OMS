@@ -198,44 +198,33 @@ public class StoreStockService {
         token = JwtUtils.replaceToken(token);
 
         String email = JwtUtils.getUserEmail(token, secretKey);
-        String storeUuid = JwtUtils.getStoreUuid(token, secretKey);
 
         Optional<User> user = userRepository.findByUserEmail(email);
-        Optional<Store> store = storeRepository.findByStoreUuid(storeUuid);
+
         if (user.isPresent()) {
 
-            List<StoreStock> storeStockResult = storeStockRepository.findByStoreIdx(store.get().getIdx());
+            Optional<StoreStock> storeStockResult = storeStockRepository.findById(storeStockUpdateReq.getIdx());
+            StoreStock storeStock = storeStockResult.get();
 
-            for (StoreStock storeStock : storeStockResult) {
-                if (store.get().getStoreUuid().equals(storeStock.getStore().getStoreUuid())) {
-                    storeStock.setStockQuantitiy(storeStockUpdateReq.getStockQuantity());
+            if (storeStockResult.isPresent()) {
+                storeStock.setStockQuantitiy(storeStockUpdateReq.getStockQuantity());
 
-                    storeStockRepository.save(storeStock);
+                storeStockRepository.save(storeStock);
 
-                    StoreStockUpdateRes storeStockUpdateRes = StoreStockUpdateRes
-                            .builder()
-                            .productName(storeStock.getProduct().getProductName())
-                            .stockQuantity(storeStockUpdateReq.getStockQuantity())
-                            .build();
+                StoreStockUpdateRes storeStockUpdateRes = StoreStockUpdateRes
+                        .builder()
+                        .productName(storeStock.getProduct().getProductName())
+                        .stockQuantity(storeStockUpdateReq.getStockQuantity())
+                        .build();
 
-                    // DtoToRes
-                    return BaseResponse.successResponse("가맹점 재고 수정을 성공했습니다.", storeStockUpdateRes);
-                }
+                // DtoToRes
+                return BaseResponse.successResponse("가맹점 재고 수정을 성공했습니다.", storeStockUpdateRes);
             }
-
-//            Optional<StoreStock> storeStock = storeStockRepository.
-//                    findStoreStockByProduct_IdxAndStore_StoreUuid(storeStockUpdateReq.getIdx(),store.get().getStoreUuid());
-//
-//            StoreStock storeStock2 = storeStock.get();
-//
-//            storeStock2.setStockQuantitiy(storeStockUpdateReq.getStockQuantity());
-//
-//            storeStockRepository.save(storeStock2);
 
             throw new ContainerException(ErrorCode.UserEmail_004,
                     String.format("가입되지 않은 회원입니다."));
         }
-        else
+
         throw new ContainerException(ErrorCode.StoreStock_004,
                 String.format("가맹점 재고 수정을 실패했습니다."));
     }

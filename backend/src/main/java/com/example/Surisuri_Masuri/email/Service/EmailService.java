@@ -49,7 +49,7 @@ public class EmailService {
         message.setTo(sendEmailReq.getEmail());
         message.setSubject("비밀번호 재설정 요청 이메일입니다.");
 
-        message.setText("http://localhost:8081/passwordReset/"
+        message.setText("http://121.140.125.34:11113/passwordReset/"
                 + sendEmailReq.getIdx()
         );
         emailSender.send(message);
