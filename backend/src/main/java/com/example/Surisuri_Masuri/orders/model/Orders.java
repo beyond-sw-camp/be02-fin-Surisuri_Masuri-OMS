@@ -31,7 +31,7 @@ public class Orders {
     @Column(nullable = false)
     private String deliveryStatus;
 
-    @Column(nullable = false)
+    // 여기 nullable 붙이지 마세요 제발
     private String refundReason;
 
     @Column(nullable = false)

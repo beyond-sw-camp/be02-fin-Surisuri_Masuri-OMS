@@ -13,7 +13,7 @@ import java.io.IOException;
 public class StoreScheduler {
     private final StoreSchedulingService storeSchedulingService;
 
-    @Scheduled(cron = "*/30 * 17 * * *\n") // 1초에 1000
+    @Scheduled(cron = "0 */1 * * * *\n") // 1분 간격으로 실행
     public void test() throws IOException {
         System.out.println("test");
         storeSchedulingService.discardExpiredFoodProducts();

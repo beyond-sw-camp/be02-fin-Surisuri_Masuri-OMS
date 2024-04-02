@@ -42,7 +42,7 @@ public class UserController {
 
     // 아이디 찾기
     @GetMapping("/user/findEmail")
-    public ResponseEntity findEmail(@Valid @RequestBody UserFindEmailReq userFindEmailReq) {
+    public ResponseEntity findEmail(@Valid UserFindEmailReq userFindEmailReq) {
         return ResponseEntity.ok().body(userService.findEmail(userFindEmailReq));
     }
 
