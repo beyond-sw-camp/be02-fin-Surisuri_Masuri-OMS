@@ -5,10 +5,7 @@ import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
 import com.example.Surisuri_Masuri.orders.model.Orders;
 import com.example.Surisuri_Masuri.orders.model.OrdersDetail;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
@@ -22,6 +19,7 @@ import java.util.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Setter
 public class Store {
 
     @Id
