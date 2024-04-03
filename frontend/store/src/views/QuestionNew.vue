@@ -1,22 +1,27 @@
 <template>
-  <div class="create-question container py-5">
-    <form @submit.prevent="submitQuestion" class="needs-validation" novalidate>
-      <div class="mb-3">
-        <label for="title" class="form-label">제목:</label>
-        <input id="title" v-model="question.title" type="text" class="form-control" required>
-        <div class="invalid-feedback">
-          제목을 입력해주세요.
-        </div>
+  <div class="container py-5">
+    <!-- 흰색 카드로 감싸기 -->
+    <div class="card">
+      <div class="card-body">
+        <form @submit.prevent="submitQuestion" class="needs-validation" novalidate>
+          <div class="mb-3">
+            <label for="title" class="form-label">제목:</label>
+            <input id="title" v-model="question.title" type="text" class="form-control" required>
+            <div class="invalid-feedback">
+              제목을 입력해주세요.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="content" class="form-label">내용:</label>
+            <textarea id="content" v-model="question.content" class="form-control" rows="3" required></textarea>
+            <div class="invalid-feedback">
+              내용을 입력해주세요.
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">문의사항 제출</button>
+        </form>
       </div>
-      <div class="mb-3">
-        <label for="content" class="form-label">내용:</label>
-        <textarea id="content" v-model="question.content" class="form-control" rows="3" required></textarea>
-        <div class="invalid-feedback">
-          내용을 입력해주세요.
-        </div>
-      </div>
-      <button type="submit" class="btn btn-primary">문의사항 제출</button>
-    </form>
+    </div>
   </div>
 </template>
 
