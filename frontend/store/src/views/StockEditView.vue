@@ -16,17 +16,67 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="product in stockList" :key="product.storeStockDto.productName">
+              <tr
+                v-for="product in stockList"
+                :key="product.storeStockDto.productName"
+              >
                 <td>{{ product.storeStockDto.productName }}</td>
                 <td>{{ product.stockQuantitiy }}</td>
                 <td>
                   <!-- 여기에 재고수량 입력 필드와 수정 버튼을 추가 -->
-                  <input type="number" v-model.number="product.stockQuantitiy" min="0" class="stock-input" />
-                  <button @click="updateStockQuantitiy(product)" class="btn btn-primary">수정</button>
+                  <input
+                    type="number"
+                    v-model.number="product.stockQuantitiy"
+                    min="0"
+                    class="stock-input"
+                  />
+                  <button
+                    @click="updateStockQuantitiy(product)"
+                    class="btn btn-primary"
+                  >
+                    수정
+                  </button>
                 </td>
               </tr>
             </tbody>
           </table>
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-end">
+              <li class="page-item">
+                <a
+                  class="page-link"
+                  href="#"
+                  aria-label="Previous"
+                  @click.prevent="prevRange"
+                >
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li
+                class="page-item"
+                v-for="page in pageRange"
+                :key="page"
+                :class="{ active: page === currentPage }"
+              >
+                <a
+                  class="page-link"
+                  href="#"
+                  @click.prevent="fetchStockList(page)"
+                  >{{ page }}</a
+                >
+              </li>
+              <li class="page-item">
+                <a
+                  class="page-link"
+                  href="#"
+                  aria-label="Next"
+                  @click.prevent="nextRange"
+                >
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>
@@ -40,12 +90,24 @@ export default {
   data() {
     return {
       stockList: [],
-      page: 1,
-      size: 10,
+      currentPage: 1,
+      totalPages: 20, // 실제 서버로부터 받아온 총 페이지 수입니다.
+      pageRangeSize: 5,
     };
   },
+  computed: {
+    pageRange() {
+      const startPage = Math.floor((this.currentPage - 1) / this.pageRangeSize) * this.pageRangeSize + 1;
+      const endPage = Math.min(startPage + this.pageRangeSize - 1, this.totalPages);
+      return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+    },
+  },
+  created() {
+    this.fetchStockList(this.currentPage);
+  },
   methods: {
-    async fetchStockList() {
+    async fetchStockList(page) {
+      this.currentPage = page;
       try {
         const token = sessionStorage.getItem("token");
         console.log("fetchStockList - 사용할 토큰:", token); // 토큰 정보 확인
@@ -54,15 +116,18 @@ export default {
           return;
         }
 
-        const response = await axios.get("http://121.140.125.34:11113/api/stock/list", {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
-          params: {
-            page: this.page,
-            size: this.size,
-          },
-        });
+        const response = await axios.get(
+          "http://121.140.125.34:11113/api/stock/list",
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+            params: {
+              page: this.currentPage,
+              size: 5,
+            },
+          }
+        );
 
         console.log("fetchStockList - 응답 데이터:", response.data); // 응답 데이터 확인
 
@@ -77,7 +142,18 @@ export default {
         console.error("API 호출 중 오류가 발생했습니다.", error);
       }
     },
-
+    nextRange() {
+      const maxPage = Math.ceil(this.currentPage / this.pageRangeSize) * this.pageRangeSize;
+      if (maxPage < this.totalPages) {
+        this.fetchStockList(maxPage + 1);
+      }
+    },
+    prevRange() {
+      const startPage = Math.floor((this.currentPage - 1) / this.pageRangeSize) * this.pageRangeSize;
+      if (startPage >= this.pageRangeSize) {
+        this.fetchStockList(startPage - this.pageRangeSize + 1);
+      }
+    },
     async updateStockQuantitiy(product) {
       try {
         const token = sessionStorage.getItem("token");
@@ -120,9 +196,7 @@ export default {
       }
     },
   },
-  created() {
-    this.fetchStockList();
-  },
+  
 };
 </script>
 
@@ -149,4 +223,3 @@ export default {
   vertical-align: middle; /* 셀의 내용을 수직 중앙에 정렬합니다 */
 }
 </style>
-  
