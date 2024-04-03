@@ -27,6 +27,20 @@
               </tr>
             </tbody>
           </table>
+          <nav aria-label="Page navigation example ">
+          <ul class="pagination justify-content-end">
+            <li class="page-item" :class="{ disabled: pageGroupIndex === 0 }">
+              <a class="page-link" href="#" @click="previousGroup">«</a>
+            </li>
+            <li class="page-item" v-for="page in pageGroup" :key="page" :class="{ active: currentPage === page }">
+              <a class="page-link" href="#" @click="changePage(page)">{{ page }}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#" @click="nextGroup">»</a>
+            </li>
+          </ul>
+        </nav>
+
         </div>
       </div>
     </div>
@@ -40,14 +54,17 @@ export default {
   data() {
     return {
       ordersDetailResult: [], // 주문 상세 정보를 저장할 배열
-      searchQuery: "", // 검색어를 저장할 변수 추가
+      searchQuery: "", 
+      currentPage: 1,
+      pageGroupIndex: 0, 
+      pageGroupSize: 5, 
     };
   },
   async mounted() {
     try {
       const token = sessionStorage.getItem("token");
 
-      const response = await axios.get("http://121.140.125.34:11114/api/orders/list", {
+      const response = await axios.get("http://localhost:8080/orders/list", {
         params: {
           page: 1,
           size: 5,
@@ -70,6 +87,7 @@ export default {
     } catch (error) {
       console.error("Error fetching orders detail:", error);
     }
+    this.fetchOrders(this.currentPage);
   },
   computed: {
     filteredOrders() {
@@ -77,10 +95,54 @@ export default {
         order.merchantUid.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     },
+    pageGroup() {
+      let startPage = this.pageGroupIndex * this.pageGroupSize + 1;
+      return Array.from({ length: this.pageGroupSize }, (_, i) => startPage + i);
+    },
   },
   methods: {
     goToOrderDetail(order) {
       this.$router.push({ name: "StoreDetail", params: { merchantUid: order.merchantUid } });
+    },
+    async fetchOrders(page) {
+      try {
+        const token = sessionStorage.getItem("token");
+        const response = await axios.get("http://121.140.125.34:11114/api/orders/list", {
+          params: {
+            page: page,
+            size: 5,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        
+        // 중복 제거 및 데이터 처리 로직 유지
+        const uniqueOrders = response.data.result.reduce((acc, curr) => {
+          if (!acc[curr.merchantUid]) {
+            acc[curr.merchantUid] = curr;
+          }
+          return acc;
+        }, {});
+        this.ordersDetailResult = Object.values(uniqueOrders);
+        
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    },
+    changePage(page) {
+      this.currentPage = page;
+      this.fetchOrders(page);
+    },
+    nextGroup() {
+      this.pageGroupIndex++;
+      this.changePage(this.pageGroup[0]); // 그룹의 첫 페이지로 이동
+    },
+    previousGroup() {
+      if (this.pageGroupIndex > 0) {
+        this.pageGroupIndex--;
+        this.changePage(this.pageGroup[0]); // 그룹의 첫 페이지로 이동
+      }
     },
   },
 };
