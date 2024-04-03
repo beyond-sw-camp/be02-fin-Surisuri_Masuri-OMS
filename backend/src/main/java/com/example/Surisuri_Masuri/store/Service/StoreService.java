@@ -56,9 +56,7 @@ public class StoreService {
 
         token = JwtUtils.replaceToken(token);
 
-        Claims managerInfo = JwtUtils.getManagerInfo2(token, secretKey);
-
-        String managerId = managerInfo.get("id", String.class);
+        String managerId = JwtUtils.getManagerInfo(token, secretKey);
 
         Optional<Manager> manager = managerRepository.findByManagerId(managerId);
 
@@ -92,7 +90,7 @@ public class StoreService {
 
         Claims managerInfo = JwtUtils.getManagerInfo2(token, secretKey);
 
-        String managerId = managerInfo.get("id", String.class);
+        String managerId = managerInfo.get("managerId", String.class);
 
         Optional<Manager> manager = managerRepository.findByManagerId(managerId);
         if (manager.isPresent()){
@@ -132,7 +130,7 @@ public class StoreService {
 
         Claims managerInfo = JwtUtils.getManagerInfo2(token, secretKey);
 
-        String managerId = managerInfo.get("id", String.class);
+        String managerId = managerInfo.get("managerId", String.class);
 
         Optional<Manager> manager = managerRepository.findByManagerId(managerId);
 
