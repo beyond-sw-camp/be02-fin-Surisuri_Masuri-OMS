@@ -3,7 +3,6 @@
     <div class="row">
       <div class="col">
         <div class="card">
-          <div class="card-header">공지사항</div>
           <div class="card-body">
             <table class="table">
               <thead>
@@ -93,7 +92,7 @@ export default {
         const response = await axios.get("http://121.140.125.34:11113/api/notice/list", {
           params: {
             page: this.currentPage,
-            size: 5,
+            size: 10,
           },
         });
         this.notices = response.data.result;

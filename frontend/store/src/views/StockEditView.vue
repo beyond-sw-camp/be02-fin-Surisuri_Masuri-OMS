@@ -2,10 +2,7 @@
   <main>
     <div class="container-fluid px-4">
       <div class="card mb-4">
-        <div class="card-header">
-          <i class="fas fa-table me-1"></i>
-          Inventory
-        </div>
+        
         <div class="card-body">
           <table id="stockTable" class="table">
             <thead>
@@ -124,7 +121,7 @@ export default {
             },
             params: {
               page: this.currentPage,
-              size: 5,
+              size: 10,
             },
           }
         );

@@ -3,8 +3,6 @@
     <div class="container-fluid px-4">
       <div class="card mb-4">
         <div class="card-header">
-          <i class="fas fa-table me-1"></i>
-          Products
           <input
             type="text"
             v-model="searchQuery"
