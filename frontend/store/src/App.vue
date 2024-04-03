@@ -102,4 +102,21 @@ a {
  background-color: rgba(246, 245, 239, 255);
  min-height: 100vh;
 }
+
+.pagination a.page-link {
+    color: #004d33; /* 기본 색상 */
+}
+
+/* 페이지 네비게이션 링크의 호버 상태 색상 변경 */
+.pagination a.page-link:hover {
+    background-color: #004d33; /* 호버 상태의 배경 색상 */
+    color: white; /* 호버 상태의 텍스트 색상 */
+}
+
+/* 현재 페이지를 나타내는 페이지 네비게이션 링크의 활성 상태 색상 변경 */
+.pagination .page-item.active .page-link {
+    background-color: #004d33; /* 활성 상태의 배경 색상 */
+    border-color: #004d33; /* 활성 상태의 테두리 색상 */
+    color: white; /* 활성 상태의 텍스트 색상 */
+}
 </style>
