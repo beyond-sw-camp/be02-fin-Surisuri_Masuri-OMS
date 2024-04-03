@@ -4,6 +4,7 @@
       <div class="col">
         <div class="card">
           <div class="card-body">
+            <router-link to="/noticenew" class="btn btn-success"> 공지사항 작성하기 </router-link>
             <table class="table">
               <thead>
                 <tr>
@@ -37,7 +38,23 @@
                 </tr>
               </tbody>
             </table>
-            <router-link to="/noticenew" class="btn btn-success float-end"> 공지사항 작성하기 </router-link>
+            <nav aria-label="Page navigation">
+              <ul class="pagination justify-content-end">
+                <li class="page-item">
+                  <a class="page-link" href="#" aria-label="Previous" @click.prevent="prevRange">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <li class="page-item" v-for="page in pageRange" :key="page" :class="{ active: page === currentPage }">
+                  <a class="page-link" href="#" @click.prevent="fetchNotices(page)">{{ page }}</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#" aria-label="Next" @click.prevent="nextRange">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
       </div>
@@ -52,28 +69,49 @@ export default {
   data() {
     return {
       notices: [],
+      currentPage: 1,
+      totalPages: 20, // 실제 서버로부터 받아온 총 페이지 수입니다.
+      pageRangeSize: 5, // 한 번에 보여줄 페이지 수입니다.
     };
   },
+  computed: {
+    pageRange() {
+      const startPage = Math.floor((this.currentPage - 1) / this.pageRangeSize) * this.pageRangeSize + 1;
+      const endPage = Math.min(startPage + this.pageRangeSize - 1, this.totalPages);
+      return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+    },
+  },
   created() {
-    this.fetchNotices();
+    this.fetchNotices(this.currentPage);
   },
   methods: {
-    async fetchNotices() {
+    async fetchNotices(page) {
+      this.currentPage = page;
       try {
         const response = await axios.get("http://121.140.125.34:11114/api/notice/list", {
           params: {
-            page: 1,
-            size: 10,
+            page: this.currentPage,
+            size: 5,
           },
         });
         this.notices = response.data.result;
-
-        // 공지사항 목록을 성공적으로 불러온 후 각 공지사항의 idx를 콘솔에 출력
-        this.notices.forEach((notice) => {
-          console.log(`공지사항 idx: ${notice.noticeIdx}`);
-        });
       } catch (error) {
         console.error("공지사항 목록을 불러오는 중 오류가 발생했습니다.", error);
+      }
+    },
+    nextRange() {
+      const maxPage =
+        Math.ceil(this.currentPage / this.pageRangeSize) * this.pageRangeSize;
+      if (maxPage < this.totalPages) {
+        this.fetchNotices(maxPage + 1);
+      }
+    },
+    prevRange() {
+      const startPage =
+        Math.floor((this.currentPage - 1) / this.pageRangeSize) *
+        this.pageRangeSize;
+      if (startPage >= this.pageRangeSize) {
+        this.fetchNotices(startPage - this.pageRangeSize + 1);
       }
     },
   },

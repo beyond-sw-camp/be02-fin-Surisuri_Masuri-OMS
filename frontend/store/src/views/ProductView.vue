@@ -5,7 +5,12 @@
         <div class="card-header">
           <i class="fas fa-table me-1"></i>
           Products
-          <input type="text" v-model="searchQuery" placeholder="상품 검색..." class="form-control w-25 float-end" />
+          <input
+            type="text"
+            v-model="searchQuery"
+            placeholder="상품 검색..."
+            class="form-control w-25 float-end"
+          />
         </div>
         <div class="card-body">
           <table id="productTable" class="table">
@@ -33,11 +38,50 @@
                   />
                 </td>
                 <td>
-                  <button @click="addToCart(product)" class="btn btn-success">장바구니에 추가</button>
+                  <button @click="addToCart(product)" class="btn btn-success">
+                    장바구니에 추가
+                  </button>
                 </td>
               </tr>
             </tbody>
           </table>
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-end">
+              <li class="page-item">
+                <a
+                  class="page-link"
+                  href="#"
+                  aria-label="Previous"
+                  @click.prevent="prevRange"
+                >
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li
+                class="page-item"
+                v-for="page in pageRange"
+                :key="page"
+                :class="{ active: page === currentPage }"
+              >
+                <a
+                  class="page-link"
+                  href="#"
+                  @click.prevent="fetchProducts(page)"
+                  >{{ page }}</a
+                >
+              </li>
+              <li class="page-item">
+                <a
+                  class="page-link"
+                  href="#"
+                  aria-label="Next"
+                  @click.prevent="nextRange"
+                >
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>
@@ -61,19 +105,43 @@ export default {
       searchQuery: "",
       products: [],
       orders: [],
+      currentPage: 1,
+      totalPages: 20, // 실제 서버로부터 받아온 총 페이지 수입니다.
+      pageRangeSize: 5,
     };
   },
+  computed: {
+    pageRange() {
+      const startPage =
+        Math.floor((this.currentPage - 1) / this.pageRangeSize) *
+          this.pageRangeSize +
+        1;
+      const endPage = Math.min(
+        startPage + this.pageRangeSize - 1,
+        this.totalPages
+      );
+      return Array.from(
+        { length: endPage - startPage + 1 },
+        (_, i) => startPage + i
+      );
+    },
+  },
   mounted() {
-    this.fetchProducts(); // 페이지가 로드될 때 제품 데이터를 가져옵니다.
+    this.fetchProducts(this.currentPage); // 페이지가 로드될 때 제품 데이터를 가져옵니다.
     this.fetchOrders();
   },
+  // created() {
+  //   this.fetchProducts(this.currentPage);
+  // },
   methods: {
-    async fetchProducts() {
+    async fetchProducts(page) {
+      this.currentPage = page;
+
       try {
         const token = sessionStorage.getItem("token");
         const response = await axios.get("http://121.140.125.34:11113/api/product/list", {
           params: {
-            page: 1,
+            page: this.currentPage,
             size: 5,
           },
           headers: {
@@ -89,15 +157,18 @@ export default {
       try {
         const token = sessionStorage.getItem("token");
         // GET 요청을 보내고 응답을 변수에 저장합니다.
-        const response = await axios.get("http://121.140.125.34:11113/api/orders/list", {
-          params: {
-            page: 1,
-            size: 5,
-          },
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          "http://121.140.125.34:11113/api/orders/list",
+          {
+            params: {
+              page: 1,
+              size: 5,
+            },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         // 서버로부터 받은 데이터를 변수에 저장합니다.
         const data = response.data.result;
@@ -109,44 +180,72 @@ export default {
         console.error("데이터를 불러오는 중 오류 발생:", error);
       }
     },
+    nextRange() {
+      const maxPage =
+        Math.ceil(this.currentPage / this.pageRangeSize) * this.pageRangeSize;
+      if (maxPage < this.totalPages) {
+        this.fetchProducts(maxPage + 1); // 수정된 부분
+      }
+    },
+    prevRange() {
+      const startPage =
+        Math.floor((this.currentPage - 1) / this.pageRangeSize) *
+        this.pageRangeSize;
+      if (startPage >= this.pageRangeSize) {
+        this.fetchProducts(startPage - this.pageRangeSize + 1); // 수정된 부분
+      }
+    },
     async addToCart(product) {
-  try {
-    const token = sessionStorage.getItem("token");
-    var CartCreateReq = {
-      idx: null,
-      productIdx: product.productIdx,
-      productQuantity: product.purchaseQuantity,
-    };
+      try {
+        const token = sessionStorage.getItem("token");
+        var CartCreateReq = {
+          idx: null,
+          productIdx: product.productIdx,
+          productQuantity: product.purchaseQuantity,
+        };
 
-    const response = await axios.post("http://121.140.125.34:11113/api/cart/addcart", CartCreateReq, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+        const response = await axios.post(
+          "http://121.140.125.34:11113/api/cart/addcart",
+          CartCreateReq,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-    // 서버로부터 응답을 받은 경우
-    console.log("장바구니에 제품이 추가되었습니다:", response.data);
-    alert(`${product.productName} ${product.purchaseQuantity}개가 장바구니에 추가되었습니다.`);
-    this.cartItemCount += product.purchaseQuantity;
-  } catch (error) {
-    console.error("장바구니에 제품을 추가하는 중 오류가 발생했습니다:", error);
+        // 서버로부터 응답을 받은 경우
+        console.log("장바구니에 제품이 추가되었습니다:", response.data);
+        alert(
+          `${product.productName} ${product.purchaseQuantity}개가 장바구니에 추가되었습니다.`
+        );
+        this.cartItemCount += product.purchaseQuantity;
+      } catch (error) {
+        console.error(
+          "장바구니에 제품을 추가하는 중 오류가 발생했습니다:",
+          error
+        );
 
-    // getErrorMessage를 사용하여 오류 메시지 처리
-    let errorMessage;
-    // error.response가 존재하는지와 함께, error.response.data와 error.response.data.errorCode가 있는지 확인
-    if (error.response && error.response.data && error.response.data.errorCode) {
-      errorMessage = getErrorMessage(error.response.data.errorCode);
-    } else {
-      // 오류에 대한 자세한 정보가 없을 경우 일반적인 오류 메시지 제공
-      errorMessage = "장바구니에 제품을 추가하는 중 오류가 발생했습니다. 다시 시도해주세요.";
-    }
+        // getErrorMessage를 사용하여 오류 메시지 처리
+        let errorMessage;
+        // error.response가 존재하는지와 함께, error.response.data와 error.response.data.errorCode가 있는지 확인
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.errorCode
+        ) {
+          errorMessage = getErrorMessage(error.response.data.errorCode);
+        } else {
+          // 오류에 대한 자세한 정보가 없을 경우 일반적인 오류 메시지 제공
+          errorMessage =
+            "장바구니에 제품을 추가하는 중 오류가 발생했습니다. 다시 시도해주세요.";
+        }
 
-    // 최종적으로 결정된 오류 메시지를 사용자에게 알림
-    alert(errorMessage);
-  }
-}
-
+        // 최종적으로 결정된 오류 메시지를 사용자에게 알림
+        alert(errorMessage);
+      }
+    },
   },
 };
 </script>
@@ -194,4 +293,3 @@ export default {
   vertical-align: middle; /* 셀의 내용을 수직 중앙에 정렬합니다 */
 }
 </style>
-

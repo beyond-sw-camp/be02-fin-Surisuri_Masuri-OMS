@@ -10,5 +10,6 @@ import java.util.List;
 @Data
 public class LoginRes {
     private String jwtToken;
+    private String refreshToken;
     private List<DiscardedProduct> discardedProduct;
 }

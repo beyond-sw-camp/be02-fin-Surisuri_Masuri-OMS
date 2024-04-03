@@ -1,23 +1,24 @@
 package com.example.Surisuri_Masuri.member.Service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
-import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
 import com.example.Surisuri_Masuri.exception.EntityException.ManagerException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
+import com.example.Surisuri_Masuri.jwt.Model.Dto.TokenDto;
+import com.example.Surisuri_Masuri.jwt.Model.RefreshToken;
+import com.example.Surisuri_Masuri.jwt.Repository.RefreshTokenRepository;
+import com.example.Surisuri_Masuri.jwt.Service.AccessTokenService;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
-import com.example.Surisuri_Masuri.member.Model.Entity.User;
-import com.example.Surisuri_Masuri.member.Model.ReqDtos.LoginReq;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.ManagerLoginReq;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.ManagerSignUpReq;
-import com.example.Surisuri_Masuri.member.Model.ResDtos.LoginRes;
 import com.example.Surisuri_Masuri.member.Model.ResDtos.ManagerSignUpRes;
 import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.time.LocalDate;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -31,12 +32,17 @@ public class ManagerService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final RefreshTokenRepository refreshTokenRepository;
+
     @Value("${jwt.secret-key}")
     private String secretKey;
 
     @Value("${jwt.token.expired-time-ms}")
     private int expiredTimeMs;
 
+    private TokenDto tokenDto;
+
+    @Transactional
     // 회원가입 기능
     public BaseResponse<ManagerSignUpRes> ManagerSignUp(ManagerSignUpReq managerSignUpReq) {
 
@@ -72,8 +78,8 @@ public class ManagerService {
             // 2. 저장
             managerRepository.save(manager);
 
-            // 3. AccessToken을 생성하여
-            String accessToken = JwtUtils.generateAccessToken(manager, secretKey, expiredTimeMs);
+            // 3. AccessToken을 생성하고
+            String accessToken = JwtUtils.generateAccessToken(manager, secretKey, (expiredTimeMs/10));
 
             // 4. 응답 Dto 생성을 위한 과정
             Optional<Manager> result = managerRepository.findByManagerId(manager.getManagerEmail());
@@ -83,7 +89,7 @@ public class ManagerService {
                 manager = result.get();
             }
         ManagerSignUpRes managerSignUpRes = ManagerSignUpRes.builder()
-                .token(accessToken)
+                .accessToken(accessToken)
                 .managerName(manager.getManagerName())
                 .department(manager.getDepartment())
                 .managerId(manager.getManagerId())
@@ -92,9 +98,9 @@ public class ManagerService {
         return BaseResponse.successResponse("회원 가입이 완료되었습니다.", managerSignUpRes);
     }
 
+    @Transactional
     // 로그인 기능
-    public BaseResponse<LoginRes> ManagerLogin(ManagerLoginReq managerLoginReq) {
-        LoginRes loginRes = null;
+    public BaseResponse<TokenDto> ManagerLogin(ManagerLoginReq managerLoginReq) {
 
         Optional<Manager> manager = managerRepository.findByManagerId(managerLoginReq.getId());
 
@@ -105,10 +111,17 @@ public class ManagerService {
 
         if (manager.isPresent() && passwordEncoder.matches(managerLoginReq.getPassword(), manager.get().getPassword()))
         {
-            loginRes = LoginRes.builder()
-                    .jwtToken(JwtUtils.generateAccessToken(manager.get(), secretKey, expiredTimeMs))
+            RefreshToken newToken = new RefreshToken(manager.get().getManagerId(),JwtUtils.generateRefreshTokenManager(manager.get(),secretKey,expiredTimeMs));
+
+             tokenDto= TokenDto.builder()
+                    .accessToken(JwtUtils.generateAccessToken(manager.get(),secretKey,(expiredTimeMs/10)))
+                    .refreshToken(newToken.getRefreshToken())
                     .build();
-            return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
+
+             refreshTokenRepository.save(newToken);
+
+            return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", tokenDto);
+
         }
 
         else throw new ManagerException(ErrorCode.ManagerLogin_004,

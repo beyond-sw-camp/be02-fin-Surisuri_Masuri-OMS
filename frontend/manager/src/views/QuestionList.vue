@@ -38,6 +38,46 @@
                 </tr>
               </tbody>
             </table>
+            <nav aria-label="Page navigation" class="mt-4">
+              <ul class="pagination justify-content-end">
+                <li
+                  class="page-item"
+                  :class="{ disabled: pagination.page === 1 }"
+                >
+                  <a
+                    class="page-link"
+                    href="#"
+                    aria-label="Previous"
+                    @click.prevent="navigatePage(pagination.page - 1)"
+                  >
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <li
+                  class="page-item"
+                  v-for="num in visiblePages"
+                  :class="{ active: num === pagination.page }"
+                  :key="num"
+                >
+                  <a
+                    class="page-link"
+                    href="#"
+                    @click.prevent="navigatePage(num)"
+                    >{{ num }}</a
+                  >
+                </li>
+                <li class="page-item">
+                  <a
+                    class="page-link"
+                    href="#"
+                    aria-label="Next"
+                    @click.prevent="navigatePage(pagination.page + 1)"
+                  >
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
       </div>
@@ -55,12 +95,15 @@ export default {
       pagination: {
         // 페이지네이션 정보를 저장할 객체
         page: 1, // 기본 페이지 번호
-        size: 10, // 기본 페이지당 항목 수, 예시로 10으로 설정
+        size: 10, 
+        pageCount: 5, // 한 번에 보여질 최대 페이지 번호 수
+        totalPage: 20,// 기본 페이지당 항목 수, 예시로 10으로 설정
       },
     };
   },
   created() {
-    this.fetchQuestions(); // 컴포넌트 생성 시 문의사항 목록을 불러오도록 설정
+    this.fetchQuestions();
+    this.updateVisiblePages();
   },
   methods: {
     async fetchQuestions() {
@@ -76,6 +119,27 @@ export default {
       } catch (error) {
         console.error("문의사항 목록을 불러오는 중 오류가 발생했습니다.", error);
       }
+    },
+    updateVisiblePages() {
+      this.visiblePages = [];
+      let startPage =
+        Math.floor((this.pagination.page - 1) / this.pagination.pageCount) *
+          this.pagination.pageCount +
+        1;
+      for (
+        let i = startPage;
+        i < startPage + this.pagination.pageCount &&
+        i <= this.pagination.totalPage;
+        i++
+      ) {
+        this.visiblePages.push(i);
+      }
+    },
+
+    navigatePage(page) {
+      this.pagination.page = page;
+      this.fetchQuestions();
+      this.updateVisiblePages();
     },
   },
 };

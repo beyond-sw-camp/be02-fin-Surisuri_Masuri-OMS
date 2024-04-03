@@ -7,6 +7,8 @@ import com.example.Surisuri_Masuri.exception.EntityException.ManagerException;
 import com.example.Surisuri_Masuri.exception.EntityException.UserException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
+import com.example.Surisuri_Masuri.jwt.Model.RefreshToken;
+import com.example.Surisuri_Masuri.jwt.Repository.RefreshTokenRepository;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.*;
 import com.example.Surisuri_Masuri.member.Model.ResDtos.*;
@@ -16,9 +18,6 @@ import com.example.Surisuri_Masuri.store.Repository.StoreRepository;
 import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -30,7 +29,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserDetailsService {
+public class UserService {
 
     private final UserRepository userRepository;
 
@@ -39,6 +38,8 @@ public class UserService implements UserDetailsService {
     private final StoreRepository storeRepository;
 
     private final EmailService emailService;
+
+    private final RefreshTokenRepository refreshTokenRepository;
 
     List<User> compare1;
     Optional<User> compare2;
@@ -99,7 +100,7 @@ public class UserService implements UserDetailsService {
                 storeRepository.save(store2);
 
                 // 3. AccessToken을 생성하여
-                String accessToken = JwtUtils.generateAccessToken(user, secretKey, expiredTimeMs);
+                String accessToken = JwtUtils.generateAccessToken(user, secretKey, (expiredTimeMs/10));
 
                 // 4. 이메일에 포함시켜 사용자에게 전달하여 이메일 인증을 요청
                 SendEmailReq sendEmailReq = SendEmailReq.builder()
@@ -159,6 +160,12 @@ public class UserService implements UserDetailsService {
         {
             Optional<Store> store = storeRepository.findByStoreName(user.get().getStore().getStoreName());
 
+            String RefreshToken = JwtUtils.generateRefreshToken(user.get(), secretKey, expiredTimeMs);
+
+            RefreshToken newToken = new RefreshToken(user.get().getUserEmail(),JwtUtils.generateRefreshToken(user.get(),secretKey,expiredTimeMs));
+
+            refreshTokenRepository.save(newToken);
+
             if (!store.get().getStoreStocks().isEmpty()) {
                 List<StoreStock> storeStockList = store.get().getStoreStocks();
 
@@ -176,18 +183,21 @@ public class UserService implements UserDetailsService {
                     }
                     if (discardedProduct2.size() > 0) {
                         loginRes = LoginRes.builder()
-                                .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
+                                .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10)))
+                                .refreshToken(RefreshToken)
                                 .discardedProduct(discardedProduct2)
                                 .build();
                     } else {
                         loginRes = LoginRes.builder()
-                                .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
+                                .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10 )))
+                                .refreshToken(RefreshToken)
                                 .build();
                     }
                 }
             } else {
                 loginRes = LoginRes.builder()
-                        .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs))
+                        .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10)))
+                        .refreshToken(RefreshToken)
                         .build();
             }
             return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
@@ -347,17 +357,6 @@ public class UserService implements UserDetailsService {
             return user.get();
         }
         return null;
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> result = userRepository.findByUserEmail(username);
-        User user = null;
-        if(result.isPresent()) {
-            user = result.get();
-        }
-
-        return user;
     }
 }
 

@@ -16,21 +16,21 @@ public class StoreController {
 
     // 가맹점 등록 - Create
     @PostMapping("/store/create")
-    public ResponseEntity StoreCreate(@RequestHeader(value = "Authorization") String token, @RequestBody StoreCreateReq storeCreateReq)
+    public ResponseEntity StoreCreate(@RequestHeader(value = "AccessToken") String token, @RequestBody StoreCreateReq storeCreateReq)
     {
         return ResponseEntity.ok().body(storeService.StoreCreate(token,storeCreateReq));
     }
 
     // 가맹점 리스트 조회 - List
     @GetMapping("/store/list")
-    public ResponseEntity StoreSearch(@RequestHeader(value = "Authorization") String token, Integer page, Integer size)
+    public ResponseEntity StoreSearch(@RequestHeader(value = "AccessToken") String token, Integer page, Integer size)
     {
         return ResponseEntity.ok().body(storeService.StoreList(token,page,size));
     }
 
     // 가맹점 검색 조회 - Search
     @GetMapping("/store/search")
-    public ResponseEntity StoreSearch(@RequestHeader(value = "Authorization") String token, @RequestBody StoreSearchReq storeSearchReq)
+    public ResponseEntity StoreSearch(@RequestHeader(value = "AccessToken") String token, @RequestBody StoreSearchReq storeSearchReq)
     {
         return ResponseEntity.ok().body(storeService.StoreSearch(token,storeSearchReq));
     }

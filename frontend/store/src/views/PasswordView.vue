@@ -68,7 +68,7 @@ export default {
           },
         });
 
-        if (response.data.success) {
+        if (response.data.result) {
           alert('비밀번호 재설정 링크가 이메일로 전송되었습니다. 메일을 확인해주세요.');
         } else {
           alert('비밀번호 재설정 요청을 처리할 수 없습니다. 입력 정보를 확인해주세요.');

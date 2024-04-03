@@ -13,7 +13,7 @@ public enum ErrorCode {
     INVALID_INPUT_VALUE(900,HttpStatus.BAD_REQUEST, "유효하지 않은 입력값입니다."),
 
     // 401
-    // INVALID_TOKEN(1000,HttpStatus.UNAUTHORIZED, "잘못된 토큰입니다."),
+    INVALID_TOKEN(1000,HttpStatus.UNAUTHORIZED, "잘못된 토큰입니다."),
 
     // 401
     INVALID_PERMISION(1001,HttpStatus.UNAUTHORIZED, "권한이 없습니다."),
@@ -265,8 +265,6 @@ public enum ErrorCode {
 
     // ContainerStock
     ContainerStock_002(3103, HttpStatus.BAD_REQUEST, "폐기할 상품이 존재하지 않습니다.");
-
-
 
     private final Integer code;
     private final HttpStatus status;
