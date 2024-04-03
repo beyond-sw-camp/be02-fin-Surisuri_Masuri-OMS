@@ -95,15 +95,20 @@
         </div>
       </div>
       <div class="col-lg-8 d-flex align-items-stretch">
-        <swiper class="mySwiper" :options="{ navigation: { clickable: true } }">
-          <swiper-slide v-for="image in images" :key="image">
-            <img :src="image" alt="사진 슬라이드" />
-          </swiper-slide>
-        </swiper>
-        <div class="card-body p-4">
-          <h5 class="card-title fw-semibold mb-4"></h5>
-          <div class="table-responsive">
-            <table class="table text-nowrap mb-0 align-middle"></table>
+        <div class="card w-100">
+          <div class="card-body p-4">
+            <swiper
+              class="mySwiper"
+              :options="{ navigation: { clickable: true } }"
+            >
+              <swiper-slide v-for="image in images" :key="image">
+                <img :src="image" alt="사진 슬라이드" />
+              </swiper-slide>
+            </swiper>
+            <h5 class="card-title fw-semibold mb-4"></h5>
+            <div class="table-responsive">
+              <table class="table text-nowrap mb-0 align-middle"></table>
+            </div>
           </div>
         </div>
       </div>
@@ -334,12 +339,15 @@ export default {
     },
     async fetchNotices() {
       try {
-        const response = await axios.get("http://121.140.125.34:11113/api/notice/list", {
-          params: {
-            page: 1,
-            size: 10,
-          },
-        });
+        const response = await axios.get(
+          "http://121.140.125.34:11113/api/notice/list",
+          {
+            params: {
+              page: 1,
+              size: 10,
+            },
+          }
+        );
         this.notices = response.data.result;
       } catch (error) {
         console.error(
@@ -378,7 +386,7 @@ export default {
   /* object-fit: contain;를 사용하면 이미지 전체가 보이되, 슬라이드를 꽉 채우지 않을 수 있음 */
 }
 .main-container {
-  max-width: 1100px; /* 원하는 최대 너비로 조정하세요 */
+  max-width: 1000px; /* 원하는 최대 너비로 조정하세요 */
   margin: 0 auto; /* 중앙 정렬을 위해 사용 */
 }
 a {

@@ -1,35 +1,40 @@
 <template>
   <div class="container mt-5">
-    <h2 class="mb-3">문의 상세 정보</h2>
-    <div class="mb-3">
-      <label class="form-label">문의 번호:</label>
-      <input type="text" class="form-control" v-model="questionIdx" :readonly="!editable" />
-    </div>
-    <div class="mb-3">
-      <label class="form-label">문의 제목:</label>
-      <input type="text" class="form-control" v-model="questionTitle" :readonly="!editable" />
-    </div>
-    <div class="mb-3">
-      <label class="form-label">문의 내용:</label>
-      <textarea class="form-control" v-model="questionContent" rows="3" :readonly="!editable"></textarea>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">카테고리:</label>
-      <input type="text" class="form-control" v-model="questionCategory" :readonly="!editable" />
-    </div>
-    <!-- answerContent가 있을 때만 보이는 섹션 -->
-    <div class="mb-3" v-if="answerContent">
-      <label class="form-label">답변 내용:</label>
-      <textarea class="form-control" v-model="answerContent" rows="3" readonly></textarea>
-    </div>
-    <div class="d-flex justify-content-between">
-      <router-link to="/question" class="btn btn-secondary">목록으로 돌아가기</router-link>
-      <button v-if="!editable" @click="enableEditing" class="btn btn-primary">수정</button>
-      <button v-if="editable" @click="saveChanges" class="btn btn-success">저장</button>
-      <button @click="deleteQuestion" class="btn btn-danger">삭제</button>
+    <!-- 흰색 카드로 감싸기 -->
+    <div class="card">
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="form-label">문의 번호:</label>
+          <input type="text" class="form-control" v-model="questionIdx" :readonly="!editable" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">문의 제목:</label>
+          <input type="text" class="form-control" v-model="questionTitle" :readonly="!editable" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">문의 내용:</label>
+          <textarea class="form-control" v-model="questionContent" rows="3" :readonly="!editable"></textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">카테고리:</label>
+          <input type="text" class="form-control" v-model="questionCategory" :readonly="!editable" />
+        </div>
+        <!-- answerContent가 있을 때만 보이는 섹션 -->
+        <div class="mb-3" v-if="answerContent">
+          <label class="form-label">답변 내용:</label>
+          <textarea class="form-control" v-model="answerContent" rows="3" readonly></textarea>
+        </div>
+        <div class="d-flex justify-content-between">
+          <router-link to="/question" class="btn btn-secondary">목록으로 돌아가기</router-link>
+          <button v-if="!editable" @click="enableEditing" class="btn btn-primary">수정</button>
+          <button v-if="editable" @click="saveChanges" class="btn btn-success">저장</button>
+          <button @click="deleteQuestion" class="btn btn-danger">삭제</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
+
 
 <script>
 import axios from "axios";
