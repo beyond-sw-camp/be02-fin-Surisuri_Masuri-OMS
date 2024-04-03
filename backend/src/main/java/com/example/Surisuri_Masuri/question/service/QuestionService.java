@@ -137,7 +137,7 @@ public class QuestionService {
     public BaseResponse answer(String token, QuestionAnswerReq req) {
         token = JwtUtils.replaceToken(token);
         Claims managerInfo = JwtUtils.getManagerInfo2(token, secretKey);
-        String managerId = managerInfo.get("id", String.class);
+        String managerId = managerInfo.get("managerId", String.class);
 
         Optional<Manager> managerResult = managerRepository.findByManagerId(managerId);
         Manager manager = managerResult.get();

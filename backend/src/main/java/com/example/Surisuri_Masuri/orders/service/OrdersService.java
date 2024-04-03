@@ -80,11 +80,12 @@ public class OrdersService {
     @Value("${jwt.secret-key}")
     private String secretKey;
 
-    public BaseResponse listDetailByMerchantUid(String merchantUid, User user) {
-        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
-        user = userResult.get();
+    public BaseResponse listDetailByMerchantUid(String merchantUid, Manager manager) {
+        Optional<Manager> managerResult = managerRepository.findByManagerId(manager.getManagerId());
 
-        for (Orders orders: user.getStore().getOrdersList()) {
+        List<Orders> ordersList = ordersRepository.findAll();
+
+        for (Orders orders: ordersList) {
             List<OrdersDetail> ordersDetailResult = ordersDetailRepository.findByOrdersIdx(orders.getIdx());
 
             for (OrdersDetail ordersDetail : ordersDetailResult) {
@@ -260,7 +261,6 @@ public class OrdersService {
 
         Optional<User> userResult = userRepository.findByUserEmail(email);
         Optional<Manager> managerResult = managerRepository.findByManagerId(managerId);
-        User user = userResult.get();
 
         if (managerResult.isPresent()) {
             Pageable pageable = PageRequest.of(page - 1, size);
@@ -293,6 +293,8 @@ public class OrdersService {
             return BaseResponse.successResponse("상품 리스트 불러오기 성공", ordersListResList);
 
         } else if (userResult.isPresent()) {
+            User user = userResult.get();
+
             Pageable pageable = PageRequest.of(page - 1, size);
 
             Page<Orders> ordersResult = ordersRepository.findListByUserIdx(user.getIdx(), pageable);

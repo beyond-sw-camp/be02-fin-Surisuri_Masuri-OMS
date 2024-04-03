@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class ManagerSignUpRes {
 
-    private String token;
+    private String accessToken;
 
     private String managerId;
 

@@ -112,4 +112,7 @@ public class Manager implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    public Manager(String managerId) {
+        this.managerId = managerId;
+    }
 }

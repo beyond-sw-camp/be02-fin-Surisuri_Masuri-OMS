@@ -1,6 +1,8 @@
 package com.example.Surisuri_Masuri.config;
 
 import com.example.Surisuri_Masuri.jwt.JwtFilter;
+import com.example.Surisuri_Masuri.jwt.JwtUtils;
+import com.example.Surisuri_Masuri.jwt.Repository.RefreshTokenRepository;
 import com.example.Surisuri_Masuri.member.Service.ManagerService;
 import com.example.Surisuri_Masuri.member.Service.UserService;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,10 +19,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final UserService userService;
     private final ManagerService managerService;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtUtils jwtUtils;
 
-    public SecurityConfig(UserService userService, ManagerService managerService) {
+    public SecurityConfig(UserService userService, ManagerService managerService, JwtUtils jwtUtils, RefreshTokenRepository refreshTokenRepository) {
         this.userService = userService;
         this.managerService = managerService;
+        this.jwtUtils = jwtUtils;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     @Value("${jwt.secret-key}")
@@ -61,7 +67,7 @@ public class SecurityConfig {
                     .antMatchers("/container/**").permitAll()
                     .antMatchers("/healthz").permitAll()
                     .anyRequest().authenticated();
-            http.addFilterBefore(new JwtFilter(userService,managerService,secretKey), UsernamePasswordAuthenticationFilter.class);
+            http.addFilterBefore(new JwtFilter(userService,managerService,refreshTokenRepository,secretKey,jwtUtils), UsernamePasswordAuthenticationFilter.class);
             http.formLogin().disable();
             http.sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
