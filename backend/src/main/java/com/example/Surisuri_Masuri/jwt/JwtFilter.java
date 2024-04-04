@@ -85,6 +85,8 @@ public class JwtFilter extends OncePerRequestFilter {
                         // 여기서 적절한 에러 처리를 수행합니다.
                         // 예: 사용자에게 에러 메시지를 JSON 형태로 응답하기
                         // 응답 상태 코드 설정 (예: HttpServletResponse.SC_UNAUTHORIZED)
+                        response.setHeader("Access-Control-Allow-Origin", "*"); // 실제 운영 환경에서는 구체적인 출처를 지정하는 것이 좋습니다.
+                        response.setHeader("Access-Control-Expose-Headers", "*, Authorization");
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         response.setContentType("application/json");
                         response.setCharacterEncoding("UTF-8");
@@ -96,6 +98,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             String email = null;
             String managerId = null;
+            Long userIdx = null;
             // 만약 액세스 토큰이 유효하지 않는다면
             if (JwtUtils.validateAccessToken(accessToken, secretKey))
             // 해당 액세스 토큰을 통해 사용자의 정보를 조회하고
@@ -105,6 +108,7 @@ public class JwtFilter extends OncePerRequestFilter {
             {
                 email = JwtUtils.getUserId(accessToken, secretKey);
                 managerId = JwtUtils.getManagerId(accessToken, secretKey);
+                userIdx = JwtUtils.getIdx(accessToken, secretKey);
 
                 if (email != null) {
                     Optional<RefreshToken> refreshTokenById = refreshTokenRepository.findByUserId(email);
@@ -115,9 +119,11 @@ public class JwtFilter extends OncePerRequestFilter {
                     } else {
                         // 토큰이 만료되었거나 유효하지 않은 경우
                         try {
-                            refreshTokenRepository.deleteByUserId(email);
+                            refreshTokenRepository.deleteByIdx(userIdx);
                             throw new UserException(ErrorCode.INVALID_RefreshTOKEN, "로그아웃하세요");
                         } catch (UserException e) {
+                            response.setHeader("Access-Control-Allow-Origin", "*"); // 실제 운영 환경에서는 구체적인 출처를 지정하는 것이 좋습니다.
+                            response.setHeader("Access-Control-Expose-Headers", "*, Authorization");
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json");
                             response.setCharacterEncoding("UTF-8");
@@ -133,9 +139,11 @@ public class JwtFilter extends OncePerRequestFilter {
                     } else {
                         // 토큰이 만료되었거나 유효하지 않은 경우
                         try {
-                            refreshTokenRepository.deleteByUserId(managerId);
+                            refreshTokenRepository.deleteByIdx(userIdx);
                             throw new UserException(ErrorCode.INVALID_RefreshTOKEN, "로그아웃하세요");
                         } catch (UserException e) {
+                            response.setHeader("Access-Control-Allow-Origin", "*"); // 실제 운영 환경에서는 구체적인 출처를 지정하는 것이 좋습니다.
+                            response.setHeader("Access-Control-Expose-Headers", "*, Authorization");
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json");
                             response.setCharacterEncoding("UTF-8");
