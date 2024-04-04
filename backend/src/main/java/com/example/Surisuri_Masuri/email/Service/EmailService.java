@@ -7,6 +7,8 @@ import com.example.Surisuri_Masuri.email.Repository.EmailVerifyRepository;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ public class EmailService {
 
     private final UserRepository userRepository;
 
+    private final RedisTemplate<String, String> redisTemplate;
+
     // 이메일 전송 메소드
     public void sendEmail(SendEmailReq sendEmailReq) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -40,7 +44,7 @@ public class EmailService {
                 + "&jwt=" + sendEmailReq.getAccessToken()
         );
         emailSender.send(message);
-        create(sendEmailReq.getEmail(),uuid,sendEmailReq.getAccessToken());
+        create(sendEmailReq.getEmail(),uuid);
     }
 
     // 이메일 전송 메소드 - 비밀번호 재설정용
@@ -56,29 +60,21 @@ public class EmailService {
     }
 
     // 이메일 전송 후 인증 여부를 저장하기 위한 메소드
-    public void create(String email,String uuid, String AccessToken)
-    {
-        EmailVerify emailVerify = EmailVerify.builder()
-                .email(email)
-                .uuid(uuid)
-                .jwt(AccessToken)
-                .build();
-        emailVerifyRepository.save(emailVerify);
+    public void create(String email, String uuid) {
+        ValueOperations<String, String> vop = redisTemplate.opsForValue();
+        vop.set(email, uuid); // email을 키로하고 uuid를 값으로하여 저장
     }
 
     // 이메일로 전송된 링크를 검증하기 위한 메소드
     public RedirectView verify(EmailConfirmReq emailConfirmReq) {
-        Optional<EmailVerify> result = emailVerifyRepository.findByEmail(emailConfirmReq.getEmail());
-        if(result.isPresent()){
-            EmailVerify emailVerify = result.get();
-            if(emailVerify.getJwt().equals(emailConfirmReq.getJwt()) && emailVerify.getUuid().equals(emailConfirmReq.getToken())) {
+        ValueOperations<String, String> vop = redisTemplate.opsForValue();
+        String value = vop.get(emailConfirmReq.getEmail());
+        if(value.equals(emailConfirmReq.getToken())){
                 update(emailConfirmReq.getEmail(), emailConfirmReq.getAuthority());
-                return new RedirectView("http://192.168.0.45/");
-            }
+                return new RedirectView("http://wwww.naver.com");
         }
         return new RedirectView("http://localhost:3000/emailCertError");
     }
-
 
     // 검증된 사용자의 status를 변경하기 위한 메소드
     public void update(String email, String authority) {
