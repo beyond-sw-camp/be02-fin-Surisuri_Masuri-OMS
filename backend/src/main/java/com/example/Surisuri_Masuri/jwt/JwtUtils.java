@@ -143,6 +143,24 @@ public class JwtUtils {
         }
     }
 
+    public static Long getIdx(String token, String key) {
+        try {
+            // 정상적인 토큰 파싱 시도
+            Jws<Claims> claimsJws = Jwts.parserBuilder()
+                    .setSigningKey(getSignKey(key))
+                    .build()
+                    .parseClaimsJws(token);
+            return claimsJws.getBody().get("idx", Long.class);
+        } catch (ExpiredJwtException e) {
+            // 만료된 토큰에서 클레임 추출
+            return e.getClaims().get("idx", Long.class);
+        } catch (Exception e) {
+            // 기타 예외 처리
+            System.out.println("토큰 파싱 중 오류 발생: " + e.getMessage());
+            return null; // 또는 적절한 에러 처리
+        }
+    }
+
     public static Claims getManagerInfo2(String token, String key) {
         return extractAllClaims(token, key);
     }
