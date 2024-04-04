@@ -13,7 +13,8 @@ public enum ErrorCode {
     INVALID_INPUT_VALUE(900,HttpStatus.BAD_REQUEST, "유효하지 않은 입력값입니다."),
 
     // 401
-    INVALID_TOKEN(1000,HttpStatus.UNAUTHORIZED, "잘못된 토큰입니다."),
+    INVALID_AccessTOKEN(1000,HttpStatus.UNAUTHORIZED, "만료된 액세스 토큰입니다."),
+    INVALID_RefreshTOKEN(1006,HttpStatus.UNAUTHORIZED, "만료된 리프레쉬 토큰입니다."),
 
     // 401
     INVALID_PERMISION(1001,HttpStatus.UNAUTHORIZED, "권한이 없습니다."),

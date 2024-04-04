@@ -80,7 +80,7 @@ public class JwtFilter extends OncePerRequestFilter {
             else {
                     // 토큰이 만료되었거나 유효하지 않은 경우
                     try {
-                        throw new UserException(ErrorCode.INVALID_TOKEN, "만료된 토큰입니다");
+                        throw new UserException(ErrorCode.INVALID_AccessTOKEN, "만료된 토큰입니다");
                     } catch (UserException e) {
                         // 여기서 적절한 에러 처리를 수행합니다.
                         // 예: 사용자에게 에러 메시지를 JSON 형태로 응답하기
@@ -88,7 +88,7 @@ public class JwtFilter extends OncePerRequestFilter {
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         response.setContentType("application/json");
                         response.setCharacterEncoding("UTF-8");
-                        response.getWriter().write("{\n    \"error\": \"" + e.getMessage() + "\",\n    \"code\": \"" + (ErrorCode.INVALID_TOKEN.getCode()) + "\"\n}");
+                        response.getWriter().write("{\n    \"error\": \"" + e.getMessage() + "\",\n    \"code\": \"" + (ErrorCode.INVALID_AccessTOKEN.getCode()) + "\"\n}");
                     }
             }
 
@@ -116,12 +116,12 @@ public class JwtFilter extends OncePerRequestFilter {
                         // 토큰이 만료되었거나 유효하지 않은 경우
                         try {
                             refreshTokenRepository.deleteByUserId(email);
-                            throw new UserException(ErrorCode.INVALID_TOKEN, "만료된 토큰입니다");
+                            throw new UserException(ErrorCode.INVALID_RefreshTOKEN, "로그아웃하세요");
                         } catch (UserException e) {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json");
                             response.setCharacterEncoding("UTF-8");
-                            response.getWriter().write("{\n    \"error\": \"" + e.getMessage() + "\",\n    \"code\": \"" + e.getErrorCode() + "\"\n}");
+                            response.getWriter().write("{\n    \"error\": \"" + e.getMessage() + "\",\n    \"code\": \"" + ErrorCode.INVALID_RefreshTOKEN.getCode() + "\"\n}");
                         }
                     }
                 } else if (managerId != null) {
@@ -134,12 +134,12 @@ public class JwtFilter extends OncePerRequestFilter {
                         // 토큰이 만료되었거나 유효하지 않은 경우
                         try {
                             refreshTokenRepository.deleteByUserId(managerId);
-                            throw new UserException(ErrorCode.INVALID_TOKEN, "만료된 토큰입니다");
+                            throw new UserException(ErrorCode.INVALID_RefreshTOKEN, "로그아웃하세요");
                         } catch (UserException e) {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json");
                             response.setCharacterEncoding("UTF-8");
-                            response.getWriter().write("{\n    \"error\": \"" + e.getMessage() + "\",\n    \"code\": \"" + e.getErrorCode() + "\"\n}");
+                            response.getWriter().write("{\n    \"error\": \"" + e.getMessage() + "\",\n    \"code\": \"" + ErrorCode.INVALID_RefreshTOKEN.getCode() + "\"\n}");
                         }
                     }
                 }
