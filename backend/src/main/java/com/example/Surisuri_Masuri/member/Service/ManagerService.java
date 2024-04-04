@@ -79,7 +79,7 @@ public class ManagerService {
             managerRepository.save(manager);
 
             // 3. AccessToken을 생성하고
-            String accessToken = JwtUtils.generateAccessToken(manager, secretKey, (expiredTimeMs/10));
+            String accessToken = JwtUtils.generateAccessToken(manager, secretKey, expiredTimeMs);
 
             // 4. 응답 Dto 생성을 위한 과정
             Optional<Manager> result = managerRepository.findByManagerId(manager.getManagerEmail());
@@ -114,7 +114,7 @@ public class ManagerService {
             RefreshToken newToken = new RefreshToken(manager.get().getManagerId(),JwtUtils.generateRefreshTokenManager(manager.get(),secretKey,expiredTimeMs));
 
              tokenDto= TokenDto.builder()
-                    .accessToken(JwtUtils.generateAccessToken(manager.get(),secretKey,(expiredTimeMs/10)))
+                    .accessToken(JwtUtils.generateAccessToken(manager.get(),secretKey,expiredTimeMs))
                     .refreshToken(newToken.getRefreshToken())
                     .build();
 
