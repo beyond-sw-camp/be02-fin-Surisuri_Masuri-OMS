@@ -27,7 +27,8 @@
 <br>
 <br>
 
-💻 Architecture
+### 💻 Architecture
+
 ---
 
 ### System Architecture
