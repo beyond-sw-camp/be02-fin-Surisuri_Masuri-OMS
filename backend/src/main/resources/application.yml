@@ -45,6 +45,12 @@ spring:
           timeout: 5000
           writetimeout: 5000
 
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+
+
 logging:
   level:
     org.springframework.security: DEBUG
