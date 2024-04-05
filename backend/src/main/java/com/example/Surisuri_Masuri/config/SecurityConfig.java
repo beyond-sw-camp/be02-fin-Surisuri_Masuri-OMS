@@ -2,12 +2,12 @@ package com.example.Surisuri_Masuri.config;
 
 import com.example.Surisuri_Masuri.jwt.JwtFilter;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
-import com.example.Surisuri_Masuri.jwt.Repository.RefreshTokenRepository;
 import com.example.Surisuri_Masuri.member.Service.ManagerService;
 import com.example.Surisuri_Masuri.member.Service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,14 +19,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final UserService userService;
     private final ManagerService managerService;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtils jwtUtils;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    public SecurityConfig(UserService userService, ManagerService managerService, JwtUtils jwtUtils, RefreshTokenRepository refreshTokenRepository) {
+    public SecurityConfig(UserService userService, ManagerService managerService, JwtUtils jwtUtils, RedisTemplate<String, String> redisTemplate) {
         this.userService = userService;
         this.managerService = managerService;
         this.jwtUtils = jwtUtils;
-        this.refreshTokenRepository = refreshTokenRepository;
+        this.redisTemplate = redisTemplate;
     }
 
     @Value("${jwt.secret-key}")
@@ -67,7 +67,8 @@ public class SecurityConfig {
                     .antMatchers("/container/**").permitAll()
                     .antMatchers("/healthz").permitAll()
                     .anyRequest().authenticated();
-            http.addFilterBefore(new JwtFilter(userService,managerService,refreshTokenRepository,secretKey,jwtUtils), UsernamePasswordAuthenticationFilter.class);
+            http.formLogin().disable();
+            http.addFilterBefore(new JwtFilter(userService,managerService,redisTemplate,secretKey,jwtUtils), UsernamePasswordAuthenticationFilter.class);
             http.formLogin().disable();
             http.sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
