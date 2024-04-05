@@ -1,27 +1,17 @@
 package com.example.Surisuri_Masuri.jwt.Service;
 
-import com.example.Surisuri_Masuri.common.BaseResponse;
-import com.example.Surisuri_Masuri.exception.EntityException.ManagerException;
-import com.example.Surisuri_Masuri.exception.EntityException.UserException;
-import com.example.Surisuri_Masuri.exception.ErrorCode;
-import com.example.Surisuri_Masuri.jwt.JwtUtils;
+import com.example.Surisuri_Masuri.common.BaseResponse;import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.jwt.Model.Dto.AccessTokenDto;
-import com.example.Surisuri_Masuri.jwt.Model.Dto.TokenDto;
-import com.example.Surisuri_Masuri.jwt.Model.RefreshToken;
-import com.example.Surisuri_Masuri.jwt.Repository.RefreshTokenRepository;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class AccessTokenService {
-
-    private final RefreshTokenRepository refreshTokenRepository;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
