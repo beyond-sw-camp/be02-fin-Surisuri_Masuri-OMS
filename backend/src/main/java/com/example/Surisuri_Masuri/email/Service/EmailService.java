@@ -71,8 +71,8 @@ public class EmailService {
         String value = vop.get(emailConfirmReq.getEmail());
         if(value.equals(emailConfirmReq.getToken())){
                 update(emailConfirmReq.getEmail(), emailConfirmReq.getAuthority());
-                return new RedirectView("http://wwww.naver.com");
-        }
+                return new RedirectView("http://192.168.0.45/");
+            }
         return new RedirectView("http://localhost:3000/emailCertError");
     }
 
