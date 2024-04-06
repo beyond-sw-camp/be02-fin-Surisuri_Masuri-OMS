@@ -358,11 +358,16 @@ public class OrdersService {
         ordersRepository.delete(ordersResult.get());
     }
 
-    public BaseResponse payment(User user, String imp_uid) throws IamportResponseException, IOException {
+    public BaseResponse payment(String token, String imp_uid) throws IamportResponseException, IOException {
         IamportResponse<Payment> response = getPaymentInfo(imp_uid);
 
-        Optional<User> userResult = userRepository.findById(user.getIdx());
-        User foundUser = userResult.get();
+        token = JwtUtils.replaceToken(token);
+
+        String userId = JwtUtils.getUserEmail(token, secretKey);
+
+        Optional<User> user = userRepository.findByUserEmail(userId);
+
+        User foundUser = user.get();
 
         String customDataString = response.getResponse().getCustomData();
 
@@ -394,7 +399,7 @@ public class OrdersService {
             refundRequest(ordersRefundReq);
 
             for (CartDetail cartDetail: cartDetailList) {
-                cartService.delete(foundUser, cartIdx, cartDetail.getProduct().getProductName());
+                cartService.delete(token, cartIdx, cartDetail.getProduct().getProductName());
             }
             throw new ContainerException(ErrorCode.OrdersPayment_001,
                     String.format("금액이 일치하지 않습니다."));
@@ -403,7 +408,7 @@ public class OrdersService {
         create(payMethod ,cartIdx, merchantUid, amount, foundUser.getStore());
 
         for (CartDetail cartDetail: cartDetailList) {
-            cartService.delete(foundUser, cartIdx, cartDetail.getProduct().getProductName());
+            cartService.delete(token, cartIdx, cartDetail.getProduct().getProductName());
         }
 
         return BaseResponse.successResponse("결제 성공", customDataString);
