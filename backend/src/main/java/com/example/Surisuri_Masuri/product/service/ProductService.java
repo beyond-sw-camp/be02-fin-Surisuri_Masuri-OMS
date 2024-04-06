@@ -3,6 +3,7 @@ package com.example.Surisuri_Masuri.product.service;
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.exception.EntityException.ProductException;
 import com.example.Surisuri_Masuri.exception.EntityException.StoreException;
+import com.example.Surisuri_Masuri.exception.EntityException.UserException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
@@ -52,7 +53,7 @@ public class ProductService {
 
             return BaseResponse.successResponse("요청 성공했습니다.", null);
         } else {
-            throw new StoreException(ErrorCode.StoreCreate_004,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
@@ -89,7 +90,7 @@ public class ProductService {
             return BaseResponse.successResponse("상품 검색을 성공했습니다.", productReadResList);
         }
         else {
-            throw new StoreException(ErrorCode.StoreCreate_004,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         } // 여기까지
     }
@@ -124,7 +125,7 @@ public class ProductService {
             }
             return BaseResponse.successResponse("상품 목록 조회를 성공했습니다.", productReadResList);
         } else {
-            throw new StoreException(ErrorCode.StoreCreate_004,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
@@ -152,7 +153,7 @@ public class ProductService {
                 return BaseResponse.successResponse("상품 수정을 성공했습니다.", null);
             } else throw new ProductException(ErrorCode.ProductUpdate_002, String.format("상품이 존재하지 않습니다."));
         } else {
-            throw new StoreException(ErrorCode.StoreCreate_004,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
@@ -176,7 +177,7 @@ public class ProductService {
             } else throw new ProductException(ErrorCode.ProductDelete_002, String.format("상품이 존재하지 않습니다."));
         }
         else {
-            throw new StoreException(ErrorCode.StoreCreate_004,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
