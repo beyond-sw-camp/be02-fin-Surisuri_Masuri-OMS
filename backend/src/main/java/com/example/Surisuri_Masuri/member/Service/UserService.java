@@ -183,20 +183,20 @@ public class UserService {
                     }
                     if (discardedProduct2.size() > 0) {
                         loginRes = LoginRes.builder()
-                                .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10)))
+                                .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10)))
                                 .refreshToken(RefreshToken)
                                 .discardedProduct(discardedProduct2)
                                 .build();
                     } else {
                         loginRes = LoginRes.builder()
-                                .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10 )))
+                                .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10 )))
                                 .refreshToken(RefreshToken)
                                 .build();
                     }
                 }
             } else {
                 loginRes = LoginRes.builder()
-                        .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10)))
+                        .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10)))
                         .refreshToken(RefreshToken)
                         .build();
             }

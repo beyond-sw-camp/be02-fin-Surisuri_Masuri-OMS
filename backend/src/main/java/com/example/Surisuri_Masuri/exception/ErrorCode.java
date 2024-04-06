@@ -263,6 +263,7 @@ public enum ErrorCode {
     ContainerCreate_003(3100, HttpStatus.BAD_REQUEST, "이미 존재하는 창고 주소입니다."),
     ContainerCreate_004(3101, HttpStatus.BAD_REQUEST, "이미 존재하는 창고 이름입니다."),
     ContainerCreate_005(3102, HttpStatus.BAD_REQUEST, "존재하지 않는 창고 입니다."),
+    ContainerCreate_006(3104, HttpStatus.BAD_REQUEST, "존재하지 않는 회원 정보 입니다."),
 
     // ContainerStock
     ContainerStock_002(3103, HttpStatus.BAD_REQUEST, "폐기할 상품이 존재하지 않습니다.");
