@@ -20,9 +20,9 @@ public class OrdersController {
     private final OrdersService ordersService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/payment")
-    public ResponseEntity payment(@AuthenticationPrincipal User user, @RequestBody String imp_uid) {
+    public ResponseEntity payment(@RequestHeader(value = "AccessToken") String token, @RequestBody String imp_uid) {
         try {
-            return ResponseEntity.ok().body(ordersService.payment(user, imp_uid));
+            return ResponseEntity.ok().body(ordersService.payment(token, imp_uid));
         } catch (Exception e) {
             e.printStackTrace();
         }
