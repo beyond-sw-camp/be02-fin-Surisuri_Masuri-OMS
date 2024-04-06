@@ -2,7 +2,11 @@ package com.example.Surisuri_Masuri.notice.service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
+import com.example.Surisuri_Masuri.exception.EntityException.StoreException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
+import com.example.Surisuri_Masuri.jwt.JwtUtils;
+import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
+import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
 import com.example.Surisuri_Masuri.notice.model.entity.Notice;
 import com.example.Surisuri_Masuri.notice.model.request.PatchUpdateNoticeReq;
 import com.example.Surisuri_Masuri.notice.model.request.PostCreateNoticeReq;
@@ -10,6 +14,7 @@ import com.example.Surisuri_Masuri.notice.model.response.GetListNoticeRes;
 import com.example.Surisuri_Masuri.notice.model.response.PostCreateNoticeRes;
 import com.example.Surisuri_Masuri.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,80 +29,124 @@ public class NoticeService {
 
     private final NoticeRepository noticeRepository;
 
-    public BaseResponse create(PostCreateNoticeReq postCreateNoticeReq) {
+    private final ManagerRepository managerRepository;
 
-        Notice notice = Notice.builder()
-                .category(postCreateNoticeReq.getCategory())
-                .title(postCreateNoticeReq.getTitle())
-                .content(postCreateNoticeReq.getContent())
-                .status(postCreateNoticeReq.getStatus())
-                .build();
-        noticeRepository.save(notice);
+    @Value("${jwt.secret-key}")
+    private String secretKey;
 
-        PostCreateNoticeRes postCreateNoticeRes = PostCreateNoticeRes.builder()
-                .category(postCreateNoticeReq.getCategory())
-                .title(postCreateNoticeReq.getTitle())
-                .content(postCreateNoticeReq.getContent())
-                .build();
+    public BaseResponse create(String token,PostCreateNoticeReq postCreateNoticeReq) {
 
-        return BaseResponse.successResponse("공지사항 작성을 성공했습니다.", postCreateNoticeRes);
-    }
+        token = JwtUtils.replaceToken(token);
 
+        String managerId = JwtUtils.getManagerInfo(token, secretKey);
 
-    public BaseResponse list(Integer page, Integer size) {
+        Optional<Manager> manager = managerRepository.findByManagerId(managerId);
 
-        Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Notice> noticeList = noticeRepository.findList(pageable);
-
-        List<GetListNoticeRes> getListNoticeResList = new ArrayList<>();
-        for (Notice notice : noticeList) {
-            GetListNoticeRes getListNoticeRes = GetListNoticeRes.builder()
-                    .noticeIdx(notice.getNoticeIdx())
-                    .category(notice.getCategory())
-                    .title(notice.getTitle())
-                    .content(notice.getContent())
+        if (manager.isPresent()) {
+            Notice notice = Notice.builder()
+                    .category(postCreateNoticeReq.getCategory())
+                    .title(postCreateNoticeReq.getTitle())
+                    .content(postCreateNoticeReq.getContent())
+                    .status(postCreateNoticeReq.getStatus())
                     .build();
-
-            getListNoticeResList.add(getListNoticeRes);
-        }
-
-        return BaseResponse.successResponse("공지사항 조회를 성공했습니다.",getListNoticeResList);
-
-    }
-
-
-    public BaseResponse update(PatchUpdateNoticeReq patchUpdateNoticeReq) {
-        Optional<Notice> result = noticeRepository.findById(patchUpdateNoticeReq.getNoticeIdx());
-
-        if (result.isPresent()) {
-            Notice notice = result.get();
-            notice.update(patchUpdateNoticeReq);
             noticeRepository.save(notice);
 
-            return BaseResponse.successResponse("공지사항 수정을 성공했습니다.", null);
-        }
+            PostCreateNoticeRes postCreateNoticeRes = PostCreateNoticeRes.builder()
+                    .category(postCreateNoticeReq.getCategory())
+                    .title(postCreateNoticeReq.getTitle())
+                    .content(postCreateNoticeReq.getContent())
+                    .build();
 
-        else {
-            throw new ContainerException(ErrorCode.NoticeUpdate_002,
-                    String.format("공지사항 Idx [ %s ] 이/가 존재하지 않습니다.", patchUpdateNoticeReq.getNoticeIdx()));
+            return BaseResponse.successResponse("공지사항 작성을 성공했습니다.", postCreateNoticeRes);
+        } else {
+            throw new StoreException(ErrorCode.StoreCreate_004,
+                    String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
 
 
-    public BaseResponse delete(Integer noticeIdx) {
-        Optional<Notice> result = noticeRepository.findById(noticeIdx);
+    public BaseResponse list(String token,Integer page, Integer size) {
+        token = JwtUtils.replaceToken(token);
 
-        if(result.isPresent()) {
-            Notice notice = result.get();
-            noticeRepository.delete(notice);
-            return BaseResponse.successResponse("공지사항 삭제를 성공했습니다.",null);
+        String managerId = JwtUtils.getManagerInfo(token, secretKey);
+
+        Optional<Manager> manager = managerRepository.findByManagerId(managerId);
+
+        if (manager.isPresent()) {
+
+            Pageable pageable = PageRequest.of(page - 1, size);
+            Page<Notice> noticeList = noticeRepository.findList(pageable);
+
+            List<GetListNoticeRes> getListNoticeResList = new ArrayList<>();
+            for (Notice notice : noticeList) {
+                GetListNoticeRes getListNoticeRes = GetListNoticeRes.builder()
+                        .noticeIdx(notice.getNoticeIdx())
+                        .category(notice.getCategory())
+                        .title(notice.getTitle())
+                        .content(notice.getContent())
+                        .build();
+
+                getListNoticeResList.add(getListNoticeRes);
+            }
+            return BaseResponse.successResponse("공지사항 조회를 성공했습니다.", getListNoticeResList);
         }
         else {
-            throw new ContainerException(ErrorCode.NoticeDelete_002,
-                    String.format("공지사항 Idx [ %s ] 이/가 존재하지 않습니다.", noticeIdx));
+            throw new StoreException(ErrorCode.StoreCreate_004,
+                    String.format("가입되지 않은 본사 관리자입니다."));
         }
-
     }
 
+
+    public BaseResponse update(String token,PatchUpdateNoticeReq patchUpdateNoticeReq) {
+
+        token = JwtUtils.replaceToken(token);
+
+        String managerId = JwtUtils.getManagerInfo(token, secretKey);
+
+        Optional<Manager> manager = managerRepository.findByManagerId(managerId);
+
+        if (manager.isPresent()) {
+            Optional<Notice> result = noticeRepository.findById(patchUpdateNoticeReq.getNoticeIdx());
+
+            if (result.isPresent()) {
+                Notice notice = result.get();
+                notice.update(patchUpdateNoticeReq);
+                noticeRepository.save(notice);
+
+                return BaseResponse.successResponse("공지사항 수정을 성공했습니다.", null);
+            } else {
+                throw new ContainerException(ErrorCode.NoticeUpdate_002,
+                        String.format("공지사항 Idx [ %s ] 이/가 존재하지 않습니다.", patchUpdateNoticeReq.getNoticeIdx()));
+            }
+        } else {
+            throw new StoreException(ErrorCode.StoreCreate_004,
+                    String.format("가입되지 않은 본사 관리자입니다."));
+        }
+    }
+
+
+    public BaseResponse delete(String token,Integer noticeIdx) {
+        token = JwtUtils.replaceToken(token);
+
+        String managerId = JwtUtils.getManagerInfo(token, secretKey);
+
+        Optional<Manager> manager = managerRepository.findByManagerId(managerId);
+
+        if (manager.isPresent()) {
+            Optional<Notice> result = noticeRepository.findById(noticeIdx);
+
+            if (result.isPresent()) {
+                Notice notice = result.get();
+                noticeRepository.delete(notice);
+                return BaseResponse.successResponse("공지사항 삭제를 성공했습니다.", null);
+            } else {
+                throw new ContainerException(ErrorCode.NoticeDelete_002,
+                        String.format("공지사항 Idx [ %s ] 이/가 존재하지 않습니다.", noticeIdx));
+            }
+        } else {
+            throw new StoreException(ErrorCode.StoreCreate_004,
+                    String.format("가입되지 않은 본사 관리자입니다."));
+        }
+    }
 }
 
