@@ -1,19 +1,19 @@
 package com.example.Surisuri_Masuri.product.service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
-import com.example.Surisuri_Masuri.exception.EntityException.ManagerException;
 import com.example.Surisuri_Masuri.exception.EntityException.ProductException;
+import com.example.Surisuri_Masuri.exception.EntityException.StoreException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
+import com.example.Surisuri_Masuri.jwt.JwtUtils;
+import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
+import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
 import com.example.Surisuri_Masuri.product.model.Product;
 import com.example.Surisuri_Masuri.product.model.dto.request.ProductCreateReq;
 import com.example.Surisuri_Masuri.product.model.dto.request.ProductUpdateReq;
-import com.example.Surisuri_Masuri.product.model.dto.response.ProductListRes;
 import com.example.Surisuri_Masuri.product.model.dto.response.ProductReadRes;
-import com.example.Surisuri_Masuri.product.model.dto.response.ProductSearchRes;
 import com.example.Surisuri_Masuri.product.repository.ProductRepository;
-import com.example.Surisuri_Masuri.store.Model.Entity.Store;
-import com.example.Surisuri_Masuri.store.Model.ResDtos.StoreReadRes;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,101 +26,158 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
+
     private final ProductRepository productRepository;
+    private final ManagerRepository managerRepository;
 
-    public BaseResponse create(ProductCreateReq req) {
+    @Value("${jwt.secret-key}")
+    private String secretKey;
 
-        Product product = productRepository.save(Product.builder()
-                .productName(req.getProductName())
-                .isItFood(req.getIsItFood())
-                .expiredAt(req.getExpiredAt())
-                .price(req.getPrice())
-                .productCategory(req.getProductCategory())
-                .build());
+    public BaseResponse create(String token,ProductCreateReq req) {
 
-        return BaseResponse.successResponse("요청 성공했습니다.", null);
-    }
+        token = JwtUtils.replaceToken(token);
 
-    public BaseResponse search(String productName, Integer page, Integer size) {
+        String managerId = JwtUtils.getManagerInfo(token, secretKey);
 
-        Pageable pageable = PageRequest.of(page-1,size);
+        Optional<Manager> manager = managerRepository.findByManagerId(managerId);
 
-        Page<Product> result = productRepository.findByProductNameContaining(productName,pageable);
+        if (manager.isPresent()) {
+            Product product = productRepository.save(Product.builder()
+                    .productName(req.getProductName())
+                    .isItFood(req.getIsItFood())
+                    .expiredAt(req.getExpiredAt())
+                    .price(req.getPrice())
+                    .productCategory(req.getProductCategory())
+                    .build());
 
-        List<ProductReadRes> productReadResList = new ArrayList<>();
-
-        for (Product product : result.getContent()) {
-
-            ProductReadRes productReadRes = ProductReadRes
-                    .builder()
-                    .productIdx(product.getIdx())
-                    .productName(product.getProductName())
-                    .price(product.getPrice())
-                    .productCategory(product.getProductCategory())
-                    .build();
-
-            productReadResList.add(productReadRes);
+            return BaseResponse.successResponse("요청 성공했습니다.", null);
+        } else {
+            throw new StoreException(ErrorCode.StoreCreate_004,
+                    String.format("가입되지 않은 본사 관리자입니다."));
         }
-
-        return BaseResponse.successResponse("상품 검색을 성공했습니다.", productReadResList);
     }
 
-    public BaseResponse list(Integer page, Integer size) {
+    public BaseResponse search(String token,String productName, Integer page, Integer size) {
 
-        Pageable pageable = PageRequest.of(page-1,size);
+        token = JwtUtils.replaceToken(token);
 
-        Page<Product> result = productRepository.findList(pageable);
+        String managerId = JwtUtils.getManagerInfo(token, secretKey);
 
-        List<ProductReadRes> productReadResList = new ArrayList<>();
+        Optional<Manager> manager = managerRepository.findByManagerId(managerId);
 
-        for (Product product : result.getContent()) {
+        if (manager.isPresent()) {
 
-            ProductReadRes productReadRes = ProductReadRes
-                    .builder()
-                    .productIdx(product.getIdx())
-                    .productName(product.getProductName())
-                    .price(product.getPrice())
-                    .productCategory(product.getProductCategory())
-                    .build();
+            Pageable pageable = PageRequest.of(page - 1, size);
 
-            productReadResList.add(productReadRes);
-        }
+            Page<Product> result = productRepository.findByProductNameContaining(productName, pageable);
 
-        return BaseResponse.successResponse("상품 목록 조회를 성공했습니다.", productReadResList);
+            List<ProductReadRes> productReadResList = new ArrayList<>();
 
-    }
+            for (Product product : result.getContent()) {
 
-    public BaseResponse update(ProductUpdateReq req) {
-        Optional<Product> result = productRepository.findById(req.getIdx());
+                ProductReadRes productReadRes = ProductReadRes
+                        .builder()
+                        .productIdx(product.getIdx())
+                        .productName(product.getProductName())
+                        .price(product.getPrice())
+                        .productCategory(product.getProductCategory())
+                        .build();
 
-        if (result.isPresent()) {
-            Product product = result.get();
-            if (req.getProductName() != null) {
-                product.setProductName(req.getProductName());
+                productReadResList.add(productReadRes);
             }
-            if (req.getPrice() != null) {
-                product.setPrice(req.getPrice());
-            }
-            productRepository.save(product);
 
-            return BaseResponse.successResponse("상품 수정을 성공했습니다.", null);
+            return BaseResponse.successResponse("상품 검색을 성공했습니다.", productReadResList);
         }
-
-        else throw new ProductException(ErrorCode.ProductUpdate_002, String.format("상품이 존재하지 않습니다."));
-
+        else {
+            throw new StoreException(ErrorCode.StoreCreate_004,
+                    String.format("가입되지 않은 본사 관리자입니다."));
+        } // 여기까지
     }
 
-    public BaseResponse delete(Long idx) {
-        Optional<Product> result = productRepository.findById(idx);
+    public BaseResponse list(String token,Integer page, Integer size) {
 
-        if(result.isPresent()) {
-            Product product = result.get();
+        token = JwtUtils.replaceToken(token);
 
-            productRepository.delete(product);
+        String managerId = JwtUtils.getManagerInfo(token, secretKey);
 
-            return BaseResponse.successResponse("상품 삭제를 성공했습니다.", null);
+        Optional<Manager> manager = managerRepository.findByManagerId(managerId);
+
+        if (manager.isPresent()) {
+
+            Pageable pageable = PageRequest.of(page - 1, size);
+
+            Page<Product> result = productRepository.findList(pageable);
+
+            List<ProductReadRes> productReadResList = new ArrayList<>();
+
+            for (Product product : result.getContent()) {
+
+                ProductReadRes productReadRes = ProductReadRes
+                        .builder()
+                        .productIdx(product.getIdx())
+                        .productName(product.getProductName())
+                        .price(product.getPrice())
+                        .productCategory(product.getProductCategory())
+                        .build();
+
+                productReadResList.add(productReadRes);
+            }
+            return BaseResponse.successResponse("상품 목록 조회를 성공했습니다.", productReadResList);
+        } else {
+            throw new StoreException(ErrorCode.StoreCreate_004,
+                    String.format("가입되지 않은 본사 관리자입니다."));
         }
+    }
 
-        else throw new ProductException(ErrorCode.ProductDelete_002, String.format("상품이 존재하지 않습니다."));
+    public BaseResponse update(String token,ProductUpdateReq req) {
+        token = JwtUtils.replaceToken(token);
+
+        String managerId = JwtUtils.getManagerInfo(token, secretKey);
+
+        Optional<Manager> manager = managerRepository.findByManagerId(managerId);
+
+        if (manager.isPresent()) {
+            Optional<Product> result = productRepository.findById(req.getIdx());
+
+            if (result.isPresent()) {
+                Product product = result.get();
+                if (req.getProductName() != null) {
+                    product.setProductName(req.getProductName());
+                }
+                if (req.getPrice() != null) {
+                    product.setPrice(req.getPrice());
+                }
+                productRepository.save(product);
+
+                return BaseResponse.successResponse("상품 수정을 성공했습니다.", null);
+            } else throw new ProductException(ErrorCode.ProductUpdate_002, String.format("상품이 존재하지 않습니다."));
+        } else {
+            throw new StoreException(ErrorCode.StoreCreate_004,
+                    String.format("가입되지 않은 본사 관리자입니다."));
+        }
+    }
+
+    public BaseResponse delete(String token,Long idx) {
+        token = JwtUtils.replaceToken(token);
+
+        String managerId = JwtUtils.getManagerInfo(token, secretKey);
+
+        Optional<Manager> manager = managerRepository.findByManagerId(managerId);
+
+        if (manager.isPresent()) {
+            Optional<Product> result = productRepository.findById(idx);
+
+            if (result.isPresent()) {
+                Product product = result.get();
+
+                productRepository.delete(product);
+
+                return BaseResponse.successResponse("상품 삭제를 성공했습니다.", null);
+            } else throw new ProductException(ErrorCode.ProductDelete_002, String.format("상품이 존재하지 않습니다."));
+        }
+        else {
+            throw new StoreException(ErrorCode.StoreCreate_004,
+                    String.format("가입되지 않은 본사 관리자입니다."));
+        }
     }
 }
