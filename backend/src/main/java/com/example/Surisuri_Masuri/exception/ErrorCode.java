@@ -12,6 +12,9 @@ public enum ErrorCode {
     // 유효값 검증 관련
     INVALID_INPUT_VALUE(900,HttpStatus.BAD_REQUEST, "유효하지 않은 입력값입니다."),
 
+    // 존재하지 않는 회원정보
+    UNREGISTERD_USER_VALUE(3104, HttpStatus.BAD_REQUEST, "존재하지 않는 회원 정보 입니다."),
+
     // 401
     INVALID_AccessTOKEN(1000,HttpStatus.UNAUTHORIZED, "만료된 액세스 토큰입니다."),
     INVALID_RefreshTOKEN(1006,HttpStatus.UNAUTHORIZED, "만료된 리프레쉬 토큰입니다."),
@@ -204,7 +207,6 @@ public enum ErrorCode {
     // StoreCreate
     // StoreCreate_002(3076, HttpStatus.BAD_REQUEST, "잘못된 형식의 가맹점 이름입니다."),
     // StoreCreate_003(3077, HttpStatus.BAD_REQUEST, "잘못된 형식의 가맹점 uuid입니다."),
-    StoreCreate_004(3076, HttpStatus.BAD_REQUEST, "가입되지 않은 본사 관리자입니다."),
 
 
     // StoreSearch
@@ -217,7 +219,6 @@ public enum ErrorCode {
     StoreList_002(3080, HttpStatus.BAD_REQUEST, "페이지 크기는 1 이상이어야 합니다."),
     StoreList_003(3081, HttpStatus.BAD_REQUEST, "잘못된 페이지 번호입니다."),
     StoreList_004(3082, HttpStatus.BAD_REQUEST, "요청한 페이지 범위를 초과했습니다."),
-    StoreList_005(3083, HttpStatus.BAD_REQUEST, "가입되지 않은 본사 관리자입니다."),
 
     // StockCreate
     // StockCreate_002(3083, HttpStatus.BAD_REQUEST, "잘못된 형식의 상품 이름입니다."),
@@ -263,7 +264,6 @@ public enum ErrorCode {
     ContainerCreate_003(3100, HttpStatus.BAD_REQUEST, "이미 존재하는 창고 주소입니다."),
     ContainerCreate_004(3101, HttpStatus.BAD_REQUEST, "이미 존재하는 창고 이름입니다."),
     ContainerCreate_005(3102, HttpStatus.BAD_REQUEST, "존재하지 않는 창고 입니다."),
-    ContainerCreate_006(3104, HttpStatus.BAD_REQUEST, "존재하지 않는 회원 정보 입니다."),
 
     // ContainerStock
     ContainerStock_002(3103, HttpStatus.BAD_REQUEST, "폐기할 상품이 존재하지 않습니다.");

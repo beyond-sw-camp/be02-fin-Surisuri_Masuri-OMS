@@ -3,6 +3,7 @@ package com.example.Surisuri_Masuri.notice.service;
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
 import com.example.Surisuri_Masuri.exception.EntityException.StoreException;
+import com.example.Surisuri_Masuri.exception.EntityException.UserException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
@@ -59,7 +60,7 @@ public class NoticeService {
 
             return BaseResponse.successResponse("공지사항 작성을 성공했습니다.", postCreateNoticeRes);
         } else {
-            throw new StoreException(ErrorCode.StoreCreate_004,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
@@ -91,7 +92,7 @@ public class NoticeService {
             return BaseResponse.successResponse("공지사항 조회를 성공했습니다.", getListNoticeResList);
         }
         else {
-            throw new StoreException(ErrorCode.StoreCreate_004,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
@@ -119,7 +120,7 @@ public class NoticeService {
                         String.format("공지사항 Idx [ %s ] 이/가 존재하지 않습니다.", patchUpdateNoticeReq.getNoticeIdx()));
             }
         } else {
-            throw new StoreException(ErrorCode.StoreCreate_004,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
@@ -144,7 +145,7 @@ public class NoticeService {
                         String.format("공지사항 Idx [ %s ] 이/가 존재하지 않습니다.", noticeIdx));
             }
         } else {
-            throw new StoreException(ErrorCode.StoreCreate_004,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }

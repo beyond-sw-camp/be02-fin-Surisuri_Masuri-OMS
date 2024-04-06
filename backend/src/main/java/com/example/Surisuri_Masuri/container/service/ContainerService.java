@@ -11,10 +11,7 @@ import com.example.Surisuri_Masuri.container.model.response.GetSingleContainerSt
 import com.example.Surisuri_Masuri.container.model.response.PostCreateContainerRes;
 import com.example.Surisuri_Masuri.container.repository.ContainerRepository;
 import com.example.Surisuri_Masuri.container.repository.ContainerStockRepository;
-import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
-import com.example.Surisuri_Masuri.exception.EntityException.ContainerStockException;
-import com.example.Surisuri_Masuri.exception.EntityException.ProductException;
-import com.example.Surisuri_Masuri.exception.EntityException.StoreException;
+import com.example.Surisuri_Masuri.exception.EntityException.*;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
@@ -85,7 +82,7 @@ public class ContainerService {
             return BaseResponse.successResponse("창고 등록 성공", postCreateContainerRes);
         }
         else {
-            throw new StoreException(ErrorCode.ContainerCreate_006,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
@@ -116,7 +113,7 @@ public class ContainerService {
             return BaseResponse.successResponse("창고 상품 등록을 성공했습니다.", null);
         }
         else {
-            throw new StoreException(ErrorCode.ContainerCreate_006,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
@@ -146,7 +143,7 @@ public class ContainerService {
             return BaseResponse.successResponse("창고 목록 조회를 성공했습니다.", getListContainerResList);
         }
         else {
-            throw new StoreException(ErrorCode.ContainerCreate_006,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
@@ -179,7 +176,7 @@ public class ContainerService {
 
             return BaseResponse.successResponse("창고 정보 조회를 성공했습니다.", getSingleContainerStockResList);
         } else {
-            throw new StoreException(ErrorCode.ContainerCreate_006,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
