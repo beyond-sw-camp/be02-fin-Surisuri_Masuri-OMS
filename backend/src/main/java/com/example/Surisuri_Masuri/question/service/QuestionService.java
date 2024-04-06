@@ -3,6 +3,7 @@ package com.example.Surisuri_Masuri.question.service;
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
 import com.example.Surisuri_Masuri.exception.EntityException.StoreException;
+import com.example.Surisuri_Masuri.exception.EntityException.UserException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
@@ -71,8 +72,8 @@ public class QuestionService {
                     .build();
 
             return BaseResponse.successResponse("문의사항 작성을 성공했습니다.", null);
-        }        else {
-            throw new StoreException(ErrorCode.StoreCreate_004,
+        }   else {
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
@@ -108,7 +109,7 @@ public class QuestionService {
             }
             return BaseResponse.successResponse("문의사항 목록 조회를 성공했습니다.", getListQuestionResList);
         }  else {
-            throw new StoreException(ErrorCode.StoreCreate_004,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
@@ -135,7 +136,7 @@ public class QuestionService {
                     String.format("수정할 문의사항 Idx [ %s ] 이/가 존재하지 않습니다.", patchUpdateQuestionReq.getIdx()));
 
         }  else {
-            throw new StoreException(ErrorCode.StoreCreate_004,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
@@ -161,7 +162,7 @@ public class QuestionService {
                         String.format("삭제할 공지사항 Idx [ %s ] 이/가 존재하지 않습니다.", idx));
             }
         } else {
-            throw new StoreException(ErrorCode.StoreCreate_004,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
