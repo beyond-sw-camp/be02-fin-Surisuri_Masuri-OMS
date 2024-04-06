@@ -35,7 +35,4 @@ public class StoreController {
         return ResponseEntity.ok().body(storeService.StoreSearch(token,storeSearchReq));
     }
 
-
-
-
 }
