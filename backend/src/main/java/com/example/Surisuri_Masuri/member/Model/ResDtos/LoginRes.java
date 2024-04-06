@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 @Data
 public class LoginRes {
-    private String jwtToken;
+    private String accessToken;
     private String refreshToken;
     private List<DiscardedProduct> discardedProduct;
 }
