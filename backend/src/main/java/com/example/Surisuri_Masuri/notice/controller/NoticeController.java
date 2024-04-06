@@ -17,25 +17,25 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
-    public ResponseEntity create(@RequestBody PostCreateNoticeReq postCreateNoticeReq) {
-        BaseResponse baseResponse = noticeService.create(postCreateNoticeReq);
+    public ResponseEntity create(@RequestHeader(value = "AccessToken") String token, @RequestBody PostCreateNoticeReq postCreateNoticeReq) {
+        BaseResponse baseResponse = noticeService.create(token,postCreateNoticeReq);
         return ResponseEntity.ok().body(baseResponse);
     }
     @RequestMapping(method = RequestMethod.GET, value = "/list")
-    public ResponseEntity list(Integer page, Integer size) {
-        BaseResponse baseResponse = noticeService.list(page,size);
+    public ResponseEntity list(@RequestHeader(value = "AccessToken") String token,Integer page, Integer size) {
+        BaseResponse baseResponse = noticeService.list(token,page,size);
         return ResponseEntity.ok().body(baseResponse);
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/update")
-    public ResponseEntity update(@RequestBody PatchUpdateNoticeReq patchUpdateNoticeReq) {
-        BaseResponse baseResponse = noticeService.update(patchUpdateNoticeReq);
+    public ResponseEntity update(@RequestHeader(value = "AccessToken") String token,@RequestBody PatchUpdateNoticeReq patchUpdateNoticeReq) {
+        BaseResponse baseResponse = noticeService.update(token,patchUpdateNoticeReq);
         return ResponseEntity.ok().body(baseResponse);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
-    public ResponseEntity delete(Integer noticeIdx) {
-        BaseResponse baseResponse = noticeService.delete(noticeIdx);
+    public ResponseEntity delete(@RequestHeader(value = "AccessToken") String token,Integer noticeIdx) {
+        BaseResponse baseResponse = noticeService.delete(token,noticeIdx);
         return ResponseEntity.ok().body(baseResponse);
     }
 

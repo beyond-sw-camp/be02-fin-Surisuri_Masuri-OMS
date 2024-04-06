@@ -2,14 +2,14 @@ package com.example.Surisuri_Masuri.jwt;
 
 import com.example.Surisuri_Masuri.exception.EntityException.UserException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
-import com.example.Surisuri_Masuri.jwt.Model.RefreshToken;
-import com.example.Surisuri_Masuri.jwt.Repository.RefreshTokenRepository;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Service.ManagerService;
 import com.example.Surisuri_Masuri.member.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,7 +27,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final ManagerService managerService;
 
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
     // Spring Security를 통해 전달 받은 secretKey
     private final String secretKey;
@@ -108,18 +108,21 @@ public class JwtFilter extends OncePerRequestFilter {
             {
                 email = JwtUtils.getUserId(accessToken, secretKey);
                 managerId = JwtUtils.getManagerId(accessToken, secretKey);
-                userIdx = JwtUtils.getIdx(accessToken, secretKey);
 
                 if (email != null) {
-                    Optional<RefreshToken> refreshTokenById = refreshTokenRepository.findByUserId(email);
-                    if (refreshTokenById != null && refreshTokenById.get().getRefreshToken().equals(refreshToken) &&
+//                    Optional<RefreshToken> refreshTokenById = refreshTokenRepository.findByUserId(email);
+                    ValueOperations<String,String> vop = redisTemplate.opsForValue();
+
+                    String resfreshTokenById = vop.get(email);
+
+                    if (resfreshTokenById != null && resfreshTokenById.equals(refreshToken) &&
                             !JwtUtils.validateRefreshToken(refreshToken, secretKey)) {
                         filterChain.doFilter(request, response);
                         return;
                     } else {
                         // 토큰이 만료되었거나 유효하지 않은 경우
                         try {
-                            refreshTokenRepository.deleteByIdx(userIdx);
+//                            refreshTokenRepository.deleteByUserId(email);
                             throw new UserException(ErrorCode.INVALID_RefreshTOKEN, "로그아웃하세요");
                         } catch (UserException e) {
                             response.setHeader("Access-Control-Allow-Origin", "*"); // 실제 운영 환경에서는 구체적인 출처를 지정하는 것이 좋습니다.
@@ -131,15 +134,17 @@ public class JwtFilter extends OncePerRequestFilter {
                         }
                     }
                 } else if (managerId != null) {
-                    Optional<RefreshToken> refreshTokenById = refreshTokenRepository.findByUserId(managerId);
-                    if (refreshTokenById != null && refreshTokenById.get().getRefreshToken().equals(refreshToken) &&
+                    ValueOperations<String,String> vop = redisTemplate.opsForValue();
+
+                    String resfreshTokenById = vop.get(managerId);
+
+                    if (resfreshTokenById != null && resfreshTokenById.equals(refreshToken) &&
                             !JwtUtils.validateRefreshToken(refreshToken, secretKey)) {
                         filterChain.doFilter(request, response);
                         return;
                     } else {
                         // 토큰이 만료되었거나 유효하지 않은 경우
                         try {
-                            refreshTokenRepository.deleteByIdx(userIdx);
                             throw new UserException(ErrorCode.INVALID_RefreshTOKEN, "로그아웃하세요");
                         } catch (UserException e) {
                             response.setHeader("Access-Control-Allow-Origin", "*"); // 실제 운영 환경에서는 구체적인 출처를 지정하는 것이 좋습니다.

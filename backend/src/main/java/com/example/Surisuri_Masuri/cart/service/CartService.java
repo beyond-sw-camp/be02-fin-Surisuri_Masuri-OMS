@@ -12,6 +12,8 @@ import com.example.Surisuri_Masuri.exception.EntityException.CartException;
 import com.example.Surisuri_Masuri.exception.EntityException.ManagerException;
 import com.example.Surisuri_Masuri.exception.EntityException.UserException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
+import com.example.Surisuri_Masuri.jwt.JwtUtils;
+import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.product.model.Product;
@@ -19,6 +21,7 @@ import com.example.Surisuri_Masuri.product.repository.ProductRepository;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import com.example.Surisuri_Masuri.store.Repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,12 +42,21 @@ public class CartService {
     private final StoreRepository storeRepository;
     private final UserRepository userRepository;
 
-    public BaseResponse addCart(User user, CartCreateReq req) {
+    @Value("${jwt.secret-key}")
+    private String secretKey;
+
+    public BaseResponse addCart(String token, CartCreateReq req) {
+
+        token = JwtUtils.replaceToken(token);
+
+        String userId = JwtUtils.getUserEmail(token, secretKey);
+
+        Optional<User> user = userRepository.findByUserEmail(userId);
 
         Optional<Product> productResult = productRepository.findById(req.getProductIdx());
 
-        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
-        User foundUser = userResult.get();
+        User foundUser = user.get();
+
         Optional<Store> storeResult = storeRepository.findByStoreUuid(foundUser.getStore().getStoreUuid());
 
         Store store = storeResult.get();
@@ -111,14 +123,20 @@ public class CartService {
         }
     }
 
-    public BaseResponse list(User user, Integer page, Integer size) {
-        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
+    public BaseResponse list(String token, Integer page, Integer size) {
+
+        token = JwtUtils.replaceToken(token);
+
+        String userId = JwtUtils.getUserEmail(token, secretKey);
+
+        Optional<User> user = userRepository.findByUserEmail(userId);
+
+        Optional<User> userResult = userRepository.findByUserEmail(user.get().getUserEmail());
         if (userResult.isPresent()) {
-            user = userResult.get();
 
             Pageable pageable = PageRequest.of(page - 1, size);
 
-            Optional<Cart> cartResult = cartRepository.findById(user.getStore().getCartList().get(0).getIdx());
+            Optional<Cart> cartResult = cartRepository.findById(user.get().getStore().getCartList().get(0).getIdx());
 
             Cart cart = cartResult.get();
 
@@ -144,14 +162,20 @@ public class CartService {
     }
 
 
-    public BaseResponse delete(User user, Long cartIdx, String productName) {
-        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
+    public BaseResponse delete(String token, Long cartIdx, String productName) {
+        token = JwtUtils.replaceToken(token);
+
+        String userId = JwtUtils.getUserEmail(token, secretKey);
+
+        Optional<User> user = userRepository.findByUserEmail(userId);
+
+        Optional<User> userResult = userRepository.findByUserEmail(user.get().getUserEmail());
         if (userResult.isPresent()) {
-            user = userResult.get();
+
             Optional<Cart> cartResult = cartRepository.findById(cartIdx);
             Cart cart = cartResult.get();
 
-            if (user.getStore().getIdx().equals(cart.getStore().getIdx())) {
+            if (user.get().getStore().getIdx().equals(cart.getStore().getIdx())) {
                 List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(cartIdx);
 
                 for (CartDetail cartDetail : cartDetailList) {
