@@ -2,6 +2,7 @@ package com.example.Surisuri_Masuri.question.service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
+import com.example.Surisuri_Masuri.exception.EntityException.StoreException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
@@ -45,102 +46,132 @@ public class QuestionService {
     @Value("${jwt.token.expired-time-ms}")
     private int expiredTimeMs;
 
-    public BaseResponse create(User user, PostCreateQuestionReq postQuestionReq) {
-        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
-        User foundUser = userResult.get();
+    public BaseResponse create(String token, PostCreateQuestionReq postQuestionReq) {
 
+        token = JwtUtils.replaceToken(token);
 
-        questionRepository.save(Question.builder()
-                .category(postQuestionReq.getCategory())
-                .title(postQuestionReq.getTitle())
-                .content(postQuestionReq.getContent())
-                .status(false)
-                .user(foundUser)
-                .build());
+        String userId = JwtUtils.getUserEmail(token, secretKey);
 
-        PostCreateQuestionRes postCreateQuestionRes = PostCreateQuestionRes.builder()
-                .category(postQuestionReq.getCategory())
-                .title(postQuestionReq.getTitle())
-                .content(postQuestionReq.getContent())
-                .userIdx(foundUser.getIdx())
-                .build();
+        Optional<User> user = userRepository.findByUserEmail(userId);
 
-        return BaseResponse.successResponse("문의사항 작성을 성공했습니다.", null);
+        if (user.isPresent()) {
+            questionRepository.save(Question.builder()
+                    .category(postQuestionReq.getCategory())
+                    .title(postQuestionReq.getTitle())
+                    .content(postQuestionReq.getContent())
+                    .status(false)
+                    .user(user.get())
+                    .build());
 
-    }
-
-
-    public BaseResponse<List<GetListQuestionRes>> list(Integer page, Integer size) {
-
-        Pageable pageable = PageRequest.of(page-1,size);
-
-        Page<Question> result = questionRepository.findList(pageable);
-
-        List<GetListQuestionRes> getListQuestionResList = new ArrayList<>();
-
-        for (Question question : result.getContent()) {
-
-            GetListQuestionRes getListQuestionRes = GetListQuestionRes.builder()
-                    .questionIdx(question.getIdx())
-                    .category(question.getCategory())
-                    .title(question.getTitle())
-                    .content(question.getContent())
-                    .userIdx(question.getUser().getIdx())
-                    .answerContent(Optional.ofNullable(question.getAnswer())
-                            .map(Answer::getAnswerContent)
-                            .orElse(null))  // answerContent가 null인 경우 null로 설정
+            PostCreateQuestionRes postCreateQuestionRes = PostCreateQuestionRes.builder()
+                    .category(postQuestionReq.getCategory())
+                    .title(postQuestionReq.getTitle())
+                    .content(postQuestionReq.getContent())
+                    .userIdx(user.get().getIdx())
                     .build();
 
-
-            getListQuestionResList.add(getListQuestionRes);
+            return BaseResponse.successResponse("문의사항 작성을 성공했습니다.", null);
+        }        else {
+            throw new StoreException(ErrorCode.StoreCreate_004,
+                    String.format("가입되지 않은 본사 관리자입니다."));
         }
-
-        return BaseResponse.successResponse("문의사항 목록 조회를 성공했습니다.", getListQuestionResList);
-
     }
 
+    public BaseResponse<List<GetListQuestionRes>> list(String token,Integer page, Integer size) {
 
-    public BaseResponse update(User user, PatchUpdateQuestionReq patchUpdateQuestionReq) {
-        Optional<Question> result = questionRepository.findById(patchUpdateQuestionReq.getIdx());
+        token = JwtUtils.replaceToken(token);
 
-        if (result.isPresent()) {
-            if (result.get().getUser().getIdx().equals(user.getIdx())) {
-                Question question = result.get();
-                question.update(patchUpdateQuestionReq);
-                questionRepository.save(question);
+        String userId = JwtUtils.getUserEmail(token, secretKey);
+
+        Optional<User> user = userRepository.findByUserEmail(userId);
+
+        if (user.isPresent()) {
+            Pageable pageable = PageRequest.of(page - 1, size);
+
+            Page<Question> result = questionRepository.findList(pageable);
+
+            List<GetListQuestionRes> getListQuestionResList = new ArrayList<>();
+
+            for (Question question : result.getContent()) {
+
+                GetListQuestionRes getListQuestionRes = GetListQuestionRes.builder()
+                        .questionIdx(question.getIdx())
+                        .category(question.getCategory())
+                        .title(question.getTitle())
+                        .content(question.getContent())
+                        .userIdx(question.getUser().getIdx())
+                        .answerContent(Optional.ofNullable(question.getAnswer())
+                                .map(Answer::getAnswerContent)
+                                .orElse(null))  // answerContent가 null인 경우 null로 설정
+                        .build();
+                getListQuestionResList.add(getListQuestionRes);
             }
-            return BaseResponse.successResponse("문의사항 수정을 성공했습니다.", patchUpdateQuestionReq);
+            return BaseResponse.successResponse("문의사항 목록 조회를 성공했습니다.", getListQuestionResList);
+        }  else {
+            throw new StoreException(ErrorCode.StoreCreate_004,
+                    String.format("가입되지 않은 본사 관리자입니다."));
         }
-        else throw new ContainerException(ErrorCode.QuestionUpdate_005,
+    }
+
+    public BaseResponse update(String token, PatchUpdateQuestionReq patchUpdateQuestionReq) {
+
+        token = JwtUtils.replaceToken(token);
+
+        String userId = JwtUtils.getUserEmail(token, secretKey);
+
+        Optional<User> user = userRepository.findByUserEmail(userId);
+
+        if (user.isPresent()) {
+            Optional<Question> result = questionRepository.findById(patchUpdateQuestionReq.getIdx());
+
+            if (result.isPresent()) {
+                if (result.get().getUser().getIdx().equals(user.get().getIdx())) {
+                    Question question = result.get();
+                    question.update(patchUpdateQuestionReq);
+                    questionRepository.save(question);
+                }
+                return BaseResponse.successResponse("문의사항 수정을 성공했습니다.", patchUpdateQuestionReq);
+            } else throw new ContainerException(ErrorCode.QuestionUpdate_005,
                     String.format("수정할 문의사항 Idx [ %s ] 이/가 존재하지 않습니다.", patchUpdateQuestionReq.getIdx()));
 
+        }  else {
+            throw new StoreException(ErrorCode.StoreCreate_004,
+                    String.format("가입되지 않은 본사 관리자입니다."));
+        }
     }
 
+    public BaseResponse delete(String token, Integer idx) {
+        token = JwtUtils.replaceToken(token);
 
-    public BaseResponse delete(User user, Integer idx) {
-        Optional<Question> result = questionRepository.findById(idx);
+        String userId = JwtUtils.getUserEmail(token, secretKey);
 
-        if (result.isPresent()) {
-            if (result.get().getUser().getIdx().equals(user.getIdx())) {
-                Question question = result.get();
-                questionRepository.delete(question);
+        Optional<User> user = userRepository.findByUserEmail(userId);
+
+        if (user.isPresent()) {
+            Optional<Question> result = questionRepository.findById(idx);
+
+            if (result.isPresent()) {
+                if (result.get().getUser().getIdx().equals(user.get().getIdx())) {
+                    Question question = result.get();
+                    questionRepository.delete(question);
+                }
+                return BaseResponse.successResponse("문의사항 삭제를 성공했습니다.", null);
+            } else {
+                throw new ContainerException(ErrorCode.QuestionDelete_002,
+                        String.format("삭제할 공지사항 Idx [ %s ] 이/가 존재하지 않습니다.", idx));
             }
-            return BaseResponse.successResponse("문의사항 삭제를 성공했습니다.", null);
-        }
-
-        else {
-            throw new ContainerException(ErrorCode.QuestionDelete_002,
-                    String.format("삭제할 공지사항 Idx [ %s ] 이/가 존재하지 않습니다.", idx));
+        } else {
+            throw new StoreException(ErrorCode.StoreCreate_004,
+                    String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
 
     public BaseResponse answer(String token, QuestionAnswerReq req) {
         token = JwtUtils.replaceToken(token);
-        Claims managerInfo = JwtUtils.getManagerInfo2(token, secretKey);
-        String managerId = managerInfo.get("managerId", String.class);
 
-        Optional<Manager> managerResult = managerRepository.findByManagerId(managerId);
-        Manager manager = managerResult.get();
+        String managerId = JwtUtils.getManagerInfo(token, secretKey);
+
+        Optional<Manager> manager = managerRepository.findByManagerId(managerId);
 
         Optional<Question> questionResult = questionRepository.findById(req.getQuestionIdx());
         Question question = questionResult.get();
@@ -150,7 +181,7 @@ public class QuestionService {
 
             if (!answerResult.isPresent()) {
                 answerRepository.save(Answer.builder()
-                        .manager(manager)
+                        .manager(manager.get())
                         .answerContent(req.getAnswerContent())
                         .question(question)
                         .build());
@@ -162,8 +193,8 @@ public class QuestionService {
             } else {
                 Answer answer = answerResult.get();
 
-                if (!answer.getManager().getManagerId().equals(manager.getManagerId()))
-                    answer.setManager(manager);
+                if (!answer.getManager().getManagerId().equals(manager.get().getManagerId()))
+                    answer.setManager(manager.get());
                 if (answer.getAnswerContent() != null)
                     answer.setAnswerContent(req.getAnswerContent());
 
