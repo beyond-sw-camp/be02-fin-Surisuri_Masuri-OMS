@@ -115,11 +115,12 @@ export default {
   methods: {
     async fetchQuestions() {
       try {
+        const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get(
           "http://121.140.125.34:11113/api/question/list",
           {
             headers: {
-              Authorization: "Bearer " + sessionStorage.getItem("token"),
+              AccessToken: accessToken,
             },
             params: this.pagination,
           }
