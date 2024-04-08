@@ -156,7 +156,7 @@ export default {
         const accessToken = sessionStorage.getItem("accessToken");
         // GET 요청을 보내고 응답을 변수에 저장합니다.
         const response = await axios.get(
-          "http://121.140.125.34:11113/apiorders/list",
+          "http://121.140.125.34:11113/api/orders/list",
           {
             params: {
               page: 1,
