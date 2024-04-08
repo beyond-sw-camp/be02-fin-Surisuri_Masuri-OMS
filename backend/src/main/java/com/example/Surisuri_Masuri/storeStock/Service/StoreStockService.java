@@ -241,7 +241,7 @@ public class StoreStockService {
         if (user.isPresent()) {
 
             storeStockRepository.
-                    deleteStoreStockByProduct_IdxAndStore_StoreUuid(storeStockDeleteReq.getIdx(),store.get().getStoreUuid());
+                    deleteStoreStockByProductIdxAndStoreUuid(storeStockDeleteReq.getIdx(),store.get().getStoreUuid());
 
             StoreStockDeleteRes storeStockDeleteRes = StoreStockDeleteRes
                     .builder()
