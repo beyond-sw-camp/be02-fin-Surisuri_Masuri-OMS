@@ -136,14 +136,14 @@ export default {
       this.currentPage = page;
 
       try {
-        const token = sessionStorage.getItem("token");
+        const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get("http://121.140.125.34:11113/api/product/list", {
           params: {
             page: this.currentPage,
             size: 5,
           },
           headers: {
-            Authorization: `Bearer ${token}`,
+            AccessToken: accessToken,
           },
         });
         this.products = response.data.result; // 서버로부터 받은 데이터를 products에 할당합니다.
@@ -153,17 +153,17 @@ export default {
     },
     async fetchOrders() {
       try {
-        const token = sessionStorage.getItem("token");
+        const accessToken = sessionStorage.getItem("accessToken");
         // GET 요청을 보내고 응답을 변수에 저장합니다.
         const response = await axios.get(
-          "http://121.140.125.34:11113/api/orders/list",
+          "http://121.140.125.34:11113/apiorders/list",
           {
             params: {
               page: 1,
               size: 5,
             },
             headers: {
-              Authorization: `Bearer ${token}`,
+              AccessToken: accessToken,
             },
           }
         );
@@ -195,7 +195,7 @@ export default {
     },
     async addToCart(product) {
       try {
-        const token = sessionStorage.getItem("token");
+        const accessToken = sessionStorage.getItem("accessToken");
         var CartCreateReq = {
           idx: null,
           productIdx: product.productIdx,
@@ -207,7 +207,7 @@ export default {
           CartCreateReq,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              AccessToken: accessToken,
               "Content-Type": "application/json",
             },
           }

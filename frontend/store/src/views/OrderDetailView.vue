@@ -105,17 +105,17 @@ export default {
   methods: {
     async fetchOrders() {
       try {
-        const token = sessionStorage.getItem("token");
+        const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get("http://121.140.125.34:11113/api/orders/list", {
           params: {
             page: this.currentPage,
             size: this.pageSize,
           },
           headers: {
-            Authorization: `Bearer ${token}`,
+            AccessToken: accessToken,
           },
         });
-
+        
         // 여기서 전체 주문 수와 전체 페이지 수 계산 (예: response에서 전체 주문 수 받아오기)
         this.totalPages = Math.ceil(response.data.totalCount / this.pageSize); // totalCount는 예시입니다.
 

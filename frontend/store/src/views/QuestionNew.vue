@@ -42,7 +42,7 @@ export default {
   methods: {
     async submitQuestion() {
       try {
-        const token = sessionStorage.getItem('token');
+        const accessToken = sessionStorage.getItem('accessToken');
         if (!token) {
           console.error('토큰이 없습니다.');
           return;
@@ -51,7 +51,7 @@ export default {
         await axios.post('http://121.140.125.34:11113/api/question/create', this.question, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'AccessToken': accessToken,
           }
         });
 
