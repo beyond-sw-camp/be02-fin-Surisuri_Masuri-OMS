@@ -88,10 +88,14 @@ export default {
     async fetchNotices(page) {
       this.currentPage = page;
       try {
+        const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get("http://121.140.125.34:11114/api/notice/list", {
           params: {
             page: this.currentPage,
             size: 5,
+          },
+          headers: {
+            AccessToken: accessToken,
           },
         });
         this.notices = response.data.result;

@@ -8,16 +8,36 @@
           <p class="card-text">내용: {{ content }}</p>
         </div>
         <div v-else>
-          <input v-model="editData.title" class="form-control mb-2" placeholder="제목" />
-          <textarea v-model="editData.content" class="form-control mb-2" placeholder="내용"></textarea>
+          <input
+            v-model="editData.title"
+            class="form-control mb-2"
+            placeholder="제목"
+          />
+          <textarea
+            v-model="editData.content"
+            class="form-control mb-2"
+            placeholder="내용"
+          ></textarea>
         </div>
         <!-- 수정/저장 버튼 -->
-        <button v-if="!isEditing" class="btn btn-primary mt-3" @click="editPost">수정하기</button>
-        <button v-else class="btn btn-success mt-3" @click="savePost">저장하기</button>
-        <button class="btn btn-danger mt-3" @click="deleteNotice">삭제하기</button>
+        <button
+          v-if="!isEditing"
+          class="btn btn-primary mt-3"
+          @click="editPost"
+        >
+          수정하기
+        </button>
+        <button v-else class="btn btn-success mt-3" @click="savePost">
+          저장하기
+        </button>
+        <button class="btn btn-danger mt-3" @click="deleteNotice">
+          삭제하기
+        </button>
       </div>
     </div>
-    <router-link to="/notice" class="btn btn-secondary mt-3">목록으로 돌아가기</router-link>
+    <router-link to="/notice" class="btn btn-secondary mt-3"
+      >목록으로 돌아가기</router-link
+    >
   </div>
 </template>
 
@@ -52,10 +72,15 @@ export default {
         status: true,
       };
 
+      // sessionStorage에서 accessToken을 가져옵니다.
+      const accessToken = sessionStorage.getItem("accessToken");
+
       axios
         .patch("http://121.140.125.34:11114/api/notice/update", updateData, {
           headers: {
             "Content-Type": "application/json",
+            // accessToken을 헤더에 추가합니다.
+            AccessToken: accessToken,
           },
         })
         .then((response) => {
@@ -82,7 +107,18 @@ export default {
           return;
         }
 
-        const response = await axios.delete(`http://121.140.125.34:11114/api/notice/delete?noticeIdx=${this.noticeIdx}`);
+        // sessionStorage에서 accessToken을 가져옵니다.
+        const accessToken = sessionStorage.getItem("accessToken");
+
+        const response = await axios.delete(
+          `http://121.140.125.34:11114/api/notice/delete?noticeIdx=${this.noticeIdx}`,
+          {
+            headers: {
+              // accessToken을 헤더에 추가합니다.
+              AccessToken: accessToken,
+            },
+          }
+        );
         console.log("공지사항 삭제 응답:", response.data);
         alert("공지사항이 성공적으로 삭제되었습니다.");
 
@@ -95,7 +131,9 @@ export default {
         console.error("공지사항 삭제 중 오류:", error);
         alert(
           "공지사항 삭제 중 오류가 발생했습니다: " +
-            (error.response && error.response.data ? error.response.data.message : error.message)
+            (error.response && error.response.data
+              ? error.response.data.message
+              : error.message)
         );
       }
     },

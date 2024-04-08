@@ -35,9 +35,12 @@ export default {
   methods: {
     async submitNotice() {
       try {
-        const response = await axios.post('http://192.168.0.44/api/notice/create', this.notice, {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const response = await axios.post('http://121.140.125.34:11114/api/notice/create', this.notice, {
           headers: {
             'Content-Type': 'application/json',
+             AccessToken: accessToken,
+
           },
         });
         console.log('Submitted notice:', response.data);

@@ -62,15 +62,15 @@ export default {
   },
   async mounted() {
     try {
-      const token = sessionStorage.getItem("token");
+      const accessToken = sessionStorage.getItem("accessToken");
 
-      const response = await axios.get("http://121.140.125.34:11114/orders/list", {
+      const response = await axios.get("http://localhost:8080/orders/list", {
         params: {
           page: 1,
           size: 5,
         },
         headers: {
-          Authorization: `Bearer ${token}`,
+          AccessToken: accessToken,
         },
       }); // 서버에서 주문 상세 정보 받아오기
 
@@ -106,14 +106,14 @@ export default {
     },
     async fetchOrders(page) {
       try {
-        const token = sessionStorage.getItem("token");
+        const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get("http://121.140.125.34:11114/api/orders/list", {
           params: {
             page: page,
             size: 5,
           },
           headers: {
-            Authorization: `Bearer ${token}`,
+            AccessToken: accessToken,
           },
         });
         
