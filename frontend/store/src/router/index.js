@@ -134,7 +134,8 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  const isAuthenticated = sessionStorage.getItem('token'); // 세션 스토리지에서 토큰을 가져옵니다.
+  
+  const isAuthenticated = sessionStorage.getItem('accessToken'); // 세션 스토리지에서 토큰을 가져옵니다.
 
   if (requiresAuth && !isAuthenticated) {
     // 인증이 필요하고, 세션 스토리지에 토큰이 없는 경우 로그인 페이지로 리다이렉트
