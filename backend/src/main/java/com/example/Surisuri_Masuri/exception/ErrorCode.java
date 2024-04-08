@@ -67,12 +67,10 @@ public enum ErrorCode {
     // UserEmail 찾기
     // UserEmail_002(3011, HttpStatus.BAD_REQUEST, "잘못된 형식의 이름입니다."),
     // UserEmail_003(3012, HttpStatus.BAD_REQUEST, "잘못된 형식의 전화번호입니다."),
-    UserEmail_004(3013, HttpStatus.NOT_FOUND, "가입되지 않은 회원입니다."),
 
     // UserPassword 찾기
     // UserPassword_002(3014, HttpStatus.BAD_REQUEST, "잘못된 형식의 이름 입니다."),
     // UserPassword_003(3015, HttpStatus.BAD_REQUEST, "잘못된 형식의 이메일 입니다."),
-    UserPassword_004(3016, HttpStatus.NOT_FOUND, "가입되지 않은 회원입니다."),
 
     // UserUpdate
     // UserUpdate_002(3017, HttpStatus.BAD_REQUEST, "잘못된 형식의 비밀번호입니다."),
