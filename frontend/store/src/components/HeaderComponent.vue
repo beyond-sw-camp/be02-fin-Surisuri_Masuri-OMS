@@ -30,7 +30,8 @@ export default {
   methods: {
     logout() {
       // 세션 스토리지에서 토큰 삭제
-      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('acceessToken');
+      sessionStorage.removeItem('refreshToken');
       // 로그아웃 후 로그인 페이지 또는 다른 페이지로 이동하려면 이곳에 경로를 지정할 수 있습니다.
       window.location.href = './';
     }
