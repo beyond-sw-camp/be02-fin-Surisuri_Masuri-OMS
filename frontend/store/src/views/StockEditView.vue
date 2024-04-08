@@ -106,9 +106,9 @@ export default {
     async fetchStockList(page) {
       this.currentPage = page;
       try {
-        const token = sessionStorage.getItem("token");
-        console.log("fetchStockList - 사용할 토큰:", token); // 토큰 정보 확인
-        if (!token) {
+        const accessToken = sessionStorage.getItem("accessToken");
+        console.log("fetchStockList - 사용할 토큰:", accessToken);
+        if (!accessToken) {
           console.error("토큰이 없습니다.");
           return;
         }
@@ -117,7 +117,7 @@ export default {
           "http://121.140.125.34:11113/api/stock/list",
           {
             headers: {
-              Authorization: "Bearer " + token,
+              AccessToken: accessToken,
             },
             params: {
               page: this.currentPage,
