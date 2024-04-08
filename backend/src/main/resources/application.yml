@@ -46,8 +46,8 @@ spring:
           writetimeout: 5000
 
   redis:
-    host: redis-master
-    port: 6379
+    host: ${REDIS_MASTER}
+    port: ${REDIS_PORT}
 
 
 
