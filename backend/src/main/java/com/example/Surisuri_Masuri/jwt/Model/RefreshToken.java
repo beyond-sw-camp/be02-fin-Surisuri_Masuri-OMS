@@ -9,7 +9,7 @@ import javax.persistence.Id;
 
 @AllArgsConstructor
 @Builder
-@RedisHash(value = "refreshToken", timeToLive = 1800)
+@RedisHash(value = "refreshToken", timeToLive = 86400)
 public class RefreshToken {
 
     @Id
