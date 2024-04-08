@@ -7,7 +7,9 @@ import com.example.Surisuri_Masuri.exception.EntityException.UserException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
+import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
+import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.product.model.Product;
 import com.example.Surisuri_Masuri.product.model.dto.request.ProductCreateReq;
 import com.example.Surisuri_Masuri.product.model.dto.request.ProductUpdateReq;
@@ -30,6 +32,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ManagerRepository managerRepository;
+    private final UserRepository userRepository;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -99,9 +102,11 @@ public class ProductService {
 
         token = JwtUtils.replaceToken(token);
 
+        String userId = JwtUtils.getUserEmail(token,secretKey);
         String managerId = JwtUtils.getManagerInfo(token, secretKey);
 
         Optional<Manager> manager = managerRepository.findByManagerId(managerId);
+        Optional<User> user = userRepository.findByUserEmail(userId);
 
         if (manager.isPresent()) {
 
@@ -124,7 +129,31 @@ public class ProductService {
                 productReadResList.add(productReadRes);
             }
             return BaseResponse.successResponse("상품 목록 조회를 성공했습니다.", productReadResList);
-        } else {
+        }
+
+        else if (user.isPresent()) {
+
+            Pageable pageable = PageRequest.of(page - 1, size);
+
+            Page<Product> result = productRepository.findList(pageable);
+
+            List<ProductReadRes> productReadResList = new ArrayList<>();
+
+            for (Product product : result.getContent()) {
+
+                ProductReadRes productReadRes = ProductReadRes
+                        .builder()
+                        .productIdx(product.getIdx())
+                        .productName(product.getProductName())
+                        .price(product.getPrice())
+                        .productCategory(product.getProductCategory())
+                        .build();
+
+                productReadResList.add(productReadRes);
+            }
+            return BaseResponse.successResponse("상품 목록 조회를 성공했습니다.", productReadResList);
+        }
+        else {
             throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
