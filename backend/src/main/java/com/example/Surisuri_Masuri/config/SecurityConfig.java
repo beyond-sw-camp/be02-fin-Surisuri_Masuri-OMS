@@ -45,7 +45,27 @@ public class SecurityConfig {
 
             http.csrf().disable()
                     .authorizeRequests()
-                    .antMatchers("/**").permitAll()
+                    .antMatchers("/user/test").hasAuthority("ROLE_User")
+                    .antMatchers("/user/update").hasAuthority("ROLE_User")
+                    .antMatchers("/store/create").hasAuthority("ROLE_Manager")
+                    .antMatchers("/store/search").hasAuthority("ROLE_Manager")
+                    .antMatchers("/user/register").permitAll()
+                    .antMatchers("/manager/register").permitAll()
+                    .antMatchers("/user/confirm").permitAll()
+                    .antMatchers("/user/findEmail").permitAll()
+                    .antMatchers("/user/login").permitAll()
+                    .antMatchers("/manager/login").permitAll()
+                    .antMatchers("/user/findPassword").permitAll()
+                    .antMatchers("/user/resetPassword/{idx}").permitAll()
+                    .antMatchers("/product/**").permitAll()
+                    .antMatchers("/cart/**").permitAll()
+                    .antMatchers("/orders/**").permitAll()
+                    .antMatchers("/stock/**").permitAll()
+                    .antMatchers("/notice/**").permitAll()
+                    .antMatchers("/question/**").permitAll()
+                    .antMatchers("/store/**").permitAll()
+                    .antMatchers("/container/**").permitAll()
+                    .antMatchers("/healthz").permitAll()
                     .anyRequest().authenticated();
             http.formLogin().disable();
             http.addFilterBefore(new JwtFilter(userService,managerService,redisTemplate,secretKey,jwtUtils), UsernamePasswordAuthenticationFilter.class);
