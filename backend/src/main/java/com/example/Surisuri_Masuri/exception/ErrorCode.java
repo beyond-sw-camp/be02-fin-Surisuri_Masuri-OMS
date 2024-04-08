@@ -120,11 +120,13 @@ public enum ErrorCode {
     RefundRequest_001(3110, HttpStatus.BAD_REQUEST, "배송이 이미 시작되어 주문 취소가 불가능합니다."),
 
     // CartCreate
-    CartCreate_002(3035, HttpStatus.BAD_REQUEST, "카트에 상품 정보가 존재하지 않습니다."),
-    CartCreate_003(3036, HttpStatus.BAD_REQUEST, "카트에 상품을 담는 것을 실패했습니다."),
+//    CartCreate_002(3035, HttpStatus.BAD_REQUEST, "카트에 상품 정보가 존재하지 않습니다."),
+//    CartCreate_003(3036, HttpStatus.BAD_REQUEST, "카트에 상품을 담는 것을 실패했습니다."),
 
     // CartAdd
-    CartAdd_001(3104, HttpStatus.BAD_REQUEST, "카트에 상품을 최소 1개 이상 추가해야 합니다."),
+    CartAdd_001(3104, HttpStatus.BAD_REQUEST, "회원 정보를 찾을 수 없습니다."),
+    CartAdd_002(3105, HttpStatus.BAD_REQUEST, "가맹점 정보가 존재하지 않습니다."),
+    CartAdd_003(3105, HttpStatus.BAD_REQUEST, "상품 정보가 존재하지 않습니다."),
 
     // CartDelete
     CartDelete_002(3037, HttpStatus.BAD_REQUEST, "카트 삭제를 실패했습니다."),
