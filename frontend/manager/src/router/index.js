@@ -96,7 +96,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const managerStore = useManagerStore(); // Pinia store 인스턴스화
-  const isAuthenticated = managerStore.token; // 로그인 상태 확인
+  const isAuthenticated = managerStore.accessToken; // 로그인 상태 확인
 
   if (!isAuthenticated && to.name !== "login") {
     // 로그인 및 회원가입 페이지를 제외한 페이지 접근 제어

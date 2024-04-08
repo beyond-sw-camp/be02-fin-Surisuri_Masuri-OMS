@@ -109,7 +109,7 @@ export default {
     async fetchQuestions() {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
-        const response = await axios.get("http://localhost:8080/question/list", {
+        const response = await axios.get("http://121.140.125.34:11114/api/question/list", {
           headers: {
             AccessToken:  accessToken, // 'Authorization' 대신 'AccessToken' 사용
           },

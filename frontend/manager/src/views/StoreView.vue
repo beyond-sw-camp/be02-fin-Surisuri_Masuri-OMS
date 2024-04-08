@@ -64,7 +64,7 @@ export default {
     try {
       const accessToken = sessionStorage.getItem("accessToken");
 
-      const response = await axios.get("http://localhost:8080/orders/list", {
+      const response = await axios.get("http://121.140.125.34:11114/api/orders/list", {
         params: {
           page: 1,
           size: 5,
