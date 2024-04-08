@@ -212,7 +212,7 @@ public class UserService {
         compare2 = userRepository.findByUserPhoneNo(userFindEmailReq.getUserPhoneNo());
 
         if (compare1.isEmpty() || compare2.isEmpty()) {
-            throw new ManagerException(ErrorCode.UserEmail_004,
+            throw new ManagerException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 회원입니다."));
         }
 
@@ -225,7 +225,7 @@ public class UserService {
                 return BaseResponse.successResponse("요청하신 회원 정보입니다.", userFindEmailRes);
             }
         }
-        throw new ManagerException(ErrorCode.UserEmail_004,
+        throw new ManagerException(ErrorCode.UNREGISTERD_USER_VALUE,
                 String.format("가입되지 않은 회원입니다."));
     }
 
@@ -292,7 +292,7 @@ public class UserService {
         Optional<User> userResult = userRepository.findByUserEmail(findUserPasswordReq.getUserEmail());
 
         if(userResults.isEmpty() || userResult.isEmpty()) {
-            throw new ManagerException(ErrorCode.UserEmail_004,
+            throw new ManagerException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 회원입니다."));
         }
 
@@ -320,8 +320,8 @@ public class UserService {
             }
 
         }
-        throw new ManagerException(ErrorCode.UserEmail_004,
-                String.format("가입되지 않은 이메일입니다."));
+        throw new ManagerException(ErrorCode.UNREGISTERD_USER_VALUE,
+                String.format("가입되지 않은 회원입니다."));
 
     }
 
@@ -345,7 +345,7 @@ public class UserService {
         }
 
         else
-            throw new ManagerException(ErrorCode.UserPassword_004,
+            throw new ManagerException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 회원입니다."));
 
     }
