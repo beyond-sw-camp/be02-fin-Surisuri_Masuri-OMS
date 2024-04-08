@@ -81,7 +81,7 @@ public class UserService {
                         .userEmail(userSignUpReq.getUserEmail())
                         .userPassword(passwordEncoder.encode(userSignUpReq.getUserPassword()))
                         .userPhoneNo(userSignUpReq.getUserPhoneNo())
-                        .userAuthority("ROLE_User")
+                        .userAuthority("ROLE_USER")
                         .store(store.get())
                         .status(false)
                         .createdAt(create)
@@ -100,7 +100,7 @@ public class UserService {
                 storeRepository.save(store2);
 
                 // 3. AccessToken을 생성하여
-                String accessToken = JwtUtils.generateAccessToken(user, secretKey, (expiredTimeMs/10));
+                String accessToken = JwtUtils.generateAccessToken(user, secretKey, expiredTimeMs/48);
 
                 // 4. 이메일에 포함시켜 사용자에게 전달하여 이메일 인증을 요청
                 SendEmailReq sendEmailReq = SendEmailReq.builder()
@@ -183,20 +183,20 @@ public class UserService {
                     }
                     if (discardedProduct2.size() > 0) {
                         loginRes = LoginRes.builder()
-                                .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10)))
+                                .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs/48))
                                 .refreshToken(RefreshToken)
                                 .discardedProduct(discardedProduct2)
                                 .build();
                     } else {
                         loginRes = LoginRes.builder()
-                                .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10 )))
+                                .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs/48))
                                 .refreshToken(RefreshToken)
                                 .build();
                     }
                 }
             } else {
                 loginRes = LoginRes.builder()
-                        .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10)))
+                        .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs/48))
                         .refreshToken(RefreshToken)
                         .build();
             }
