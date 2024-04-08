@@ -45,7 +45,7 @@ public class StoreSchedulingService {
             StoreStockDto dto = StoreStockDto.builder()
                     .storeName(storeStock.getStore().getStoreName())
                     .productName(storeStock.getProduct().getProductName())
-                    .productQuantity(storeStock.getStockQuantitiy())
+                    .productQuantity(storeStock.getStockQuantity())
                     .expiredAt(storeStock.getExpiredAt()) // 변경된 부분
                     .build();
             discardedProductsDTO.add(dto);

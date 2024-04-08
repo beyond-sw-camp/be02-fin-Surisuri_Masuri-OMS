@@ -38,8 +38,8 @@ export default {
   methods: {
     async submitAnswer() {
       try {
-        const token = sessionStorage.getItem("token");
-        if (!token) {
+        
+        if (!accessToken) {
           alert("로그인이 필요합니다.");
           return;
         }
@@ -47,11 +47,11 @@ export default {
           questionIdx: this.questionIdx,
           answerContent: this.answerContent,
         };
-
+        const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.post("http://121.140.125.34:11114/api/question/answer", answerReq, {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            AccessToken: accessToken,
           },
         });
 

@@ -7,13 +7,17 @@ import com.example.Surisuri_Masuri.exception.EntityException.UserException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
+import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
+import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.notice.model.entity.Notice;
 import com.example.Surisuri_Masuri.notice.model.request.PatchUpdateNoticeReq;
 import com.example.Surisuri_Masuri.notice.model.request.PostCreateNoticeReq;
 import com.example.Surisuri_Masuri.notice.model.response.GetListNoticeRes;
 import com.example.Surisuri_Masuri.notice.model.response.PostCreateNoticeRes;
 import com.example.Surisuri_Masuri.notice.repository.NoticeRepository;
+import com.example.Surisuri_Masuri.store.Model.Entity.Store;
+import com.example.Surisuri_Masuri.store.Repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -31,6 +35,8 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
 
     private final ManagerRepository managerRepository;
+
+    private final UserRepository userRepository;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -70,8 +76,11 @@ public class NoticeService {
         token = JwtUtils.replaceToken(token);
 
         String managerId = JwtUtils.getManagerInfo(token, secretKey);
+        String userId = JwtUtils.getUserEmail(token,secretKey);
 
         Optional<Manager> manager = managerRepository.findByManagerId(managerId);
+        Optional<User> user = userRepository.findByUserEmail(userId);
+
 
         if (manager.isPresent()) {
 
@@ -91,9 +100,29 @@ public class NoticeService {
             }
             return BaseResponse.successResponse("공지사항 조회를 성공했습니다.", getListNoticeResList);
         }
+
+        else if (user.isPresent()) {
+
+            Pageable pageable = PageRequest.of(page - 1, size);
+            Page<Notice> noticeList = noticeRepository.findList(pageable);
+
+            List<GetListNoticeRes> getListNoticeResList = new ArrayList<>();
+            for (Notice notice : noticeList) {
+                GetListNoticeRes getListNoticeRes = GetListNoticeRes.builder()
+                        .noticeIdx(notice.getNoticeIdx())
+                        .category(notice.getCategory())
+                        .title(notice.getTitle())
+                        .content(notice.getContent())
+                        .build();
+
+                getListNoticeResList.add(getListNoticeRes);
+            }
+            return BaseResponse.successResponse("공지사항 조회를 성공했습니다.", getListNoticeResList);
+        }
+
         else {
             throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
-                    String.format("가입되지 않은 본사 관리자입니다."));
+                    String.format("가입되지 않은 유저입니다"));
         }
     }
 
@@ -150,4 +179,3 @@ public class NoticeService {
         }
     }
 }
-

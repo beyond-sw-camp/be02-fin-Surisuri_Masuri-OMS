@@ -79,7 +79,7 @@ public class StoreStockService {
                     .product(product2)
                     .createdAt(create)
                     .updatedAt(update)
-                    .stockQuantitiy(storeStockCreateReq.getStockQuantity())
+                    .stockQuantity(storeStockCreateReq.getStockQuantity())
                     .store(store2)
                     .isDiscarded(false)
                     .expiredAt(product2.getExpiredAt())
@@ -139,7 +139,7 @@ public class StoreStockService {
                 storeStockReadRes = StoreStockReadRes
                         .builder()
                         .storeStockDto(storeStockDto)
-                        .stockQuantitiy(storeStock.getStockQuantitiy())
+                        .stockQuantitiy(storeStock.getStockQuantity())
                         .storeStockIdx(storeStock.getIdx())
                         .build();
 
@@ -180,7 +180,7 @@ public class StoreStockService {
             StoreStockSearchRes storeStockSearchRes = StoreStockSearchRes
                     .builder()
                     .storeStockDto(storeStockDto)
-                    .stockQuantity(storeStock2.getStockQuantitiy())
+                    .stockQuantity(storeStock2.getStockQuantity())
                     .storeAddr(store.get().getStoreAddr())
                     .storeStockIdx(storeStock2.getIdx())
                     .build();
@@ -208,7 +208,7 @@ public class StoreStockService {
             StoreStock storeStock = storeStockResult.get();
 
             if (storeStockResult.isPresent()) {
-                storeStock.setStockQuantitiy(storeStockUpdateReq.getStockQuantity());
+                storeStock.setStockQuantity(storeStockUpdateReq.getStockQuantity());
 
                 storeStockRepository.save(storeStock);
 

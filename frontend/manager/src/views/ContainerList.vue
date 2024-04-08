@@ -102,6 +102,7 @@ export default {
     async fetchContainers(page) {
       this.currentPage = page;
       try {
+        const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get(
           "http://121.140.125.34:11114/api/container/list",
           {
@@ -109,6 +110,9 @@ export default {
               page: this.currentPage,
               size: 5,
             },
+            headers: {
+            AccessToken: accessToken,
+          },
           }
         );
         this.containers = response.data.result; // 'data.result'로 수정

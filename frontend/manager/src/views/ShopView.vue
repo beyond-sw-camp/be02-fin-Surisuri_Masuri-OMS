@@ -112,28 +112,38 @@ export default {
   created() {
     this.fetchShops(this.currentPage);
   },
-  
+
   methods: {
     async fetchShops(page) {
       this.currentPage = page;
       try {
-        const token = sessionStorage.getItem("token");
+        const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get("http://121.140.125.34:11114/api/store/list", {
           headers: {
-            Authorization: `Bearer ${token}`,
+            AccessToken:  accessToken, // 'Authorization' 대신 'AccessToken' 사용
           },
           params: {
             page: this.currentPage,
             size: 5,
             searchQuery: this.searchQuery,
           },
+          
         });
+        console.log(accessToken)
         // 서버 응답에 따라 .data 구조 조정 필요
         this.shops = response.data.result || []; // 응답이 없을 경우 빈 배열 할당
         console.log("가맹점 조회 응답:", response.data);
       } catch (error) {
         console.error("가맹점 조회 오류:", error);
         this.shops = []; // 오류 발생 시 shops를 빈 배열로 초기화
+        // 오류 메시지 추출 및 콘솔에 출력
+        const errorMessage =
+          error.response && error.response.data && error.response.data.error
+            ? error.response.data.error
+            : "가맹점 조회 중 오류가 발생했습니다.";
+        console.error("오류 메시지:", errorMessage);
+        // 여기서 오류 메시지를 사용자에게 알리기 위한 로직을 추가할 수 있습니다.
+        // 예: alert(errorMessage); 또는 상태 변수에 저장하여 템플릿에 표시
       }
     },
     nextRange() {
@@ -158,7 +168,6 @@ export default {
       this.fetchShops();
     },
   },
- 
 };
 </script>
 

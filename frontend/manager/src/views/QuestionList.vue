@@ -108,8 +108,13 @@ export default {
   methods: {
     async fetchQuestions() {
       try {
+        const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get("http://121.140.125.34:11114/api/question/list", {
-          params: this.pagination, // 페이지네이션 정보를 params로 전달
+          headers: {
+            AccessToken:  accessToken, // 'Authorization' 대신 'AccessToken' 사용
+          },
+          params: this.pagination,
+          // 페이지네이션 정보를 params로 전달
         });
         // 응답 데이터 전체를 콘솔에 출력
         console.log("응답 데이터:", response.data);
