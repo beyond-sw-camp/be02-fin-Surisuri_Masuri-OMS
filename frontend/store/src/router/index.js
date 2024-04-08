@@ -134,6 +134,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  
   const isAuthenticated = sessionStorage.getItem('accessToken'); // 세션 스토리지에서 토큰을 가져옵니다.
 
   if (requiresAuth && !isAuthenticated) {
