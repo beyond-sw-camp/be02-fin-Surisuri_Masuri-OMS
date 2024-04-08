@@ -56,8 +56,8 @@ export default {
       this.editable = true;
     },
     async saveChanges() {
-      const token = sessionStorage.getItem("token");
-      if (!token) {
+      const accessToken = sessionStorage.getItem("accessToken");
+      if (!accessToken) {
         alert("로그인이 필요합니다.");
         return;
       }
@@ -75,7 +75,7 @@ export default {
           {
             headers: {
               "Content-Type": "application/json",
-              Authorization: "Bearer " + token,
+              'AccessToken': accessToken,
             },
           }
         );
@@ -88,15 +88,15 @@ export default {
       }
     },
     async deleteQuestion() {
-      const token = sessionStorage.getItem("token");
-      if (!token) {
+      const accessToken = sessionStorage.getItem("accessToken");
+      if (!accessToken) {
         alert("로그인이 필요합니다.");
         return;
       }
       try {
         await axios.delete(`http://121.140.125.34:11113/api/question/delete?idx=${this.questionIdx}`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            'AcessToken': accessToken,
           },
         });
         alert("문의사항이 성공적으로 삭제되었습니다.");
