@@ -40,12 +40,13 @@ export default {
     async fetchOrderDetails() {
       this.loading = true;
       const merchantUid = this.$route.params.merchantUid;
-      const token = sessionStorage.getItem("token");
+     
 
       try {
+        const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get(`http://121.140.125.34:11114/api/orders/${merchantUid}`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            AccessToken: accessToken,
           },
         });
         this.orderDetails = response.data.result;
