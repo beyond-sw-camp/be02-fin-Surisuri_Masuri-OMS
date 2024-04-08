@@ -43,7 +43,7 @@ export default {
     async submitQuestion() {
       try {
         const accessToken = sessionStorage.getItem('accessToken');
-        if (!token) {
+        if (!accessToken) {
           console.error('토큰이 없습니다.');
           return;
         }
