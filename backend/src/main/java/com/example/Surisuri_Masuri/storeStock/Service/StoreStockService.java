@@ -82,7 +82,7 @@ public class StoreStockService {
                     .stockQuantity(storeStockCreateReq.getStockQuantity())
                     .store(store2)
                     .isDiscarded(false)
-                    .expiredAt(product2.getExpiredAt())
+                    .expiredAt(storeStockCreateReq.getExpiredAt())
                     .build();
 
             StoreDto storeDto = StoreDto
@@ -241,7 +241,7 @@ public class StoreStockService {
         if (user.isPresent()) {
 
             storeStockRepository.
-                    deleteStoreStockByProductIdxAndStoreUuid(storeStockDeleteReq.getIdx(),store.get().getStoreUuid());
+                    deleteStoreStockByStockIdxAndStoreUuid(storeStockDeleteReq.getIdx(),store.get().getStoreUuid());
 
             StoreStockDeleteRes storeStockDeleteRes = StoreStockDeleteRes
                     .builder()
