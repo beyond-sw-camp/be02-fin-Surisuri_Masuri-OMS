@@ -207,15 +207,8 @@ public class UserService {
     }
 
     // 이메일 찾기 기능
-    public BaseResponse<UserFindEmailRes> findEmail(String token,UserFindEmailReq userFindEmailReq) {
+    public BaseResponse<UserFindEmailRes> findEmail(UserFindEmailReq userFindEmailReq) {
 
-        token = JwtUtils.replaceToken(token);
-
-        String userId = JwtUtils.getUserId(token, secretKey);
-
-        Optional<User> user = userRepository.findByUserEmail(userId);
-
-        if (user.isPresent()) {
             compare1 = userRepository.findByUserName(userFindEmailReq.getUserName());
             compare2 = userRepository.findByUserPhoneNo(userFindEmailReq.getUserPhoneNo());
 
@@ -233,7 +226,7 @@ public class UserService {
                     return BaseResponse.successResponse("요청하신 회원 정보입니다.", userFindEmailRes);
                 }
             }
-        }
+
         throw new ManagerException(ErrorCode.UNREGISTERD_USER_VALUE,
                 String.format("가입되지 않은 회원입니다."));
     }

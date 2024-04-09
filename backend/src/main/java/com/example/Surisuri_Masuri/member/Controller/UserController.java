@@ -42,8 +42,8 @@ public class UserController {
 
     // 아이디 찾기
     @GetMapping("/user/findEmail")
-    public ResponseEntity findEmail(@RequestHeader(value = "AccessToken") String token,@Valid UserFindEmailReq userFindEmailReq) {
-        return ResponseEntity.ok().body(userService.findEmail(token,userFindEmailReq));
+    public ResponseEntity findEmail(@Valid UserFindEmailReq userFindEmailReq) {
+        return ResponseEntity.ok().body(userService.findEmail(userFindEmailReq));
     }
 
     // 회원정보 수정
