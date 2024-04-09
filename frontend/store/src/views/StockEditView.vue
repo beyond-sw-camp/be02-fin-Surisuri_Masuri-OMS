@@ -28,7 +28,7 @@
                       class="stock-input"
                     />
                     <button
-                      @click="updateStockQuantity(product)"
+                      @click="updateProductQuantity(product)"
                       class="btn btn-primary"
                     >
                       수정
@@ -151,26 +151,26 @@
           this.fetchStockList(startPage - this.pageRangeSize + 1);
         }
       },
-      async updateStockQuantity(product) {
+      async updateProductQuantity(product) {
         try {
           const accessToken = sessionStorage.getItem("accessToken");
-          console.log("updateStockQuantity - 사용할 토큰:", accessToken); // 토큰 정보 확인
+          console.log("updateProductQuantity - 사용할 토큰:", accessToken); // 토큰 정보 확인
           if (!accessToken) {
             console.error("토큰이 없습니다.");
             return;
           }
 
-          console.log("updateStockQuantity - 요청 데이터:", {
+          console.log("updateProductQuantity - 요청 데이터:", {
             // 요청 데이터 확인
             idx: product.storeStockIdx,
-            stockQuantity: product.stockQuantity,
+            productQuantity: product.productQuantity,
           });
 
           const response = await axios.patch(
             "http://121.140.125.34:11113/api/stock/update",
             {
               idx: product.storeStockIdx,
-              stockQuantity: product.stockQuantity,
+              productQuantity: product.productQuantity,
             },
             {
               headers: {
@@ -180,7 +180,7 @@
             }
           );
 
-          console.log("updateStockQuantity - 응답 데이터:", response.data); // 응답 데이터 확인
+          console.log("updateProductQuantity - 응답 데이터:", response.data); // 응답 데이터 확인
 
           if (response.status === 200) {
             // HTTP 상태 코드가 200인 경우 성공으로 간주
