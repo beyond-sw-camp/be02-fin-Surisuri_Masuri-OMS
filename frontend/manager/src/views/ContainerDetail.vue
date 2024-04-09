@@ -43,7 +43,7 @@ export default {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get(
-          `http://121.140.125.34:11114/api/singlestock?containerIdx=${containerIdx}`,
+          `http://121.140.125.34:11114/api/container/singlestock?containerIdx=${containerIdx}`,
           {
             params: {
               page: 1,
