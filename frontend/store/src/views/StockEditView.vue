@@ -26,7 +26,7 @@
                     v-model.number="product.stockQuantitiy"
                     min="0"
                     class="stock-input"
-                  />
+                  />z
                   <button
                     @click="updateStockQuantitiy(product)"
                     class="btn btn-primary"
@@ -153,9 +153,9 @@ export default {
     },
     async updateStockQuantitiy(product) {
       try {
-        const token = sessionStorage.getItem("token");
-        console.log("updateStockQuantitiy - 사용할 토큰:", token); // 토큰 정보 확인
-        if (!token) {
+        const accessToken = sessionStorage.getItem("accessToken");
+        console.log("updateStockQuantitiy - 사용할 토큰:", accessToken); // 토큰 정보 확인
+        if (!accessToken) {
           console.error("토큰이 없습니다.");
           return;
         }
@@ -175,7 +175,7 @@ export default {
           {
             headers: {
               "Content-Type": "application/json",
-              Authorization: "Bearer " + token,
+               AccessToken: accessToken,
             },
           }
         );
@@ -185,6 +185,7 @@ export default {
         if (response.status === 200) {
           // HTTP 상태 코드가 200인 경우 성공으로 간주
           console.log("재고 업데이트 성공");
+          alert('재고 수정이 완료 되었습니다.');
         } else {
           console.error(`재고 업데이트 실패: ${response.data.message}`);
         }
