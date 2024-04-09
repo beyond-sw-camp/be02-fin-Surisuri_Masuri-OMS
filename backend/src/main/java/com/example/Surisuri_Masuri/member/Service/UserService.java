@@ -99,14 +99,10 @@ public class UserService {
 
                 storeRepository.save(store2);
 
-                // 3. AccessToken을 생성하여
-                String accessToken = JwtUtils.generateAccessToken(user, secretKey, (expiredTimeMs/48));
-
                 // 4. 이메일에 포함시켜 사용자에게 전달하여 이메일 인증을 요청
                 SendEmailReq sendEmailReq = SendEmailReq.builder()
                         .email(user.getUserEmail())
                         .authority(user.getUserAuthority())
-                        .accessToken(accessToken)
                         .build();
 
                 // 5. 이메일 전송

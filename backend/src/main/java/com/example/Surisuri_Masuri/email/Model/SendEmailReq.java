@@ -9,5 +9,5 @@ public class SendEmailReq {
     private Long idx;
     private String email;
     private String authority;
-    private String accessToken;
+    private String uuid;
 }

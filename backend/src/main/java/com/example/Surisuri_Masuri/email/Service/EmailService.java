@@ -41,7 +41,7 @@ public class EmailService {
         String uuid = UUID.randomUUID().toString();
         message.setText("http://121.140.125.34:11113/api/user/confirm?email="
                 + sendEmailReq.getEmail()
-                + "&token=" + uuid
+                + "&uuid=" + uuid
                 + "&authority=" + sendEmailReq.getAuthority()
         );
         emailSender.send(message);
