@@ -4,6 +4,8 @@ import com.example.Surisuri_Masuri.email.Model.EmailConfirmReq;
 import com.example.Surisuri_Masuri.email.Model.EmailVerify;
 import com.example.Surisuri_Masuri.email.Model.SendEmailReq;
 import com.example.Surisuri_Masuri.email.Repository.EmailVerifyRepository;
+import com.example.Surisuri_Masuri.exception.EntityException.UserException;
+import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +41,8 @@ public class EmailService {
         String uuid = UUID.randomUUID().toString();
         message.setText("http://121.140.125.34:11113/api/user/confirm?email="
                 + sendEmailReq.getEmail()
-                + "&authority=" + sendEmailReq.getAuthority()
                 + "&token=" + uuid
-                + "&jwt=" + sendEmailReq.getAccessToken()
+                + "&authority=" + sendEmailReq.getAuthority()
         );
         emailSender.send(message);
         create(sendEmailReq.getEmail(),uuid);
@@ -69,16 +70,16 @@ public class EmailService {
     public RedirectView verify(EmailConfirmReq emailConfirmReq) {
         ValueOperations<String, String> vop = redisTemplate.opsForValue();
         String value = vop.get(emailConfirmReq.getEmail());
-        if(value.equals(emailConfirmReq.getToken())){
+        if(value.equals(emailConfirmReq.getUuid())){
                 update(emailConfirmReq.getEmail(), emailConfirmReq.getAuthority());
-                return new RedirectView("http://192.168.0.45/");
+                return new RedirectView("http://121.140.125.34:11113");
             }
-        return new RedirectView("http://localhost:3000/emailCertError");
+        else throw new UserException(ErrorCode.UserVerify_0001,String.format("잘못된 인증정보"));
     }
 
     // 검증된 사용자의 status를 변경하기 위한 메소드
     public void update(String email, String authority) {
-        if (authority.equals("ROLE_User")){
+        if (authority.equals("ROLE_USER")){
             Optional<User> result = userRepository.findByUserEmail(email);
             if(result.isPresent()) {
                 User user = result.get();
