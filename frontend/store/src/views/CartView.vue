@@ -57,7 +57,7 @@ export default {
       )
     );
 
-    const token = sessionStorage.getItem("token");
+    const accessToken = sessionStorage.getItem("accessToken");
     var IMP = window.IMP;
 
     var today = new Date();
@@ -76,6 +76,7 @@ export default {
 
     onMounted(async () => {
       try {
+        const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get("http://121.140.125.34:11113/api/cart/list", {
           params: {
             // idx: 1, // 여기에 카트 ID를 넣어주세요
@@ -84,7 +85,7 @@ export default {
           },
           headers: {
             // 필요한 경우 헤더를 추가하세요
-            Authorization: `Bearer ${token}`,
+            AccessToken: accessToken,
           },
         });
 
@@ -106,6 +107,7 @@ export default {
     async function removeItem(index) {
       try {
         // 삭제 요청 보내기
+        const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.delete(
           "http://121.140.125.34:11113/api/cart/delete",
           {
@@ -114,7 +116,7 @@ export default {
               productName: cartItems.value[index].productName,
             },
             headers: {
-              Authorization: `Bearer ${token}`,
+              AccessToken: accessToken,
             },
           }
         );
@@ -154,7 +156,8 @@ export default {
             buyer_addr: "서울특별시 강남구 삼성동",
             buyer_postcode: "123-456",
             custom_data: customData,
-          },
+          }, // 토큰 유효성검증
+            // 트루면
           function (rsp) {
             // 결제 결과 처리
             if (rsp.success) {
@@ -164,7 +167,7 @@ export default {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`,
+                  AccessToken: accessToken,
                 },
                 body: imp_uid,
               })
@@ -188,6 +191,7 @@ export default {
         const message = getErrorMessage(error.response.data.errorCode);
         alert(message);
       }
+      // 펄스면 ~
     }
 
     return {

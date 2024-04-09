@@ -58,10 +58,10 @@ export default {
       // 사용자가 '확인'을 누른 경우에만 수정 요청을 진행합니다.
       if (isConfirmed) {
         try {
-          const token = sessionStorage.getItem('token'); // 세션 스토리지에서 토큰 값 가져오기
+          const accessToken = sessionStorage.getItem("accessToken");
           const response = await axios.patch( baseURL + `/user/update`, this.userUpdateReq, {
             headers: {
-              Authorization: `Bearer ${token}`, // 토큰 값 헤더에 포함
+              AccessToken: accessToken,
               "Content-Type": "application/json",
             },
           });
