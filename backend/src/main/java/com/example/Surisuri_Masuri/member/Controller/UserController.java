@@ -48,7 +48,7 @@ public class UserController {
 
     // 회원정보 수정
     @PatchMapping("/user/update")
-    public ResponseEntity updateUser(@RequestHeader(value = "Authorization") String token, @RequestBody @Valid UserUpdateReq userUpdateReq)
+    public ResponseEntity updateUser(@RequestHeader(value = "AccessToken") String token, @RequestBody @Valid UserUpdateReq userUpdateReq)
     {
         return ResponseEntity.ok().body(userService.userUpdate(token,userUpdateReq));
     }

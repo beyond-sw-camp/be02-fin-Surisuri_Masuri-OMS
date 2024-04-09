@@ -7,7 +7,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class OrdersUpdateDeliveryReq {
-    Long OrdersIdx;
+    Long ordersIdx;
 
     private String deliveryStatus;
 

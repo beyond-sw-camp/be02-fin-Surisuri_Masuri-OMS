@@ -39,26 +39,26 @@ public class OrdersController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/list")
-    public ResponseEntity list(@RequestHeader(value = "Authorization") String token,
+    public ResponseEntity list(@RequestHeader(value = "AccessToken") String token,
                                Integer page, Integer size) {
         return ResponseEntity.ok().body(ordersService.list(token, page, size));
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/updatedelivery")
-    public ResponseEntity updateOrdersDelivery(@RequestHeader(value = "Authorization") String token, @RequestBody OrdersUpdateDeliveryReq req) {
+    public ResponseEntity updateOrdersDelivery(@RequestHeader(value = "AccessToken") String token, @RequestBody OrdersUpdateDeliveryReq req) {
 
         return ResponseEntity.ok().body(ordersService.updateOrdersDelivery(req));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/deliverystatus")
-    public ResponseEntity showDeliveryStatus(@RequestHeader(value = "Authorization") String token, Long ordersIdx) {
+    public ResponseEntity showDeliveryStatus(@RequestHeader(value = "AccessToken") String token, Long ordersIdx) {
 
         return ResponseEntity.ok().body(ordersService.showDeliveryStatus(ordersIdx));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{merchantUid}")
     public ResponseEntity listDetailByMerchantUid(@PathVariable String merchantUid,
-                                                  @RequestHeader(value = "Authorization") String token) {
+                                                  @RequestHeader(value = "AccessToken") String token) {
 
         return ResponseEntity.ok().body(ordersService.listDetailByMerchantUid(merchantUid, token));
     }
