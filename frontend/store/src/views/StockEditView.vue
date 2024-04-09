@@ -18,7 +18,7 @@
                   :key="product.storeStockDto.productName"
                 >
                   <td>{{ product.storeStockDto.productName }}</td>
-                  <td>{{ product.stockQuantitiy }}</td>
+                  <td>{{ product.stockQuantity }}</td>
                   <td>
                     <!-- 여기에 재고수량 입력 필드와 수정 버튼을 추가 -->
                     <input
