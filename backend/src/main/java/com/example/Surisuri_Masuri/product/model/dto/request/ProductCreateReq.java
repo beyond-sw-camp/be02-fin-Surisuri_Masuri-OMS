@@ -13,7 +13,6 @@ import java.time.LocalDate;
 public class ProductCreateReq {
     String productName;
     Integer price;
-    LocalDate expiredAt;
     Boolean isItFood;
     ProductCategory productCategory;
 }
