@@ -49,7 +49,6 @@ public class ProductService {
             Product product = productRepository.save(Product.builder()
                     .productName(req.getProductName())
                     .isItFood(req.getIsItFood())
-                    .expiredAt(req.getExpiredAt())
                     .price(req.getPrice())
                     .productCategory(req.getProductCategory())
                     .build());
