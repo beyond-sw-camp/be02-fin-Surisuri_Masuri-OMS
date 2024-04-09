@@ -56,6 +56,7 @@ public enum ErrorCode {
     UserRegister_008(3006, HttpStatus.BAD_REQUEST, "존재하지 않는 storeUuid입니다."),
     UserRegister_009(3007, HttpStatus.CONFLICT, "가게 정보가 이미 등록되어있습니다."),
     UserRegister_0010(3008, HttpStatus.CONFLICT, "이미 존재하는 이메일입니다."),
+    UserVerify_0001(3009,HttpStatus.BAD_REQUEST, "잘못된 인증정보입니다."),
 
     // Store Addr
     // UserRegister_010(3008, HttpStatus.BAD_REQUEST, "잘못된 형식의 주소 정보입니다."),
