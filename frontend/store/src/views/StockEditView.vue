@@ -18,17 +18,17 @@
                   :key="product.storeStockDto.productName"
                 >
                   <td>{{ product.storeStockDto.productName }}</td>
-                  <td>{{ product.stockQuantitiy }}</td>
+                  <td>{{ product.productQuantity }}</td>
                   <td>
                     <!-- 여기에 재고수량 입력 필드와 수정 버튼을 추가 -->
                     <input
                       type="number"
-                      v-model.number="product.stockQuantitiy"
+                      v-model.number="product.productQuantity"
                       min="0"
                       class="stock-input"
                     />
                     <button
-                      @click="updateStockQuantitiy(product)"
+                      @click="updateProductQuantity(product)"
                       class="btn btn-primary"
                     >
                       수정
@@ -130,7 +130,7 @@
 
           this.stockList = response.data.result.map((product) => ({
             ...product,
-            stockQuantitiy: product.stockQuantitiy,
+            productQuantity: product.productQuantity,
             idx: product.storeStockIdx,
           }));
           console.log("API 호출에 성공했습니다.");
@@ -151,26 +151,26 @@
           this.fetchStockList(startPage - this.pageRangeSize + 1);
         }
       },
-      async updateStockQuantitiy(product) {
+      async updateProductQuantity(product) {
         try {
           const accessToken = sessionStorage.getItem("accessToken");
-          console.log("updateStockQuantitiy - 사용할 토큰:", accessToken); // 토큰 정보 확인
+          console.log("updateProductQuantity - 사용할 토큰:", accessToken); // 토큰 정보 확인
           if (!accessToken) {
             console.error("토큰이 없습니다.");
             return;
           }
 
-          console.log("updateStockQuantitiy - 요청 데이터:", {
+          console.log("updateProductQuantity - 요청 데이터:", {
             // 요청 데이터 확인
             idx: product.storeStockIdx,
-            stockQuantity: product.stockQuantitiy,
+            productQuantity: product.productQuantity,
           });
 
           const response = await axios.patch(
             "http://121.140.125.34:11113/api/stock/update",
             {
               idx: product.storeStockIdx,
-              stockQuantity: product.stockQuantitiy,
+              productQuantity: product.productQuantity,
             },
             {
               headers: {
@@ -180,7 +180,7 @@
             }
           );
 
-          console.log("updateStockQuantitiy - 응답 데이터:", response.data); // 응답 데이터 확인
+          console.log("updateProductQuantity - 응답 데이터:", response.data); // 응답 데이터 확인
 
           if (response.status === 200) {
             // HTTP 상태 코드가 200인 경우 성공으로 간주
