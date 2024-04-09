@@ -11,5 +11,6 @@ public class StoreStockCreateReq {
 
     private Long productIdx;
     private Long stockQuantity;
+    private LocalDate expiredAt;
 
 }
