@@ -2,7 +2,6 @@ package com.example.Surisuri_Masuri.question.service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
-import com.example.Surisuri_Masuri.exception.EntityException.StoreException;
 import com.example.Surisuri_Masuri.exception.EntityException.UserException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
@@ -10,8 +9,6 @@ import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
-import com.example.Surisuri_Masuri.product.model.Product;
-import com.example.Surisuri_Masuri.product.model.dto.response.ProductReadRes;
 import com.example.Surisuri_Masuri.question.model.entity.Answer;
 import com.example.Surisuri_Masuri.question.model.entity.Question;
 import com.example.Surisuri_Masuri.question.model.request.PatchUpdateQuestionReq;
@@ -21,7 +18,6 @@ import com.example.Surisuri_Masuri.question.model.response.GetListQuestionRes;
 import com.example.Surisuri_Masuri.question.model.response.PostCreateQuestionRes;
 import com.example.Surisuri_Masuri.question.repository.AnswerRepository;
 import com.example.Surisuri_Masuri.question.repository.QuestionRepository;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -83,8 +79,10 @@ public class QuestionService {
         token = JwtUtils.replaceToken(token);
 
         String userId = JwtUtils.getUserEmail(token, secretKey);
+        String managerId = JwtUtils.getManagerId(token,secretKey);
 
         Optional<User> user = userRepository.findByUserEmail(userId);
+        Optional<Manager> manager = managerRepository.findByManagerId(managerId);
 
         if (user.isPresent()) {
             Pageable pageable = PageRequest.of(page - 1, size);
@@ -108,7 +106,33 @@ public class QuestionService {
                 getListQuestionResList.add(getListQuestionRes);
             }
             return BaseResponse.successResponse("문의사항 목록 조회를 성공했습니다.", getListQuestionResList);
-        }  else {
+        }
+
+        else if (manager.isPresent()) {
+            Pageable pageable = PageRequest.of(page - 1, size);
+
+            Page<Question> result = questionRepository.findList(pageable);
+
+            List<GetListQuestionRes> getListQuestionResList = new ArrayList<>();
+
+            for (Question question : result.getContent()) {
+
+                GetListQuestionRes getListQuestionRes = GetListQuestionRes.builder()
+                        .questionIdx(question.getIdx())
+                        .category(question.getCategory())
+                        .title(question.getTitle())
+                        .content(question.getContent())
+                        .userIdx(question.getUser().getIdx())
+                        .answerContent(Optional.ofNullable(question.getAnswer())
+                                .map(Answer::getAnswerContent)
+                                .orElse(null))  // answerContent가 null인 경우 null로 설정
+                        .build();
+                getListQuestionResList.add(getListQuestionRes);
+            }
+            return BaseResponse.successResponse("문의사항 목록 조회를 성공했습니다.", getListQuestionResList);
+        }
+
+        else {
             throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }

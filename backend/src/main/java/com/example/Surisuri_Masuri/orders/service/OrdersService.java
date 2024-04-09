@@ -80,8 +80,13 @@ public class OrdersService {
     @Value("${jwt.secret-key}")
     private String secretKey;
 
-    public BaseResponse listDetailByMerchantUid(String merchantUid, Manager manager) {
-        Optional<Manager> managerResult = managerRepository.findByManagerId(manager.getManagerId());
+    public BaseResponse listDetailByMerchantUid(String merchantUid, String token) {
+
+        token = JwtUtils.replaceToken(token);
+
+        String managerId = JwtUtils.getManagerInfo(token, secretKey);
+
+        Optional<Manager> managerResult = managerRepository.findByManagerId(managerId);
 
         List<Orders> ordersList = ordersRepository.findAll();
 
@@ -113,84 +118,86 @@ public class OrdersService {
 
     public BaseResponse updateOrdersDelivery(OrdersUpdateDeliveryReq req) {
         Optional<Orders> ordersResult = ordersRepository.findById(req.getOrdersIdx());
-        Orders orders = ordersResult.get();
 
-        Integer containerIdx = null;
+        if (ordersResult.isPresent()) {
+            Orders orders = ordersResult.get();
 
-        if (req.getDeliveryStatus().equals("출고 처리")) {
-            // 창고 재고 변경
-            for (OrdersDetail ordersDetail : ordersResult.get().getOrdersDetailList()) {
-                containerIdx = selectContainer(ordersDetail.getProduct().getProductName(), ordersDetail.getOrders().getStore().getStoreAddr());
-                Optional<Container> containerResult = containerRepository.findById(containerIdx);
-                Container container = containerResult.get();
-                for (ContainerStock containerStock : container.getContainerStockList()) {
-                    if (containerStock.getProduct() == ordersDetail.getProduct()) {
-                        Optional<ContainerStock> containerStockResult = containerStockRepository.findById(containerStock.getIdx());
-                        Long quantity = containerStockResult.get().getProductQuantity() - ordersDetail.getProcuctQuantity();
-                        containerStockResult.get().setProductQuantity(quantity);
-                        containerStockRepository.save(containerStockResult.get());
+            Integer containerIdx = null;
+
+            if (req.getDeliveryStatus().equals("출고 처리")) {
+                // 창고 재고 변경
+                for (OrdersDetail ordersDetail : ordersResult.get().getOrdersDetailList()) {
+                    containerIdx = selectContainer(ordersDetail.getProduct().getProductName(), ordersDetail.getOrders().getStore().getStoreAddr());
+                    Optional<Container> containerResult = containerRepository.findById(containerIdx);
+                    Container container = containerResult.get();
+                    for (ContainerStock containerStock : container.getContainerStockList()) {
+                        if (containerStock.getProduct() == ordersDetail.getProduct()) {
+                            Optional<ContainerStock> containerStockResult = containerStockRepository.findById(containerStock.getIdx());
+                            Long quantity = containerStockResult.get().getProductQuantity() - ordersDetail.getProcuctQuantity();
+                            containerStockResult.get().setProductQuantity(quantity);
+                            containerStockRepository.save(containerStockResult.get());
+
+                            orders.setDeliveryStatus(req.getDeliveryStatus().getStatus());
+                            ordersRepository.save(orders);
+
+                            return BaseResponse.successResponse("배송 상태 변경 성공", null);
+                        }
+                    }
+                }
+            } else if (req.getDeliveryStatus().equals("배송 완료")) {
+                // 가맹점 재고 변경
+                for (OrdersDetail ordersDetail : ordersResult.get().getOrdersDetailList()) {
+                    // 플래그
+                    boolean flag = false;
+
+                    Optional<Store> storeResult = storeRepository.findById(orders.getStore().getIdx());
+                    containerIdx = selectContainer(ordersDetail.getProduct().getProductName(), storeResult.get().getStoreAddr());
+                    Store store = storeResult.get();
+
+                    // 창고 상품의 유효기간 가져오기 위한 쿼리
+                    List<LocalDate> containerStockResult = containerStockRepository
+                            .findByContainerIdxAndProductName(containerIdx, ordersDetail.getProduct().getProductName());
+
+                    for (StoreStock storeStock : store.getStoreStocks()) {
+                        if (storeStock.getProduct() == ordersDetail.getProduct()
+                                && storeStock.getExpiredAt().equals(containerStockResult.get(0))) {
+                            Optional<StoreStock> storeStockResult = storeStockRepository.findById(storeStock.getIdx());
+                            Long quantity = storeStockResult.get().getStockQuantity() + ordersDetail.getProcuctQuantity();
+                            storeStockResult.get().setStockQuantity(quantity);
+                            storeStockRepository.save(storeStockResult.get());
+
+                            orders.setDeliveryStatus(req.getDeliveryStatus().getStatus());
+
+                            ordersRepository.save(orders);
+
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (!flag) {
+                        storeStockRepository.save(StoreStock.builder()
+                                .store(store)
+                                .product(ordersDetail.getProduct())
+                                .stockQuantity(ordersDetail.getProcuctQuantity().longValue())
+                                .expiredAt(containerStockResult.get(0))
+                                .isDiscarded(false)
+                                .build());
 
                         orders.setDeliveryStatus(req.getDeliveryStatus().getStatus());
 
                         ordersRepository.save(orders);
-
-                        return BaseResponse.successResponse("배송 상태 변경 성공", null);
                     }
                 }
+                return BaseResponse.successResponse("배송 상태 변경 성공", null);
             }
-
-        } else if (req.getDeliveryStatus().equals("배송 완료")) {
-            // 가맹점 재고 변경
-            for (OrdersDetail ordersDetail : ordersResult.get().getOrdersDetailList()) {
-                // 플래그
-                boolean flag = false;
-
-                Optional<Store> storeResult = storeRepository.findById(orders.getStore().getIdx());
-                containerIdx = selectContainer(ordersDetail.getProduct().getProductName(), storeResult.get().getStoreAddr());
-                Store store = storeResult.get();
-
-                // 창고 상품의 유효기간 가져오기 위한 쿼리
-                List<LocalDate> containerStockResult = containerStockRepository
-                        .findByContainerIdxAndProductName(containerIdx, ordersDetail.getProduct().getProductName());
-
-                for (StoreStock storeStock : store.getStoreStocks()) {
-                    if (storeStock.getProduct() == ordersDetail.getProduct()
-                            && storeStock.getExpiredAt().equals(containerStockResult.get(0))) {
-                        Optional<StoreStock> storeStockResult = storeStockRepository.findById(storeStock.getIdx());
-                        Long quantity = storeStockResult.get().getStockQuantity() + ordersDetail.getProcuctQuantity();
-                        storeStockResult.get().setStockQuantity(quantity);
-                        storeStockRepository.save(storeStockResult.get());
-
-                        orders.setDeliveryStatus(req.getDeliveryStatus().getStatus());
-
-                        ordersRepository.save(orders);
-
-                        flag = true;
-                        break;
-                    }
-                }
-                if (!flag) {
-                    storeStockRepository.save(StoreStock.builder()
-                            .store(store)
-                            .product(ordersDetail.getProduct())
-                            .stockQuantity(ordersDetail.getProcuctQuantity().longValue())
-                            .expiredAt(containerStockResult.get(0))
-                            .isDiscarded(false)
-                            .build());
-
-                    orders.setDeliveryStatus(req.getDeliveryStatus().getStatus());
-
-                    ordersRepository.save(orders);
-                }
-            }
-            return BaseResponse.successResponse("배송 상태 변경 성공", null);
-        }
 
             orders.setDeliveryStatus(req.getDeliveryStatus().getStatus());
 
-        ordersRepository.save(orders);
+            ordersRepository.save(orders);
 
-        return BaseResponse.successResponse("배송 상태 변경을 성공했습니다.", null);
+            return BaseResponse.successResponse("배송 상태 변경을 성공했습니다.", null);
+        }
+        return BaseResponse.failResponse(1111, "주문 정보가 존재하지 않습니다");
     }
 
     public Integer selectContainer(String productName, String storeAddr) {
@@ -229,28 +236,34 @@ public class OrdersService {
 
     public BaseResponse showDeliveryStatus(Long ordersIdx) {
         Optional<Orders> ordersResult = ordersRepository.findById(ordersIdx);
-        Orders orders = ordersResult.get();
-        List<OrdersDetail> ordersDetailList = ordersDetailRepository.findByOrdersIdx(ordersIdx);
 
-        List<OrdersDetailDtoRes> ordersDetailDtoResList = new ArrayList<>();
+        if (ordersResult.isPresent()) {
 
-        for (OrdersDetail ordersDetail : ordersDetailList) {
-            OrdersDetailDtoRes ordersDetailDtoRes = OrdersDetailDtoRes.builder()
-                    .procuctQuantity(ordersDetail.getProcuctQuantity())
-                    .productName(ordersDetail.getProduct().getProductName())
+            Orders orders = ordersResult.get();
+
+            List<OrdersDetail> ordersDetailList = ordersDetailRepository.findByOrdersIdx(ordersIdx);
+
+            List<OrdersDetailDtoRes> ordersDetailDtoResList = new ArrayList<>();
+
+            for (OrdersDetail ordersDetail : ordersDetailList) {
+                OrdersDetailDtoRes ordersDetailDtoRes = OrdersDetailDtoRes.builder()
+                        .procuctQuantity(ordersDetail.getProcuctQuantity())
+                        .productName(ordersDetail.getProduct().getProductName())
+                        .build();
+
+                ordersDetailDtoResList.add(ordersDetailDtoRes);
+            }
+
+            OrdersShowDeliveryStatusRes ordersShowDeliveryStatusRes = OrdersShowDeliveryStatusRes.builder()
+                    .ordersDetailDtoResList(ordersDetailDtoResList)
+                    .deliveryStatus(orders.getDeliveryStatus())
+                    .createAt(orders.getCreatedAt())
+                    .updatedAt(orders.getUpdatedAt())
                     .build();
 
-            ordersDetailDtoResList.add(ordersDetailDtoRes);
+            return BaseResponse.successResponse("요청 성공했습니다.", ordersShowDeliveryStatusRes);
         }
-
-        OrdersShowDeliveryStatusRes ordersShowDeliveryStatusRes = OrdersShowDeliveryStatusRes.builder()
-                .ordersDetailDtoResList(ordersDetailDtoResList)
-                .deliveryStatus(orders.getDeliveryStatus())
-                .createAt(orders.getCreatedAt())
-                .updatedAt(orders.getUpdatedAt())
-                .build();
-
-        return BaseResponse.successResponse("요청 성공했습니다.", ordersShowDeliveryStatusRes);
+        return  BaseResponse.failResponse(1111, "주문 정보가 존재하지 않습니다.");
     }
 
     public BaseResponse list(String token, Integer page, Integer size) {
@@ -361,57 +374,66 @@ public class OrdersService {
     public BaseResponse payment(String token, String imp_uid) throws IamportResponseException, IOException {
         IamportResponse<Payment> response = getPaymentInfo(imp_uid);
 
+        String merchantUid = response.getResponse().getMerchantUid();
+        String customDataString = response.getResponse().getCustomData();
+        String payMethod = response.getResponse().getPgProvider();
+        Long amount = response.getResponse().getAmount().longValue();
+
         token = JwtUtils.replaceToken(token);
 
         String userId = JwtUtils.getUserEmail(token, secretKey);
 
         Optional<User> user = userRepository.findByUserEmail(userId);
 
-        User foundUser = user.get();
+        if (user.isPresent()) {
+            User foundUser = user.get();
 
-        String customDataString = response.getResponse().getCustomData();
+            Gson gson = new Gson();
+            PaymentDto paymentDto = gson.fromJson(customDataString, PaymentDto.class);
+            Long cartIdx = paymentDto.getCartDtoList().get(0).getCartIdx();
 
-        String payMethod = response.getResponse().getPgProvider();
+            Optional<Cart> cartResult = cartRepository.findById(cartIdx);
+            List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(cartIdx);
 
-        Gson gson = new Gson();
-        PaymentDto paymentDto = gson.fromJson(customDataString, PaymentDto.class);
-        Long cartIdx = paymentDto.getCartDtoList().get(0).getCartIdx();
+            Integer productPrice = null;
 
-        Long amount = response.getResponse().getAmount().longValue();
-        String merchantUid = response.getResponse().getMerchantUid();
+            for (CartDetail cartDetail : cartDetailList) {
+                productPrice = +(cartDetail.getProduct().getPrice() * cartDetail.getProductQuantity());
+            }
+            System.out.println("productPrice = " + productPrice);
+            System.out.println("amount = " + amount);
 
-        Optional<Cart> cartResult = cartRepository.findById(cartIdx);
-        List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(cartIdx);
+            if (productPrice != amount.intValue()) {
+                OrdersRefundReq ordersRefundReq = OrdersRefundReq.builder()
+                        .merchantUid(merchantUid)
+                        .refundReason("결제 금액과 상품 금액 총합이 맞지 않습니다")
+                        .build();
+                refundRequest(ordersRefundReq);
 
-        Integer productPrice = null;
+                for (CartDetail cartDetail : cartDetailList) {
+                    cartService.delete(token, cartIdx, cartDetail.getProduct().getProductName());
+                }
+                throw new ContainerException(ErrorCode.OrdersPayment_001,
+                        String.format("금액이 일치하지 않습니다."));
+            }
 
-        for (CartDetail cartDetail: cartDetailList) {
-            productPrice =+ (cartDetail.getProduct().getPrice() * cartDetail.getProductQuantity());
-        }
-        System.out.println("productPrice = " + productPrice);
-        System.out.println("amount = " + amount);
+            create(payMethod, cartIdx, merchantUid, amount, foundUser.getStore());
 
-        if (productPrice != amount.intValue()) {
-            OrdersRefundReq ordersRefundReq = OrdersRefundReq.builder()
-                    .merchantUid(merchantUid)
-                    .refundReason("결제 금액과 상품 금액 총합이 맞지 않습니다")
-                    .build();
-            refundRequest(ordersRefundReq);
-
-            for (CartDetail cartDetail: cartDetailList) {
+            for (CartDetail cartDetail : cartDetailList) {
                 cartService.delete(token, cartIdx, cartDetail.getProduct().getProductName());
             }
-            throw new ContainerException(ErrorCode.OrdersPayment_001,
-                    String.format("금액이 일치하지 않습니다."));
+
+            return BaseResponse.successResponse("결제 성공", customDataString);
         }
 
-        create(payMethod ,cartIdx, merchantUid, amount, foundUser.getStore());
+        OrdersRefundReq ordersRefundReq = OrdersRefundReq.builder()
+                .merchantUid(merchantUid)
+                .refundReason("유저 정보를 찾을 수 없습니다")
+                .build();
 
-        for (CartDetail cartDetail: cartDetailList) {
-            cartService.delete(token, cartIdx, cartDetail.getProduct().getProductName());
-        }
+        refundRequest(ordersRefundReq);
 
-        return BaseResponse.successResponse("결제 성공", customDataString);
+        return BaseResponse.failResponse(1111, "유저 정보를 찾을 수 없습니다");
     }
 
     public IamportResponse getPaymentInfo(String impUid) throws IamportResponseException, IOException {
@@ -422,16 +444,20 @@ public class OrdersService {
 
     public BaseResponse refundRequest(OrdersRefundReq req) throws IOException {
         Orders orders = null;
+
         if (req.getIdx() != null) {
             Optional<Orders> ordersResult = ordersRepository.findById(req.getIdx());
 
-            orders = ordersResult.get();
-
-            if (!orders.getDeliveryStatus().equals("배송 전")) {
+            if (ordersResult.isPresent() && !orders.getDeliveryStatus().equals("배송 전")) {
+                orders = ordersResult.get();
 
                 throw new ContainerException(ErrorCode.RefundRequest_001,
                         String.format("배송이 이미 시작되어 주문 취소가 불가능합니다."));
 
+            } else if (ordersResult.isPresent()) {
+                orders = ordersResult.get();
+            } else {
+                return BaseResponse.failResponse(1111, "주문 정보가 존재하지 않습니다.");
             }
         }
 
