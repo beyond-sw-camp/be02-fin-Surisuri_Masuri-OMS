@@ -8,5 +8,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface StoreStockRepositoryCustom {
     public Page<StoreStock> findList(Pageable pageable);
-    public Long deleteStoreStockByStockIdxAndStoreUuid(Long productIdx, String storeUuid);
+    public Long deleteStoreStockByStockIdxAndStoreUuid(Long stockIdx, String storeUuid);
 }

@@ -96,7 +96,7 @@ public class StoreStockService {
             storeStockCreateRes = StoreStockCreateRes
                     .builder()
                     .storeDto(storeDto)
-                    .stockQuantitiy(storeStockCreateReq.getStockQuantity())
+                    .stockQuantity(storeStockCreateReq.getStockQuantity())
                     .productIdx(storeStockCreateReq.getProductIdx())
                     .expiredAt(storeStock.getExpiredAt())
                     .storeStockIdx(storeStock.getIdx())
@@ -139,7 +139,7 @@ public class StoreStockService {
                 storeStockReadRes = StoreStockReadRes
                         .builder()
                         .storeStockDto(storeStockDto)
-                        .stockQuantitiy(storeStock.getStockQuantity())
+                        .stockQuantity(storeStock.getStockQuantity())
                         .storeStockIdx(storeStock.getIdx())
                         .build();
 
