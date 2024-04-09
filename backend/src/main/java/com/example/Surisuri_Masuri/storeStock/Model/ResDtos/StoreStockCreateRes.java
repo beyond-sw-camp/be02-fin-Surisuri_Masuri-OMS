@@ -12,7 +12,7 @@ public class StoreStockCreateRes {
 
     private StoreDto storeDto;
     private Long productIdx;
-    private Long stockQuantitiy;
+    private Long stockQuantity;
     private LocalDate expiredAt;
     private Long storeStockIdx;
 
