@@ -138,7 +138,6 @@ public class OrdersService {
                             containerStockRepository.save(containerStockResult.get());
 
                             orders.setDeliveryStatus(req.getDeliveryStatus().getStatus());
-
                             ordersRepository.save(orders);
 
                             return BaseResponse.successResponse("배송 상태 변경 성공", null);
@@ -163,8 +162,8 @@ public class OrdersService {
                         if (storeStock.getProduct() == ordersDetail.getProduct()
                                 && storeStock.getExpiredAt().equals(containerStockResult.get(0))) {
                             Optional<StoreStock> storeStockResult = storeStockRepository.findById(storeStock.getIdx());
-                            Long quantity = storeStockResult.get().getStockQuantitiy() + ordersDetail.getProcuctQuantity();
-                            storeStockResult.get().setStockQuantitiy(quantity);
+                            Long quantity = storeStockResult.get().getStockQuantity() + ordersDetail.getProcuctQuantity();
+                            storeStockResult.get().setStockQuantity(quantity);
                             storeStockRepository.save(storeStockResult.get());
 
                             orders.setDeliveryStatus(req.getDeliveryStatus().getStatus());
@@ -179,7 +178,7 @@ public class OrdersService {
                         storeStockRepository.save(StoreStock.builder()
                                 .store(store)
                                 .product(ordersDetail.getProduct())
-                                .stockQuantitiy(ordersDetail.getProcuctQuantity().longValue())
+                                .stockQuantity(ordersDetail.getProcuctQuantity().longValue())
                                 .expiredAt(containerStockResult.get(0))
                                 .isDiscarded(false)
                                 .build());
