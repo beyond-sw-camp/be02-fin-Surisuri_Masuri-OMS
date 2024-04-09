@@ -10,9 +10,8 @@ import java.time.LocalDate;
 @Builder
 public class StoreStockReadRes {
     private final StoreStockDto storeStockDto;
-    private final Long stockQuantity;
-    private final Boolean discarded;
-    private final LocalDate discardedAt;
-    private final Long storeStockIdx;
-
+//    private final Long stockQuantity;
+//    private final Boolean discarded;
+//    private final LocalDate discardedAt;
+//    private final Long storeStockIdx;
 }
