@@ -133,14 +133,12 @@ public class StoreStockService {
                 StoreStockDto storeStockDto = StoreStockDto
                         .builder()
                         .productName(productName)
-                        .expiredAt(storeStock.getExpiredAt())
+                        .productQuantity(storeStock.getStockQuantity())
                         .build();
 
                 storeStockReadRes = StoreStockReadRes
                         .builder()
                         .storeStockDto(storeStockDto)
-                        .stockQuantity(storeStock.getStockQuantity())
-                        .storeStockIdx(storeStock.getIdx())
                         .build();
 
                 storeSearchResList.add(storeStockReadRes);
@@ -174,7 +172,6 @@ public class StoreStockService {
             StoreStockDto storeStockDto = StoreStockDto
                     .builder()
                     .productName(storeStock2.getProduct().getProductName())
-                    .expiredAt(storeStock2.getExpiredAt())
                     .build();
 
             StoreStockSearchRes storeStockSearchRes = StoreStockSearchRes
