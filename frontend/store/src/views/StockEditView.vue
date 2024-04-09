@@ -185,6 +185,7 @@
           if (response.status === 200) {
             // HTTP 상태 코드가 200인 경우 성공으로 간주
             console.log("재고 업데이트 성공");
+            alert("재고 수정이 완료되었습니다.");
           } else {
             console.error(`재고 업데이트 실패: ${response.data.message}`);
           }
