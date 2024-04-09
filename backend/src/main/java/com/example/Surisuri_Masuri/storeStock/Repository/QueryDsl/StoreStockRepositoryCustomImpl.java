@@ -26,7 +26,6 @@ public class StoreStockRepositoryCustomImpl extends QuerydslRepositorySupport im
         super(StoreStock.class);
         this.queryFactory = queryFactory;
         this.em = em;
-
     }
 
     @Override

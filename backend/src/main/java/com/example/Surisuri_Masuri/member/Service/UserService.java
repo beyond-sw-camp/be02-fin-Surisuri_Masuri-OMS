@@ -207,22 +207,31 @@ public class UserService {
     }
 
     // 이메일 찾기 기능
-    public BaseResponse<UserFindEmailRes> findEmail(UserFindEmailReq userFindEmailReq) {
-        compare1 = userRepository.findByUserName(userFindEmailReq.getUserName());
-        compare2 = userRepository.findByUserPhoneNo(userFindEmailReq.getUserPhoneNo());
+    public BaseResponse<UserFindEmailRes> findEmail(String token,UserFindEmailReq userFindEmailReq) {
 
-        if (compare1.isEmpty() || compare2.isEmpty()) {
-            throw new ManagerException(ErrorCode.UNREGISTERD_USER_VALUE,
-                    String.format("가입되지 않은 회원입니다."));
-        }
+        token = JwtUtils.replaceToken(token);
 
-        for (User user :compare1) {
-            if (user.equals(compare2.get())) {
-                userFindEmailRes = UserFindEmailRes
-                        .builder()
-                        .userEmail(user.getUserEmail())
-                        .build();
-                return BaseResponse.successResponse("요청하신 회원 정보입니다.", userFindEmailRes);
+        String userId = JwtUtils.getUserId(token, secretKey);
+
+        Optional<User> user = userRepository.findByUserEmail(userId);
+
+        if (user.isPresent()) {
+            compare1 = userRepository.findByUserName(userFindEmailReq.getUserName());
+            compare2 = userRepository.findByUserPhoneNo(userFindEmailReq.getUserPhoneNo());
+
+            if (compare1.isEmpty() || compare2.isEmpty()) {
+                throw new ManagerException(ErrorCode.UNREGISTERD_USER_VALUE,
+                        String.format("가입되지 않은 회원입니다."));
+            }
+
+            for (User user2 : compare1) {
+                if (user2.equals(compare2.get())) {
+                    userFindEmailRes = UserFindEmailRes
+                            .builder()
+                            .userEmail(user2.getUserEmail())
+                            .build();
+                    return BaseResponse.successResponse("요청하신 회원 정보입니다.", userFindEmailRes);
+                }
             }
         }
         throw new ManagerException(ErrorCode.UNREGISTERD_USER_VALUE,
@@ -237,8 +246,10 @@ public class UserService {
         Date create = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
 
         token = JwtUtils.replaceToken(token);
-        String email = JwtUtils.getUserEmail(token, secretKey);
-        Optional<User> user = userRepository.findByUserEmail(email);
+
+        String userId = JwtUtils.getUserId(token, secretKey);
+
+        Optional<User> user = userRepository.findByUserEmail(userId);
 
         if (user.isPresent()) {
 

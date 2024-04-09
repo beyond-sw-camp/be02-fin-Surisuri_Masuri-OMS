@@ -43,9 +43,6 @@ public class Product {
     private Boolean isItFood;
 
     @Column(nullable = false)
-    private LocalDate expiredAt;
-
-    @Column(nullable = false)
     private ProductCategory productCategory;
 
     @OneToMany(mappedBy = "product")
