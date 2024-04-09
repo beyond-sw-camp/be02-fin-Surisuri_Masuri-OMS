@@ -8,7 +8,6 @@ import lombok.Getter;
 @Data
 public class EmailConfirmReq {
     private String email;
-    private String token;
-    private String jwt;
+    private String uuid;
     private String authority;
 }
