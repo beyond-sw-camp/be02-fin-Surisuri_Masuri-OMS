@@ -339,12 +339,16 @@ export default {
     },
     async fetchNotices() {
       try {
+        const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get(
           "http://121.140.125.34:11113/api/notice/list",
           {
             params: {
               page: 1,
               size: 10,
+            },
+            headers: {
+              AccessToken: accessToken,
             },
           }
         );
