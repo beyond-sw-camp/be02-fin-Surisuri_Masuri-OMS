@@ -15,7 +15,7 @@ export const useManagerStore = defineStore({
     async login({ id, password }) {
       try {
         const response = await axios.post(
-          "http://121.140.125.34:11114/api/manager/login",
+          "http://localhost:8080/manager/login",
           { id, password }
         );
         const { data } = response;
@@ -45,7 +45,7 @@ export const useManagerStore = defineStore({
       );
       try {
         const response = await axios.get(
-          "http://121.140.125.34:11114/api/jwt/reload",
+          "http://localhost:8080/jwt/reload",
           {
             headers: {
               AccessToken: accessToken,
