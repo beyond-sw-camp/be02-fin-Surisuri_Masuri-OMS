@@ -126,12 +126,13 @@ import { ref } from "vue";
 import { useUserStore } from "../../stores/userStore.js";
 import { getErrorMessage } from "../utils/error.js"; // 에러 처리 함수 임포트
 import { useRouter } from 'vue-router';
-
+import { useLoadingStore } from '../../stores/loadingStore';
 export default {
   name: "RegisterView",
   setup() {
     const router = useRouter();
     const userStore = useUserStore();
+    const loadingStore = useLoadingStore();
     const confirmPassword = ref("");
 
     const createAccount = async () => {
@@ -139,8 +140,10 @@ export default {
         alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
         return;
       }
-
+      loadingStore.showLoading();
       const result = await userStore.createAccount();
+      loadingStore.hideLoading();
+      
       if (result === true) {
         alert("회원가입이 성공적으로 완료되었습니다. 이메일 인증을 완료해주세요");
         router.push('/login');

@@ -1,20 +1,25 @@
-<template class="sb-nav-fixed">
-  <div class="main-content">
-    <!-- 조건부 렌더링을 통해 특정 경로들에서 SideComponent 숨김 -->
-    <SideComponent class="side-component" v-if="!isHiddenPage" />
-    <div class="right-side-container">
-      <HeaderComponent v-if="!isHiddenPage" />
-      <div class="content-view">
-        <router-view/>
+<template>
+  <div class="sb-nav-fixed">
+    <div class="main-content">
+      <!-- 로딩 컴포넌트 조건부 렌더링 -->
+      <LoadingComponent v-if="loadingStore.isLoading" />
+      <!-- 조건부 렌더링을 통해 특정 경로들에서 SideComponent 숨김 -->
+      <SideComponent class="side-component" v-if="!isHiddenPage" />
+      <div class="right-side-container">
+        <HeaderComponent v-if="!isHiddenPage" />
+        <div class="content-view">
+          <router-view/>
+        </div>
+        <!-- 조건부 렌더링을 통해 특정 경로들에서 FooterComponent 숨김 -->
+        <FooterComponent v-if="!isHiddenPage"></FooterComponent>
       </div>
-      <!-- 조건부 렌더링을 통해 특정 경로들에서 FooterComponent 숨김 -->
-      <FooterComponent v-if="!isHiddenPage"></FooterComponent>
     </div>
   </div>
 </template>
 
-
 <script>
+import { useLoadingStore } from '../stores/loadingStore'; // 경로에 주의하세요.
+import LoadingComponent from './components/LoadingComponent.vue'; // 경로에 주의하세요.
 import HeaderComponent from "./components/HeaderComponent.vue";
 import SideComponent from "./components/SideComponent.vue";
 import FooterComponent from "./components/FooterComponent.vue";
@@ -25,17 +30,23 @@ export default {
     HeaderComponent,
     SideComponent,
     FooterComponent,
+    LoadingComponent, // 컴포넌트 등록
+  },
+  setup() {
+    const loadingStore = useLoadingStore();
+
+    return {
+      loadingStore, // Pinia 로딩 상태 스토어
+    };
   },
   data() {
     return {
-      hiddenRoutes: ['/', '/password', '/register' , '/loginreset', '/passwordReset/:idx'],
+      hiddenRoutes: ['/', '/password', '/register', '/loginreset', '/passwordReset/:idx'],
       isHiddenPage: false,
     };
   },
   watch: {
-    // $route 객체를 감시
     '$route'(to) {
-      // 경로 변경 시 isHiddenPage 값을 업데이트
       this.isHiddenPage = this.hiddenRoutes.includes(to.path);
     }
   },
@@ -44,6 +55,7 @@ export default {
   },
 };
 </script>
+
 
 
 <style>
