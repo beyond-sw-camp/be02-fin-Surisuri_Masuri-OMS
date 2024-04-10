@@ -9,9 +9,10 @@ pipeline {
             steps {
                 script {
                     try {
-                        git branch: 'develop',
+                        git branch: 'develop_backend',
                         credentialsId: 'github_access_token',
                         url: 'https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS.git'
+                        currentBuild.result = 'SUCCESS'
                     } catch (Exception e) {
                         echo "Git clone failed: ${e.message}"
                         currentBuild.result = 'FAILURE'
@@ -20,29 +21,35 @@ pipeline {
             }
         }
         stage('test') {
+            when {
+                expression { currentBuild.result == 'SUCCESS' }
+            }
              steps {
                  script {
                     try {
                         dir('backend') {
                             sh 'pwd'
                             sh '/usr/local/maven/bin/mvn test'
-                            currentBuild.result = 'SUCCESS'
                         }
+                        currentBuild.result = 'SUCCESS'
                     } catch (Exception e) {
                         echo "Build failed: ${e.message}"
                         currentBuild.result = 'FAILURE'
                     }
                 }
-             }
+            }
          }
         stage('Build') {
+            when {
+                expression { currentBuild.result == 'SUCCESS' }
+            }
             steps {
                 script {
                     try {
                         dir('backend') {
                             sh '/usr/local/maven/bin/mvn package'
-                            currentBuild.result = 'SUCCESS'
                         }
+                        currentBuild.result = 'SUCCESS'
                     } catch (Exception e) {
                         echo "Build failed: ${e.message}"
                         currentBuild.result = 'FAILURE'
@@ -61,8 +68,8 @@ pipeline {
                             sh "cd /var/lib/jenkins/workspace/Backend/backend/target"
                             sh "pwd"
                             sh "docker build -t beomiya/final_backend:1.${BUILD_ID} ."
-                            currentBuild.result = 'SUCCESS'
                         }
+                        currentBuild.result = 'SUCCESS'
                     } catch (Exception e) {
                         echo "Docker build failed: ${e.message}"
                         currentBuild.result = 'FAILURE'
