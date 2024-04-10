@@ -41,20 +41,24 @@ User
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "../../stores/userStore.js";
+import { useLoadingStore } from '../../stores/loadingStore';
 import { getErrorMessage } from "../utils/error.js";
 export default {
   setup() {
     const router = useRouter();
     const userStore = useUserStore(); // Pinia 스토어 사용
-
+    const loadingStore = useLoadingStore(); 
     const userEmail = ref("");
     const userPassword = ref("");
 
     const loginSubmit = async () => {
+
+      loadingStore.showLoading();
       const result = await userStore.login({
         id: userEmail.value,
         password: userPassword.value,
       });
+      loadingStore.hideLoading();
       if (result === true) {
         alert("로그인 성공"); // 로그인 성공 알림
         router.push("/home");
