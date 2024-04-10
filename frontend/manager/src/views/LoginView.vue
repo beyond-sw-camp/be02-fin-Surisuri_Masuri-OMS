@@ -36,23 +36,25 @@
 <script>
 import { useManagerStore } from '/stores/managerStores';
 import { useRouter } from 'vue-router';
+import { useLoadingStore } from '../../stores/loadingStore';
 import { ref } from 'vue';
 
 export default {
   setup() {
     const managerStore = useManagerStore();
     const router = useRouter();
-
+    const loadingStore = useLoadingStore();
     const userEmail = ref('');
     const userPassword = ref('');
 
     const loginSubmit = async () => {
       try {
+        loadingStore.showLoading();
         const success = await managerStore.login({
           id: userEmail.value,
           password: userPassword.value
         });
-
+        loadingStore.hideLoading();
         if (success) {
           alert('로그인 성공'); // 성공 알림
           console.log('로그인 성공');

@@ -21,6 +21,23 @@
                 </tr>
               </tbody>
             </table>
+            <nav aria-label="Page navigation">
+              <ul class="pagination justify-content-end">
+                <li class="page-item">
+                  <a class="page-link" href="#" aria-label="Previous" @click.prevent="prevRange">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <li class="page-item" v-for="page in pageRange" :key="page" :class="{ active: page === currentPage }">
+                  <a class="page-link" href="#" @click.prevent="fetchNotices(page)">{{ page }}</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" href="#" aria-label="Next" @click.prevent="nextRange">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
             <a @click="goBack" class="btn btn-primary btn-sm">목록으로 돌아가기</a>
           </div>
         </div>
@@ -36,17 +53,28 @@ export default {
   data() {
     return {
       containerss: [],
+      currentPage: 1,
+      totalPages: 20, // 실제 서버로부터 받아온 총 페이지 수입니다.
+      pageRangeSize: 5,
     };
   },
+  computed: {
+    pageRange() {
+      const startPage = Math.floor((this.currentPage - 1) / this.pageRangeSize) * this.pageRangeSize + 1;
+      const endPage = Math.min(startPage + this.pageRangeSize - 1, this.totalPages);
+      return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+    },
+  },
   methods: {
-    async fetchData(containerIdx) {
+    async fetchData(containerIdx, page) {
+      this.currentPage = page;
       try {
         const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get(
           `http://121.140.125.34:11114/api/container/singlestock?containerIdx=${containerIdx}`,
           {
             params: {
-              page: 1,
+              page: this.currentPage,
               size: 10,
             },
             headers: {
@@ -57,6 +85,18 @@ export default {
         this.containerss = response.data.result; // 받아온 데이터를 containerss에 저장
       } catch (error) {
         console.error("Error fetching data:", error);
+      }
+    },
+    nextRange() {
+      const maxPage = Math.ceil(this.currentPage / this.pageRangeSize) * this.pageRangeSize;
+      if (maxPage < this.totalPages) {
+        this.fetchNotices(maxPage + 1);
+      }
+    },
+    prevRange() {
+      const startPage = Math.floor((this.currentPage - 1) / this.pageRangeSize) * this.pageRangeSize;
+      if (startPage >= this.pageRangeSize) {
+        this.fetchNotices(startPage - this.pageRangeSize + 1);
       }
     },
     goBack() {

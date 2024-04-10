@@ -1,6 +1,7 @@
 <template class="sb-nav-fixed">
   <div class="main-content">
     <!-- 조건부 렌더링을 통해 특정 경로들에서 SideComponent 숨김 -->
+    <LoadingComponent v-if="loadingStore.isLoading" />
     <SideComponent class="side-component" v-if="!isHiddenPage" />
     <div class="right-side-container">
       <HeaderComponent v-if="!isHiddenPage" />
@@ -16,8 +17,10 @@
 
 <script>
 import HeaderComponent from "./components/HeaderComponent.vue";
+import { useLoadingStore } from '../stores/loadingStore';
 import SideComponent from "./components/SideComponent.vue";
 import FooterComponent from "./components/FooterComponent.vue";
+import LoadingComponent from './components/LoadingComponent.vue';
 
 export default {
   name: "App",
@@ -25,6 +28,14 @@ export default {
     HeaderComponent,
     SideComponent,
     FooterComponent,
+    LoadingComponent,
+  },
+  setup() {
+    const loadingStore = useLoadingStore();
+
+    return {
+      loadingStore, // Pinia 로딩 상태 스토어
+    };
   },
   data() {
     return {
