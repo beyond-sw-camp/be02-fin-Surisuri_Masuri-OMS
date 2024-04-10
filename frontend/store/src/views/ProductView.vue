@@ -3,20 +3,27 @@
     <div class="container-fluid px-4">
       <div class="card mb-4">
         <div class="card-header">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="상품 검색..."
-            class="form-control w-25 float-end"
-          />
-        </div>
+  <div class="row">
+    <div class="col-auto">
+      <input
+        type="text"
+        v-model="searchQuery"
+        placeholder="상품 검색..."
+        class="form-control"
+      />
+    </div>
+    <div class="col-auto">
+      <button @click="searchProducts" class="btn btn-primary">검색</button>
+    </div>
+  </div>
+</div>
         <div class="card-body">
           <table id="productTable" class="table">
             <thead>
               <tr>
                 <th>상품이름</th>
                 <th>가격</th>
-                <th>현재 재고수량</th>
+                
                 <th>구매 수량</th>
                 <th>장바구니 추가</th>
               </tr>
@@ -25,7 +32,7 @@
               <tr v-for="(product, index) in products" :key="index">
                 <td>{{ product.productName }}</td>
                 <td>{{ product.price }}</td>
-                <td></td>
+                
                 <td>
                   <input
                     type="number"
@@ -80,6 +87,7 @@
               </li>
             </ul>
           </nav>
+
         </div>
       </div>
     </div>
@@ -104,7 +112,7 @@ export default {
       products: [],
       orders: [],
       currentPage: 1,
-      totalPages: 20, // 실제 서버로부터 받아온 총 페이지 수입니다.
+      totalPages: 20, // 실제 서버로부터 받아온 총 페이지 수
       pageRangeSize: 5,
     };
   },
@@ -125,13 +133,30 @@ export default {
     },
   },
   mounted() {
-    this.fetchProducts(this.currentPage); // 페이지가 로드될 때 제품 데이터를 가져옵니다.
-    this.fetchOrders();
+    this.fetchProducts(this.currentPage); // 초기 제품 데이터 로드
   },
-  // created() {
-  //   this.fetchProducts(this.currentPage);
-  // },
   methods: {
+    async searchProducts() {
+      // 검색 쿼리 기반으로 제품을 검색하는 로직
+      this.currentPage = 1; // 검색을 시작할 때 페이지를 초기화
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const response = await axios.get("http://121.140.125.34:11113/api/product/search", { // 백엔드 URL에 맞게 수정하세요
+          params: {
+            productName: this.searchQuery,
+            page: this.currentPage,
+            size: 10,
+          },
+          headers: {
+            AccessToken: accessToken,
+          },
+        });
+        this.products = response.data.products; // 응답에서 상품 목록을 가져와 저장
+        // 응답 형식에 따라 .data 내의 경로는 조정될 수 있습니다.
+      } catch (error) {
+        console.error("상품 검색 중 오류 발생:", error);
+      }
+    },
     async fetchProducts(page) {
       this.currentPage = page;
 
@@ -244,6 +269,7 @@ export default {
         alert(errorMessage);
       }
     },
+  
   },
 };
 </script>
