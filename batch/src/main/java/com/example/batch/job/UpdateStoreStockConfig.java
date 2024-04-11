@@ -33,10 +33,10 @@ public class UpdateStoreStockConfig {
     private final StoreStockRepository repository;
 
     @Bean("updateStoreStockJob")
-    public Job updateContainerStockJob(Step updateContainerStockStep) {
+    public Job updateContainerStockJob(Step updateStoreStockStep) {
         return jobBuilderFactory.get("updateStoreStockJob")
                 .incrementer(new RunIdIncrementer())
-                .start(updateContainerStockStep)
+                .start(updateStoreStockStep)
                 .build();
     }
 
@@ -45,7 +45,7 @@ public class UpdateStoreStockConfig {
     public Step updateStoreStockStep(ItemReader updateStoreStockReader,
                                          ItemProcessor updateStoreStockProcessor,
                                          ItemWriter updateStoreStockWriter) {
-        return stepBuilderFactory.get("updateContainerStockStep")
+        return stepBuilderFactory.get("updateStoreStockStep")
                 .<StoreStock, StoreStock>chunk(10)
                 .reader(updateStoreStockReader)
                 .processor(updateStoreStockProcessor)
