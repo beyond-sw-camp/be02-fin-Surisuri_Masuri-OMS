@@ -143,15 +143,15 @@ export default {
         const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get("http://121.140.125.34:11113/api/product/search", { // 백엔드 URL에 맞게 수정하세요
           params: {
-            productName: this.searchQuery,
-            page: this.currentPage,
+            Name: this.searchQuery,
+            page: 1,
             size: 10,
           },
           headers: {
             AccessToken: accessToken,
           },
         });
-        this.products = response.data.products; // 응답에서 상품 목록을 가져와 저장
+        this.products = response.data.result; // 응답에서 상품 목록을 가져와 저장
         // 응답 형식에 따라 .data 내의 경로는 조정될 수 있습니다.
       } catch (error) {
         console.error("상품 검색 중 오류 발생:", error);
