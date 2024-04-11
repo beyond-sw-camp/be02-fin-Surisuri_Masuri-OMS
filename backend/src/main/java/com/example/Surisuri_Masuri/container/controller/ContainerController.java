@@ -43,8 +43,8 @@ public class ContainerController {
         return ResponseEntity.ok().body(baseResponse);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/search")
-    public ResponseEntity search(@RequestHeader(value = "AccessToken") String token, @RequestBody String name, Integer page, Integer size) {
+    @RequestMapping(method = RequestMethod.GET, value = "/search")
+    public ResponseEntity search(@RequestHeader(value = "AccessToken") String token, String name, Integer page, Integer size) {
         BaseResponse baseResponse = containerService.search(token,name,page,size);
         return ResponseEntity.ok().body(baseResponse);
     }
