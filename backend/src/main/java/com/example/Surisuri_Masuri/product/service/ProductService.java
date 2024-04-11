@@ -65,10 +65,36 @@ public class ProductService {
         token = JwtUtils.replaceToken(token);
 
         String managerId = JwtUtils.getManagerInfo(token, secretKey);
+        String userId = JwtUtils.getUserId(token, secretKey);
 
         Optional<Manager> manager = managerRepository.findByManagerId(managerId);
+        Optional<User> user = userRepository.findByUserEmail(userId);
 
         if (manager.isPresent()) {
+
+            Pageable pageable = PageRequest.of(page - 1, size);
+
+            Page<Product> result = productRepository.findByProductNameContaining(productName, pageable);
+
+            List<ProductReadRes> productReadResList = new ArrayList<>();
+
+            for (Product product : result.getContent()) {
+
+                ProductReadRes productReadRes = ProductReadRes
+                        .builder()
+                        .productIdx(product.getIdx())
+                        .productName(product.getProductName())
+                        .price(product.getPrice())
+                        .productCategory(product.getProductCategory())
+                        .build();
+
+                productReadResList.add(productReadRes);
+            }
+
+            return BaseResponse.successResponse("상품 검색을 성공했습니다.", productReadResList);
+        }
+
+        if (user.isPresent()) {
 
             Pageable pageable = PageRequest.of(page - 1, size);
 
