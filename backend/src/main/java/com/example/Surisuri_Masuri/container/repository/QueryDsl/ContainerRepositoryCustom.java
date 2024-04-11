@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface ContainerRepositoryCustom {
     public Page<Container> findList(Pageable pageable);
+    public Page<Container> findContainerByNameContaining(String name,Pageable pageable);
 }
