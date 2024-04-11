@@ -35,7 +35,7 @@ public class Store {
     @Column(nullable = true, length = 100, unique = true)
     private String storeAddr;
 
-    @Column(length = 50)
+    @Column(length = 50, unique = true)
     private String storePhoneNo;
 
     @Column(updatable = false)
