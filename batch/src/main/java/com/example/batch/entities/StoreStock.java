@@ -19,7 +19,7 @@ public class StoreStock {
     private Long idx;
 
     @Column(nullable = false)
-    private Long stockQuantitiy;
+    private Long stockQuantity;
 
     @Column(nullable = false)
     private LocalDate expiredAt;
