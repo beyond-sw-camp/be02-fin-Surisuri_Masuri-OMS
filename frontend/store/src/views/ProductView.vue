@@ -143,7 +143,7 @@ export default {
         const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get("http://121.140.125.34:11113/api/product/search", { // 백엔드 URL에 맞게 수정하세요
           params: {
-            Name: this.searchQuery,
+            productName: this.searchQuery,
             page: 1,
             size: 10,
           },
