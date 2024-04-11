@@ -1,6 +1,18 @@
 <template>
   <div class="container mt-4">
-    <h1 class="mb-4">창고 목록</h1>
+    <div class="row">
+    <div class="col-auto">
+      <input
+        type="text"
+        v-model="searchQuery"
+        placeholder="상품 검색..."
+        class="form-control"
+      />
+    </div>
+    <div class="col-auto">
+     <button @click="searchContainers" class="btn btn-primary">검색</button>
+    </div>
+  </div>
     <table class="table">
       <thead>
         <tr>
@@ -73,7 +85,8 @@ import axios from "axios";
 export default {
   data() {
     return {
-      containers: [], // 창고 목록을 저장할 배열
+      containers: [],
+      searchQuery: "",
       currentPage: 1,
       totalPages: 50, // 실제 서버로부터 받아온 총 페이지 수입니다.
       pageRangeSize: 5, // 한 번에 보여줄 페이지 수입니다.
@@ -99,6 +112,27 @@ export default {
     this.fetchContainers(this.currentPage); // 컴포넌트 생성 시 창고 목록을 불러오도록 설정
   },
   methods: {
+    async searchContainers() {
+      
+      this.currentPage = 1; // 검색을 시작할 때 페이지를 초기화
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const response = await axios.get("http://121.140.125.34:11114/api/container/search", { // 백엔드 URL에 맞게 수정하세요
+          params: {
+            name: this.searchQuery,
+            page: 1,
+            size: 10,
+          },
+          headers: {
+            AccessToken: accessToken,
+          },
+        });
+        this.containers = response.data.result; // 응답에서 상품 목록을 가져와 저장
+        // 응답 형식에 따라 .data 내의 경로는 조정될 수 있습니다.
+      } catch (error) {
+        console.error("상품 검색 중 오류 발생:", error);
+      }
+    },
     async fetchContainers(page) {
       this.currentPage = page;
       try {

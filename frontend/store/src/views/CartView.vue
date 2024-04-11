@@ -45,10 +45,11 @@
 import axios from "axios";
 import { ref, computed, onMounted } from "vue";
 import { getErrorMessage } from "../utils/error.js";
-
+import { useRouter } from 'vue-router'; 
 export default {
   name: "CartPage",
   setup() {
+    const router = useRouter();
     const cartItems = ref([]);
     const grandTotal = computed(() =>
       cartItems.value.reduce(
@@ -179,6 +180,7 @@ export default {
                 .catch((error) => {
                   console.error("Error:", error);
                 });
+                router.push('/orderdetail');
             } else {
               // 결제 실패 처리
               console.log("결제 실패:", rsp.error_msg);

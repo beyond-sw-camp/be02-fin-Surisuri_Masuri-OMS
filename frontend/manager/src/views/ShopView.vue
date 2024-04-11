@@ -2,16 +2,16 @@
   <div>
     <div class="container mt-5">
       <div class="row">
-        <div class="col">
+        <div class="col-auto">
           <input
             type="text"
             v-model="searchQuery"
-            class="form-control search-input"
             placeholder="가맹점 검색"
+            class="form-control"
           />
         </div>
         <div class="col-auto">
-          <button class="btn btn-primary" @click="fetchShops">검색</button>
+          <button class="btn btn-primary" @click="searchShops">검색</button>
         </div>
       </div>
       <table class="table mt-3">
@@ -114,22 +114,50 @@ export default {
   },
 
   methods: {
+    async searchShops() {
+      this.currentPage = 1; // 검색 시작 시 항상 첫 페이지로
+      try {
+        const accessToken = sessionStorage.getItem("accessToken");
+        const response = await axios.get(
+          "http://121.140.125.34:11114/api/store/search", // 검색 API 엔드포인트 주소 확인 필요
+          {
+            headers: {
+              AccessToken: accessToken,
+              
+            },
+            params: {
+              storeName: this.searchQuery, // 백엔드와 일치하는 검색 파라미터 이름 사용
+              page: this.currentPage,
+              size: 5,
+            },
+          }
+        );
+
+        this.shops = response.data.result || []; // 검색 결과 업데이트
+      } catch (error) {
+        console.error("가맹점 검색 오류:", error);
+        this.shops = [];
+      }
+    },
+
     async fetchShops(page) {
       this.currentPage = page;
       try {
         const accessToken = sessionStorage.getItem("accessToken");
-        const response = await axios.get("http://121.140.125.34:11114/api/store/list", {
-          headers: {
-            AccessToken:  accessToken, // 'Authorization' 대신 'AccessToken' 사용
-          },
-          params: {
-            page: this.currentPage,
-            size: 5,
-            searchQuery: this.searchQuery,
-          },
-          
-        });
-        console.log(accessToken)
+        const response = await axios.get(
+          "http://121.140.125.34:11114/api/store/list",
+          {
+            headers: {
+              AccessToken: accessToken, // 'Authorization' 대신 'AccessToken' 사용
+            },
+            params: {
+              page: this.currentPage,
+              size: 5,
+              searchQuery: this.searchQuery,
+            },
+          }
+        );
+        console.log(accessToken);
         // 서버 응답에 따라 .data 구조 조정 필요
         this.shops = response.data.result || []; // 응답이 없을 경우 빈 배열 할당
         console.log("가맹점 조회 응답:", response.data);
@@ -160,12 +188,6 @@ export default {
       if (startPage >= this.pageRangeSize) {
         this.fetchShops(startPage - this.pageRangeSize + 1);
       }
-    },
-  },
-  watch: {
-    searchQuery() {
-      // 검색어가 변경될 때마다 가맹점 다시 불러오기
-      this.fetchShops();
     },
   },
 };
