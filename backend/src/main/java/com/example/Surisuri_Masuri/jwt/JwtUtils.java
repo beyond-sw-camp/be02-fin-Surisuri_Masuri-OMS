@@ -35,7 +35,7 @@ public class JwtUtils {
         String token = Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + (expiredTimeMs/48)))
+                .setExpiration(new Date(System.currentTimeMillis() + expiredTimeMs))
                 .signWith(getSignKey(secretkey), SignatureAlgorithm.HS256)
                 .compact();
         return token;
@@ -61,9 +61,11 @@ public class JwtUtils {
         String token = Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + (expiredTimeMs/48)))
+                .setExpiration(new Date(System.currentTimeMillis() + expiredTimeMs))
                 .signWith(getSignKey(secretkey), SignatureAlgorithm.HS256)
                 .compact();
+
+        int a = expiredTimeMs/24;
         return token;
     }
 
