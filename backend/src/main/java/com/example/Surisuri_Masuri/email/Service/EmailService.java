@@ -8,6 +8,7 @@ import com.example.Surisuri_Masuri.exception.EntityException.UserException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
+import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -39,9 +40,10 @@ public class EmailService {
     // 이메일 전송 메소드
     public void sendEmail(SendEmailReq sendEmailReq) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
+        String uuid = UUID.randomUUID().toString();
         String authUrl = "http://121.140.125.34:11113/api/user/confirm?email="
                 + sendEmailReq.getEmail()
-                + "&uuid=" + UUID.randomUUID().toString()
+                + "&uuid=" + uuid
                 + "&authority=" + sendEmailReq.getAuthority();
         String htmlContent = "<div style=\"font-family: 'Apple SD Gothic Neo', 'sans-serif' !important; width: 540px; height: 600px; border-top: 4px solid #2e8b57; margin: 100px auto; padding: 30px 0; box-sizing: border-box;\">"
                 + "<h1 style=\"margin: 0; padding: 0 5px; font-size: 28px; font-weight: 400;\">"
@@ -69,7 +71,10 @@ public class EmailService {
         message.setSubject("[GIGA COFFEE] 이메일 인증을 완료해주세요 ^3^");
         message.setRecipient(Message.RecipientType.TO, new InternetAddress(sendEmailReq.getEmail()));
         emailSender.send(message);
+        create(sendEmailReq.getEmail(),uuid);
     }
+
+//    TODO : 비밀번호 변경시 uuid 적용할것
     public void sendEmail2(SendEmailReq sendEmailReq) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         String authUrl = "http://121.140.125.34:11113/passwordReset/"
