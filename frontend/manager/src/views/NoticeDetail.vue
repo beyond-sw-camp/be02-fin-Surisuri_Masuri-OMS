@@ -43,6 +43,7 @@
 
 <script>
 import axios from "axios";
+import swal from 'sweetalert';
 
 export default {
   data() {
@@ -85,12 +86,12 @@ export default {
         })
         .then((response) => {
           console.log("수정 응답:", response);
-          alert("공지사항이 수정되었습니다.");
+          swal("공지사항이 수정되었습니다.");
           this.$router.push("/notice");
         })
         .catch((error) => {
           console.error("공지사항 수정 중 오류 발생:", error);
-          alert(
+          swal(
             "오류 발생: " +
               (error.response && error.response.data.message
                 ? error.response.data.message
@@ -103,7 +104,7 @@ export default {
     async deleteNotice() {
       try {
         if (!this.noticeIdx) {
-          alert("삭제할 공지사항이 선택되지 않았습니다.");
+          swal("삭제할 공지사항이 선택되지 않았습니다.");
           return;
         }
 
@@ -120,7 +121,7 @@ export default {
           }
         );
         console.log("공지사항 삭제 응답:", response.data);
-        alert("공지사항이 성공적으로 삭제되었습니다.");
+        swal("공지사항이 성공적으로 삭제되었습니다.");
 
         this.noticeIdx = null;
         this.title = "";
@@ -129,7 +130,7 @@ export default {
         this.$router.push("/notice");
       } catch (error) {
         console.error("공지사항 삭제 중 오류:", error);
-        alert(
+        swal(
           "공지사항 삭제 중 오류가 발생했습니다: " +
             (error.response && error.response.data
               ? error.response.data.message

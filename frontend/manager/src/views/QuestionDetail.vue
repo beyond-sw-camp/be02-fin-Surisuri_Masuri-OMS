@@ -23,7 +23,7 @@
 
 <script>
 import axios from "axios";
-
+import swal from 'sweetalert';
 export default {
   data() {
     return {
@@ -38,7 +38,7 @@ export default {
   methods: {
     async submitAnswer() {
       try {
-        
+        const accessToken = sessionStorage.getItem("accessToken");
         if (!accessToken) {
           alert("로그인이 필요합니다.");
           return;
@@ -47,7 +47,7 @@ export default {
           questionIdx: this.questionIdx,
           answerContent: this.answerContent,
         };
-        const accessToken = sessionStorage.getItem("accessToken");
+        
         const response = await axios.post("http://121.140.125.34:11114/api/question/answer", answerReq, {
           headers: {
             "Content-Type": "application/json",
@@ -60,12 +60,12 @@ export default {
         // localStorage에 답변 저장
         localStorage.setItem(`answerContent_${this.questionIdx}`, this.answerContent);
 
-        alert("답변이 성공적으로 제출되었습니다.");
+        swal("답변이 성공적으로 제출되었습니다.");
         // 답변 제출 후에도 내용을 초기화하지 않음
         this.$router.push("/question");
       } catch (error) {
         console.error("답변 제출 중 오류:", error);
-        alert(
+        swal(
           "답변 제출 중 오류가 발생했습니다: " +
             (error.response && error.response.data ? error.response.data.message : error.message)
         );
