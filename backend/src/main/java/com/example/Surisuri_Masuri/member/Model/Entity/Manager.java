@@ -29,7 +29,7 @@ public class Manager implements UserDetails {
     @Column(nullable = false)
     private String managerName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String managerPhoneNo;
 
     @Column(nullable = false)
