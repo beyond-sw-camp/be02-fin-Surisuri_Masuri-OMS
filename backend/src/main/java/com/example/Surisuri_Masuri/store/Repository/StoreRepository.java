@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface StoreRepository extends JpaRepository<Store,Long>, StoreRepositoryCustom {
     Optional<Store> findByStoreUuid(String storeUuid);
+    Optional<Store> findByStoreName(String storeName);
 }
