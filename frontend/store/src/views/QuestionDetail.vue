@@ -39,6 +39,7 @@
 <script>
 import axios from "axios";
 import { getErrorMessage } from "../utils/error.js";
+import swal from 'sweetalert';
 export default {
   data() {
     return {
@@ -58,7 +59,7 @@ export default {
     async saveChanges() {
       const accessToken = sessionStorage.getItem("accessToken");
       if (!accessToken) {
-        alert("로그인이 필요합니다.");
+        swal("로그인이 필요합니다.");
         return;
       }
       try {
@@ -79,18 +80,18 @@ export default {
             },
           }
         );
-        alert("변경 사항이 저장되었습니다.");
+        swal("변경 사항이 저장되었습니다.");
         this.editable = false;
         this.$router.push("/question"); // 수정 후 inquiry 목록으로 리다이렉트
       } catch (error) {
         const message = getErrorMessage(error.response && error.response.data ? error.response.data.errorCode : null);
-        alert("문의사항 수정 중 오류가 발생했습니다: " + message);
+        swal("문의사항 수정 중 오류가 발생했습니다: " + message);
       }
     },
     async deleteQuestion() {
       const accessToken = sessionStorage.getItem("accessToken");
       if (!accessToken) {
-        alert("로그인이 필요합니다.");
+        swal("로그인이 필요합니다.");
         return;
       }
       try {
@@ -99,11 +100,11 @@ export default {
             'AcessToken': accessToken,
           },
         });
-        alert("문의사항이 성공적으로 삭제되었습니다.");
+        swal("문의사항이 성공적으로 삭제되었습니다.");
         this.$router.push("/question"); // 삭제 후 inquiry 목록으로 리다이렉트
       }catch (error) {
         const message = getErrorMessage(error.response && error.response.data ? error.response.data.errorCode : null);
-        alert("문의사항 삭제 중 오류가 발생했습니다: " + message);
+        swal("문의사항 삭제 중 오류가 발생했습니다: " + message);
       }
     },
   },

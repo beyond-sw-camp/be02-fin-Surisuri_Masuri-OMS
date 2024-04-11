@@ -126,7 +126,7 @@
             }
           );
 
-          console.log("fetchStockList - 응답 데이터:", response.data); // 응답 데이터 확인
+          console.log("fetchStockList - 응답 데이터:", response.result); // 응답 데이터 확인
 
           this.stockList = response.data.result.map((product) => ({
             ...product,

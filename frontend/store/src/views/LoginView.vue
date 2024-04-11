@@ -43,6 +43,7 @@ import { useRouter } from "vue-router";
 import { useUserStore } from "../../stores/userStore.js";
 import { useLoadingStore } from '../../stores/loadingStore';
 import { getErrorMessage } from "../utils/error.js";
+import swal from 'sweetalert';
 export default {
   setup() {
     const router = useRouter();
@@ -60,12 +61,12 @@ export default {
       });
       loadingStore.hideLoading();
       if (result === true) {
-        alert("로그인 성공"); // 로그인 성공 알림
+        swal('로그인 성공', '', 'success'); // 로그인 성공 알림
         router.push("/home");
       } else {
-        // getErrorMessage 함수를 사용하여 에러 메시지를 얻음
+        
         const errorMessage = getErrorMessage(result); // 결과값이 에러 코드일 것임
-        alert(errorMessage); // 에러 메시지를 알림 창으로 표시
+        swal(errorMessage); // 에러 메시지를 알림 창으로 표시
       }
     };
 

@@ -90,4 +90,20 @@ export default {
 .mt-4 {
   margin-top: 2.0rem !important; /* Adjust as necessary */
 }
+/* SweetAlert 팝업의 전반적인 크기 조정 */
+.swal-modal {
+  width: 400px; /* 기본 크기보다 작게 조정 */
+}
+
+/* 내부 콘텐츠의 패딩 조정 */
+.swal-modal .swal-text {
+  font-size: 14px; /* 텍스트 크기 조정 */
+  padding: 20px; /* 내부 패딩 조정 */
+}
+
+/* 버튼 크기 조정 */
+.swal-modal .swal-button {
+  padding: 7px 19px; /* 버튼의 패딩 조정 */
+  font-size: 12px; /* 버튼 내 텍스트 크기 조정 */
+}
 </style>

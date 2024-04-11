@@ -93,7 +93,7 @@
 <script>
 import axios from "axios";
 import { getErrorMessage } from "../utils/error.js"; // 에러 메시지 처리 함수 임포트
-
+import swal from 'sweetalert';
 export default {
   data() {
     return {
@@ -137,7 +137,7 @@ export default {
             ? error.response.data.errorCode
             : null
         );
-        alert(message);
+        swal(message);
       }
     },
     updateVisiblePages() {

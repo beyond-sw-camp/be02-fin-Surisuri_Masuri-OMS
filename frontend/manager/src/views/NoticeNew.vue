@@ -19,7 +19,7 @@
 
 <script>
 import axios from 'axios';
-
+import swal from 'sweetalert';
 export default {
   name: 'CreateNotice',
   data() {
@@ -44,11 +44,11 @@ export default {
           },
         });
         console.log('Submitted notice:', response.data);
-        alert('공지사항이 성공적으로 생성되었습니다.');
+        swal('공지사항이 성공적으로 생성되었습니다.');
         this.$router.push('/notice'); // 제출 후 공지사항 목록 페이지로 이동
       } catch (error) {
         console.error('공지사항 생성 중 오류 발생:', error);
-        alert('공지사항 생성 중 오류가 발생했습니다.');
+        swal('공지사항 생성 중 오류가 발생했습니다.');
       }
     },
   },

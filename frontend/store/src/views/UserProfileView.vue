@@ -36,6 +36,7 @@
 
 <script>
 import axios from 'axios';
+import swal from 'sweetalert';
 
 const baseURL = 'http://121.140.125.34:11113/api'
 
@@ -67,13 +68,13 @@ export default {
           });
           
           // 수정 성공 알림
-          alert("회원정보가 성공적으로 수정되었습니다.");
+          swal("회원정보가 성공적으로 수정되었습니다.");
           console.log(response.data);
           
           // 여기에서 추가적으로 페이지를 리디렉션하거나 다른 UI 업데이트를 수행할 수 있습니다.
         } catch (error) {
           // 수정 실패 알림
-          alert("회원정보 수정 요청 실패.");
+          swal("회원정보 수정 요청 실패.");
           console.error('회원정보 수정 요청 실패:', error);
         }
       } else {

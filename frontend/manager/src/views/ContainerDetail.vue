@@ -21,23 +21,7 @@
                 </tr>
               </tbody>
             </table>
-            <nav aria-label="Page navigation">
-              <ul class="pagination justify-content-end">
-                <li class="page-item">
-                  <a class="page-link" href="#" aria-label="Previous" @click.prevent="prevRange">
-                    <span aria-hidden="true">&laquo;</span>
-                  </a>
-                </li>
-                <li class="page-item" v-for="page in pageRange" :key="page" :class="{ active: page === currentPage }">
-                  <a class="page-link" href="#" @click.prevent="fetchNotices(page)">{{ page }}</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#" aria-label="Next" @click.prevent="nextRange">
-                    <span aria-hidden="true">&raquo;</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
+            <!-- 페이지네이션 관련 UI 제거 -->
             <a @click="goBack" class="btn btn-primary btn-sm">목록으로 돌아가기</a>
           </div>
         </div>
@@ -45,6 +29,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import axios from "axios";
@@ -54,49 +39,45 @@ export default {
     return {
       containerss: [],
       currentPage: 1,
-      totalPages: 20, // 실제 서버로부터 받아온 총 페이지 수입니다.
-      pageRangeSize: 5,
+      isLoading: false, // 데이터 로딩 중인지 여부
+      hasMoreData: true, // 더 불러올 데이터가 있는지 여부
     };
   },
-  computed: {
-    pageRange() {
-      const startPage = Math.floor((this.currentPage - 1) / this.pageRangeSize) * this.pageRangeSize + 1;
-      const endPage = Math.min(startPage + this.pageRangeSize - 1, this.totalPages);
-      return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
-    },
-  },
   methods: {
-    async fetchData(containerIdx, page) {
-      this.currentPage = page;
+    async fetchData() {
+      if (this.isLoading || !this.hasMoreData) return;
+      this.isLoading = true;
+
       try {
         const accessToken = sessionStorage.getItem("accessToken");
         const response = await axios.get(
-          `http://121.140.125.34:11114/api/container/singlestock?containerIdx=${containerIdx}`,
+          `http://121.140.125.34:11114/api/container/singlestock?containerIdx=${this.$route.params.containerIdx}`,
           {
             params: {
               page: this.currentPage,
               size: 10,
             },
             headers: {
-            AccessToken: accessToken,
-          },
+              AccessToken: accessToken,
+            },
           }
         );
-        this.containerss = response.data.result; // 받아온 데이터를 containerss에 저장
+        if (response.data.result.length > 0) {
+          this.containerss = [...this.containerss, ...response.data.result];
+          this.currentPage++;
+        } else {
+          this.hasMoreData = false;
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        this.isLoading = false;
       }
     },
-    nextRange() {
-      const maxPage = Math.ceil(this.currentPage / this.pageRangeSize) * this.pageRangeSize;
-      if (maxPage < this.totalPages) {
-        this.fetchNotices(maxPage + 1);
-      }
-    },
-    prevRange() {
-      const startPage = Math.floor((this.currentPage - 1) / this.pageRangeSize) * this.pageRangeSize;
-      if (startPage >= this.pageRangeSize) {
-        this.fetchNotices(startPage - this.pageRangeSize + 1);
+    checkScroll() {
+      const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 10;
+      if (nearBottom) {
+        this.fetchData();
       }
     },
     goBack() {
@@ -104,9 +85,11 @@ export default {
     },
   },
   mounted() {
-    // 두 번째 템플릿이 마운트되면서 컨테이너의 idx 값을 받아와서 데이터를 불러옴
-    const containerIdx = this.$route.params.containerIdx;
-    this.fetchData(containerIdx);
+    this.fetchData();
+    window.addEventListener('scroll', this.checkScroll);
+  },
+  beforeUnmount() { // 여기를 수정했습니다
+    window.removeEventListener('scroll', this.checkScroll);
   },
 };
 </script>

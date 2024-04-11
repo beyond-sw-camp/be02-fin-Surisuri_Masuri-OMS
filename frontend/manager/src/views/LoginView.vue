@@ -38,7 +38,7 @@ import { useManagerStore } from '/stores/managerStores';
 import { useRouter } from 'vue-router';
 import { useLoadingStore } from '../../stores/loadingStore';
 import { ref } from 'vue';
-
+import swal from 'sweetalert';
 export default {
   setup() {
     const managerStore = useManagerStore();
@@ -56,15 +56,15 @@ export default {
         });
         loadingStore.hideLoading();
         if (success) {
-          alert('로그인 성공'); // 성공 알림
+          swal('로그인 성공', '', 'success'); // 성공 알림
           console.log('로그인 성공');
           router.push('/home');
         } else {
-          alert('로그인 실패. 이메일 또는 비밀번호를 확인해 주세요.'); // 실패 알림
+          swal('로그인 실패', '이메일 또는 비밀번호를 확인해 주세요.', 'error'); // 실패 알림
           console.log('로그인 실패');
         }
       } catch (error) {
-        alert('로그인 요청 중 오류 발생. 다시 시도해 주세요.'); // 오류 알림
+        swal('로그인 요청 중 오류 발생', '다시 시도해 주세요.', 'error'); // 오류 알림
         console.error('로그인 요청 중 오류 발생:', error);
       }
     };

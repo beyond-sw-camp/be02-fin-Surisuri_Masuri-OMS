@@ -46,6 +46,7 @@ import axios from "axios";
 import { ref, computed, onMounted } from "vue";
 import { getErrorMessage } from "../utils/error.js";
 import { useRouter } from 'vue-router'; 
+import swal from 'sweetalert';
 export default {
   name: "CartPage",
   setup() {
@@ -101,7 +102,7 @@ export default {
         console.error("Error fetching cart list:", error);
         // 여기서 getErrorMessage 함수를 사용하여 적절한 에러 메시지를 얻음
         const message = getErrorMessage(error.response.data.errorCode); // 가정: error.response.data.errorCode가 에러 코드를 포함
-        alert(message); // 에러 메시지를 사용자에게 알림
+        swal(message); // 에러 메시지를 사용자에게 알림
       }
     });
 
@@ -133,7 +134,7 @@ export default {
         console.error("Error removing item:", error);
         // removeItem 함수 내에서도 같은 방식으로 에러 메시지 처리
         const message = getErrorMessage(error.response.data.errorCode);
-        alert(message);
+        swal(message);
       }
     }
 
@@ -191,7 +192,7 @@ export default {
         console.error("Error processing KakaoPay:", error);
         // processKakaoPay 내에서 에러 처리
         const message = getErrorMessage(error.response.data.errorCode);
-        alert(message);
+        swal(message);
       }
       // 펄스면 ~
     }
