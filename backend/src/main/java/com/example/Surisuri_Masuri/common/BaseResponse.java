@@ -12,7 +12,7 @@ public class BaseResponse<T> {
     private T result;
 
     public static <T> BaseResponse<T> successResponse(String message, T result) {
-        return new BaseResponse<>(true, 1000, message, result);
+        return new BaseResponse<>(true, 200, message, result);
     }
 
     public static <T> BaseResponse<T> failResponse(Integer code, String message) {

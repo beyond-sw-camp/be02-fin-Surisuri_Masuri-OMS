@@ -448,7 +448,7 @@ public class OrdersService {
         if (req.getIdx() != null) {
             Optional<Orders> ordersResult = ordersRepository.findById(req.getIdx());
 
-            if (ordersResult.isPresent() && !orders.getDeliveryStatus().equals("배송 전")) {
+            if (ordersResult.isPresent() && !ordersResult.get().getDeliveryStatus().equals("배송전")) {
                 orders = ordersResult.get();
 
                 throw new ContainerException(ErrorCode.RefundRequest_001,
