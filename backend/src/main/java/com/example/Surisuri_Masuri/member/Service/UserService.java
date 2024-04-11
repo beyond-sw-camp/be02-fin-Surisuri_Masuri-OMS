@@ -20,6 +20,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -57,7 +59,7 @@ public class UserService {
     List<DiscardedProduct> discardedProduct2 = new ArrayList<>();
 
     // 회원가입 기능
-    public BaseResponse<UserSignUpRes> UserSignUp(UserSignUpReq userSignUpReq) {
+    public BaseResponse<UserSignUpRes> UserSignUp(UserSignUpReq userSignUpReq) throws MessagingException {
 
         LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         Date update = Date.from(localDateTime.atZone(ZoneId.of("Asia/Seoul")).toInstant());
@@ -289,7 +291,7 @@ public class UserService {
     }
 
     // 회원 비밀번호 찾기 기능
-    public BaseResponse<FindUserPasswordRes> findPassword(FindUserPasswordReq findUserPasswordReq) {
+    public BaseResponse<FindUserPasswordRes> findPassword(FindUserPasswordReq findUserPasswordReq) throws MessagingException {
 
         List<User> userResults = userRepository.findByUserName(findUserPasswordReq.getUserName());
         Optional<User> userResult = userRepository.findByUserEmail(findUserPasswordReq.getUserEmail());

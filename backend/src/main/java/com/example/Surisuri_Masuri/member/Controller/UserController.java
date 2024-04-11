@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 @RestController
@@ -21,8 +22,7 @@ public class UserController {
 
     // 계정 생성 - Create
     @PostMapping("/user/register")
-    public ResponseEntity UserSignUp(@Valid @RequestBody UserSignUpReq userSignUpReq)
-    {
+    public ResponseEntity UserSignUp(@Valid @RequestBody UserSignUpReq userSignUpReq) throws MessagingException {
         return ResponseEntity.ok().body(userService.UserSignUp(userSignUpReq));
     }
 
@@ -55,8 +55,7 @@ public class UserController {
 
     // Password 재설정 이메일 발송
     @PostMapping("/user/findPassword")
-    public ResponseEntity findPassword(@RequestBody @Valid FindUserPasswordReq findUserPasswordReq)
-    {
+    public ResponseEntity findPassword(@RequestBody @Valid FindUserPasswordReq findUserPasswordReq) throws MessagingException {
         return ResponseEntity.ok().body(userService.findPassword(findUserPasswordReq));
     }
 
