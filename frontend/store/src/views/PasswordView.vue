@@ -39,7 +39,7 @@
 <script>
 import axios from 'axios';
 import { getErrorMessage } from '../utils/error.js'; // 에러 메시지 처리 함수 임포트
-
+import swal from 'sweetalert';
 const baseURL = 'http://121.140.125.34:11113/api';
 
 export default {
@@ -52,7 +52,7 @@ export default {
   methods: {
     async resetPassword() {
       if (!this.userName.trim() || !this.userEmail.trim()) {
-        alert('이름과 이메일을 모두 입력해주세요.');
+        swal('이름과 이메일을 모두 입력해주세요.');
         return;
       }
 
@@ -69,13 +69,13 @@ export default {
         });
 
         if (response.data.result) {
-          alert('비밀번호 재설정 링크가 이메일로 전송되었습니다. 메일을 확인해주세요.');
+          swal('비밀번호 재설정 링크가 이메일로 전송되었습니다. 메일을 확인해주세요.');
         } else {
-          alert('비밀번호 재설정 요청을 처리할 수 없습니다. 입력 정보를 확인해주세요.');
+          swal('비밀번호 재설정 요청을 처리할 수 없습니다. 입력 정보를 확인해주세요.');
         }
       } catch (error) {
         const errorMessage = getErrorMessage(error.response && error.response.data ? error.response.data.errorCode : null);
-        alert(`비밀번호 재설정 요청 중 오류가 발생했습니다.\n${errorMessage}`);
+        swal(`비밀번호 재설정 요청 중 오류가 발생했습니다.\n${errorMessage}`);
       }
     },
   },

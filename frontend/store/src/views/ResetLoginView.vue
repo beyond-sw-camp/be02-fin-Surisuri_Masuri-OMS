@@ -38,7 +38,7 @@
 <script>
 import axios from 'axios';
 import { getErrorMessage } from '../utils/error.js'; // 에러 메시지 처리 함수 임포트
-
+import swal from 'sweetalert';
 const baseURL = 'http://121.140.125.34:11113/api';
 
 export default {
@@ -52,7 +52,7 @@ export default {
   methods: {
     async findId() {
       if (!this.userName.trim() || !this.userPhoneNo.trim()) {
-        alert('이름과 핸드폰 번호를 모두 입력해주세요.');
+        swal('이름과 핸드폰 번호를 모두 입력해주세요.');
         return;
       }
       
@@ -66,13 +66,13 @@ export default {
 
         if (response.data && response.data.result && response.data.result.userEmail) {
           this.foundId = response.data.result.userEmail;
-          alert(`찾은 아이디: ${this.foundId}`);
+          swal(`찾은 아이디: ${this.foundId}`);
         } else {
-          alert('해당 정보와 일치하는 아이디가 없습니다.');
+          swal('해당 정보와 일치하는 아이디가 없습니다.');
         }
       } catch (error) {
         const errorMessage = getErrorMessage(error.response && error.response.data ? error.response.data.errorCode : null);
-        alert(`아이디를 찾는 동안 오류가 발생했습니다.\n${errorMessage}`);
+        swal(`아이디를 찾는 동안 오류가 발생했습니다.\n${errorMessage}`);
       }
     },
   },

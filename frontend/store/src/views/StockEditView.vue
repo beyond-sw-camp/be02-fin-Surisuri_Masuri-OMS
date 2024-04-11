@@ -18,7 +18,7 @@
                   :key="product.storeStockDto.productName"
                 >
                   <td>{{ product.storeStockDto.productName }}</td>
-                  <td>{{ product.productQuantity }}</td>
+                  <td>{{ product.storeStockDto.productQuantity }}</td>
                   <td>
                     <!-- 여기에 재고수량 입력 필드와 수정 버튼을 추가 -->
                     <input
@@ -126,7 +126,7 @@
             }
           );
 
-          console.log("fetchStockList - 응답 데이터:", response.data); // 응답 데이터 확인
+          console.log("fetchStockList - 응답 데이터:", response.result); // 응답 데이터 확인
 
           this.stockList = response.data.result.map((product) => ({
             ...product,

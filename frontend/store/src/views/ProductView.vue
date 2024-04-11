@@ -99,6 +99,7 @@
 import axios from "axios";
 import CartButtonComponent from "@/components/CartButtonComponent.vue";
 import { getErrorMessage } from "../utils/error.js";
+import swal from 'sweetalert';
 
 export default {
   name: "ProductView",
@@ -240,7 +241,7 @@ export default {
 
         // 서버로부터 응답을 받은 경우
         console.log("장바구니에 제품이 추가되었습니다:", response.data);
-        alert(
+        swal(
           `${product.productName} ${product.purchaseQuantity}개가 장바구니에 추가되었습니다.`
         );
         this.cartItemCount += product.purchaseQuantity;
@@ -266,7 +267,7 @@ export default {
         }
 
         // 최종적으로 결정된 오류 메시지를 사용자에게 알림
-        alert(errorMessage);
+        swal(errorMessage);
       }
     },
   
