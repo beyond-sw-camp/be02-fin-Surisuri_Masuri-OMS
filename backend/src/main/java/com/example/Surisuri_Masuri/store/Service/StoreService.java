@@ -8,6 +8,8 @@ import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
+import com.example.Surisuri_Masuri.product.model.Product;
+import com.example.Surisuri_Masuri.product.model.dto.response.ProductReadRes;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import com.example.Surisuri_Masuri.store.Model.ReqDtos.StoreCreateReq;
 import com.example.Surisuri_Masuri.store.Model.ReqDtos.StoreSearchReq;
@@ -47,7 +49,6 @@ public class StoreService {
     StoreCreateRes storeCreateRes;
 
 
-
     // 가맹점 등록
     public BaseResponse<StoreCreateRes> StoreCreate(String token, StoreCreateReq storeCreateReq) {
 
@@ -77,8 +78,7 @@ public class StoreService {
                     .build();
 
             return BaseResponse.successResponse("요청 성공했습니다.", storeCreateRes);
-        }
-        else {
+        } else {
             throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
@@ -94,38 +94,37 @@ public class StoreService {
         String managerId = managerInfo.get("managerId", String.class);
 
         Optional<Manager> manager = managerRepository.findByManagerId(managerId);
-        if (manager.isPresent()){
+        if (manager.isPresent()) {
 
-        Pageable pageable = PageRequest.of(page-1,size);
+            Pageable pageable = PageRequest.of(page - 1, size);
 
-        Page<Store> result = storeRepository.findList(pageable);
+            Page<Store> result = storeRepository.findList(pageable);
 
-        List<StoreReadRes> storeSearchResList = new ArrayList<>();
+            List<StoreReadRes> storeSearchResList = new ArrayList<>();
 
-        for (Store store : result.getContent()) {
+            for (Store store : result.getContent()) {
 
-            storeReadRes = StoreReadRes
-                    .builder()
-                    .storeName(store.getStoreName())
-                    .storePhoneNo(store.getStorePhoneNo())
-                    .userPhoneNo(store.getUser().getUserPhoneNo())
-                    .storeAddr(store.getStoreAddr())
-                    .storeUuid(store.getStoreUuid())
-                    .build();
+                storeReadRes = StoreReadRes
+                        .builder()
+                        .storeName(store.getStoreName())
+                        .storePhoneNo(store.getStorePhoneNo())
+                        .userPhoneNo(store.getUser().getUserPhoneNo())
+                        .storeAddr(store.getStoreAddr())
+                        .storeUuid(store.getStoreUuid())
+                        .build();
 
-            storeSearchResList.add(storeReadRes);
-        }
-        // DtoToRes
-        return BaseResponse.successResponse("요청 성공했습니다.", storeSearchResList);
-        }
-        else {
+                storeSearchResList.add(storeReadRes);
+            }
+            // DtoToRes
+            return BaseResponse.successResponse("요청 성공했습니다.", storeSearchResList);
+        } else {
             throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
 
     // 가맹점 단일 조회
-    public BaseResponse<StoreReadRes> StoreSearch(String token, StoreSearchReq storeSearchReq) {
+    public BaseResponse StoreSearch(String token, StoreSearchReq storeSearchReq, Integer page, Integer size) {
 
         token = JwtUtils.replaceToken(token);
 
@@ -136,27 +135,27 @@ public class StoreService {
         Optional<Manager> manager = managerRepository.findByManagerId(managerId);
 
         if (manager.isPresent()) {
-            Optional<Store> store = storeRepository.findByStoreName(storeSearchReq.getStoreName());
-            if (store.isPresent()) {
-                Store store2 = store.get();
-                if (store2.getStorePhoneNo() == null) {
-                    throw new StoreException(ErrorCode.StoreSearch_004,
-                            String.format("가맹점 정보가 등록되었으나 가맹점 관리자가 가입이 되지 않았습니다."));
-                }
-                storeReadRes = StoreReadRes
-                        .builder()
-                        .storeName(store2.getStoreName())
-                        .storePhoneNo(store2.getStorePhoneNo())
-                        .userPhoneNo(store2.getUser().getUserPhoneNo())
-                        .storeAddr(store2.getStoreAddr())
-                        .storeUuid(store2.getStoreUuid())
-                        .build();
-            } else
-                throw new StoreException(ErrorCode.StoreSearch_003,
-                        String.format("가맹점 검색 결과가 존재하지 않습니다"));
+            Pageable pageable = PageRequest.of(page - 1, size);
 
-            return BaseResponse.successResponse("요청 성공했습니다.", storeReadRes);
-        }  else {
+            Page<Store> result = storeRepository.findStoreByName(storeSearchReq.getStoreName(), pageable);
+
+            List<StoreReadRes> storeReadResList = new ArrayList<>();
+
+            for (Store store : result.getContent()) {
+
+                StoreReadRes storeReadRes1 = StoreReadRes
+                        .builder()
+                        .storeName(store.getStoreName())
+                        .storeAddr(store.getStoreAddr())
+                        .storeUuid(store.getStoreUuid())
+                        .userPhoneNo(store.getUser().getUserPhoneNo())
+                        .storePhoneNo(store.getStorePhoneNo())
+                        .build();
+
+                storeReadResList.add(storeReadRes1);
+            }
+            return BaseResponse.successResponse("상품 검색을 성공했습니다.", storeReadResList);
+        } else {
             throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }

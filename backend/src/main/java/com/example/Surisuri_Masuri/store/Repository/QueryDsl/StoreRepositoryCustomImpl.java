@@ -3,6 +3,7 @@ package com.example.Surisuri_Masuri.store.Repository.QueryDsl;
 import com.example.Surisuri_Masuri.store.Model.Entity.QStore;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 
+import com.example.Surisuri_Masuri.store.Model.ReqDtos.StoreSearchReq;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -28,5 +29,22 @@ public class StoreRepositoryCustomImpl extends QuerydslRepositorySupport impleme
                 .fetch();
 
         return new PageImpl<>(result, pageable, result.size());
+    }
+
+    @Override
+    public Page<Store> findStoreByName(String name, Pageable pageable) {
+        QStore store = QStore.store;
+
+        List<Store> result = from(store)
+                .where(store.storeName.containsIgnoreCase(name))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        long total = from(store)
+                .where(store.storeName.containsIgnoreCase(name))
+                .fetchCount();
+
+        return new PageImpl<>(result, pageable, total);
     }
 }

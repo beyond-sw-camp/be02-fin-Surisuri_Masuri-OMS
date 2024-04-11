@@ -180,5 +180,38 @@ public class ContainerService {
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
+
+    public BaseResponse search(String token, String name,Integer page, Integer size)
+    {
+
+        Optional<Manager> manager = managerRepository.findByManagerId(JwtUtils.getManagerId(token,secretKey));
+
+        if(manager.isPresent()) {
+            Pageable pageable = PageRequest.of(page - 1, size);
+
+            Page<Container> containerList = containerRepository.findContainerByNameContaining(name,pageable);
+
+            List<GetListContainerRes> getListContainerResList = new ArrayList<>();
+            for (Container container : containerList) {
+                GetListContainerRes getListContainernRes = GetListContainerRes.builder()
+                        .containerIdx(container.getIdx())
+                        .containerName(container.getContainerName())
+                        .containerAddr(container.getContainerAddr())
+                        .containerManager(container.getContainerManager())
+                        .containerPhoneNo(container.getContainerPhoneNo())
+                        .containerComplexity(container.getContainerComplexity())
+                        .build();
+
+                getListContainerResList.add(getListContainernRes);
+            }
+
+            return BaseResponse.successResponse("창고 목록 조회를 성공했습니다.", getListContainerResList);
+        }
+        else {
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
+                    String.format("가입되지 않은 본사 관리자입니다."));
+        }
+    }
+
 }
 
