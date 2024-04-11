@@ -50,7 +50,7 @@ describe('ResetPasswordView', () => {
     await wrapper.vm.submitNewPassword();
   
     // 비밀번호 재설정 요청이 정상적으로 처리되었는지 확인
-    expect(axios.patch).toHaveBeenCalledWith('http://localhost:8080/user/resetPassword/userIdx123', expect.any(FormData));
+    expect(axios.patch).toHaveBeenCalledWith('http://121.140.125.34:11113/api/user/resetPassword/userIdx123', expect.any(FormData));
     expect(wrapper.vm.$data.alertMessage).toBe('비밀번호가 성공적으로 재설정되었습니다.');
   });
   

@@ -17,7 +17,7 @@ describe('ResetLoginView', () => {
 
     await wrapper.find('form').trigger('submit.prevent');
 
-    expect(axios.get).toHaveBeenCalledWith('http://localhost:8080/user/findEmail', {
+    expect(axios.get).toHaveBeenCalledWith('http://121.140.125.34:11113/api/user/findEmail', {
       params: {
         userName: '김광두',
         userPhoneNo: '010-1234-5678'

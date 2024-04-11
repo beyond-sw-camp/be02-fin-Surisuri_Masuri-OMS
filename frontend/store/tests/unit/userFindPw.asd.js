@@ -34,7 +34,7 @@ describe('PasswordView', () => {
 
     // axios.post가 올바른 URL과 함께 호출되었는지 확인합니다.
     expect(axios.post).toHaveBeenCalledWith(
-      'http://localhost:8080/user/findPassword',
+      'http://121.140.125.34:11113/api/user/findPassword',
       { userName: '테스트', userEmail: 'test@example.com' },
       {
         headers: {
@@ -63,6 +63,7 @@ describe('PasswordView', () => {
     await wrapper.find('form').trigger('submit.prevent');
 
     // 서버 오류가 발생했을 때 적절한 오류 메시지가 표시되는지 확인합니다.
-    expect(window.alert).toHaveBeenCalledWith(`비밀번호 재설정 요청 중 오류가 발생했습니다.\n${errorMessage}`);
+    expect(window.alert).toHaveBeenCalledWith(`비밀번호 재설정 요청 중 오류가 발생했습니다.
+    알 수 없는 오류가 발생했습니다.`);
   });
 });

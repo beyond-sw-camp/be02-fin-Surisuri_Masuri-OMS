@@ -51,7 +51,7 @@ describe('OrderDetailView', () => {
     await wrapper.vm.$nextTick()
 
     // axios.get이 호출되었는지 확인
-    expect(axios.get).toHaveBeenCalledWith('http://localhost:8080/orders/list', {
+    expect(axios.get).toHaveBeenCalledWith('http://121.140.125.34:11113/api/orders/list', {
       params: {
         page: 1,
         size: 5
