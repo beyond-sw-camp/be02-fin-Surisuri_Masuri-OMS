@@ -18,6 +18,7 @@ export const useUserStore = defineStore({
     },
     AccessTokenToken: sessionStorage.getItem("accessToken") || null,
     refreshToken: sessionStorage.getItem("refreshToken") || null,
+    discardedProduct: "",
   }),
   actions: {
     async createAccount() {
@@ -59,6 +60,7 @@ export const useUserStore = defineStore({
         if (data.isSuccess) {
           this.accessToken = data.result.accessToken;
           this.refreshToken = data.result.refreshToken;
+          this.discardedProduct = data.result.discardedProduct;
 
           sessionStorage.setItem("accessToken", this.accessToken);
           sessionStorage.setItem("refreshToken", this.refreshToken);
