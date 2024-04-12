@@ -59,4 +59,16 @@ public class StoreStockRepositoryCustomImpl extends QuerydslRepositorySupport im
         // 삭제된 레코드 수 반환
         return (long) storeStocks.size();
     }
+
+    @Override
+    @Transactional
+    public Long countDiscardedStocksByStoreName(String storeName) {
+        QStoreStock qStoreStock = QStoreStock.storeStock;
+        return queryFactory
+                .selectFrom(qStoreStock)
+                .where(qStoreStock.store.storeName.eq(storeName)
+                        .and(qStoreStock.isDiscarded.isTrue()))
+                .fetchCount();
+    }
+
 }
