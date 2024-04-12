@@ -60,7 +60,7 @@ public class CartService {
 
             Optional<Store> storeResult = storeRepository.findByStoreUuid(foundUser.getStore().getStoreUuid());
 
-            if (storeResult.isPresent() && foundUser.getStore().getCartList().size() == 0) {
+            if (storeResult.isPresent() && foundUser.getStore().getCartList().isEmpty()) {
 
                 Store store = storeResult.get();
 
@@ -97,6 +97,18 @@ public class CartService {
                         for (CartDetail cartDetail : cartDetailResult) {
                             if (cartDetail.getProduct().equals(product)) {
                                 cartDetail.setProductQuantity(req.getProductQuantity() + cartDetail.getProductQuantity());
+                                cartDetailRepository.save(cartDetail);
+
+                                CartCreateRes cartCreateRes = CartCreateRes.builder()
+                                        .idx(cart.getIdx())
+                                        .productName(product.getProductName())
+                                        .price(product.getPrice())
+                                        .productQuantity(cartDetail.getProductQuantity())
+                                        .build();
+
+                                return BaseResponse.successResponse("요청 성공했습니다.", cartCreateRes);
+                            } else {
+                                cartDetail.setProductQuantity(req.getProductQuantity());
                                 cartDetailRepository.save(cartDetail);
 
                                 CartCreateRes cartCreateRes = CartCreateRes.builder()

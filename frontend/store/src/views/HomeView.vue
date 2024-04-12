@@ -254,12 +254,12 @@ export default {
     checkDiscardedProducts() {
       const userStore = useUserStore(); // Pinia 스토어 사용
       if (
-        userStore.discardedProducts &&
-        userStore.discardedProducts.length > 0
+        userStore.discardedProduct &&
+        userStore.discardedProduct.length > 0
       ) {
         // 폐기 대상 상품이 있으면 알림 표시
         this.showNotification = true;
-        this.notificationText = `폐기 대상 상품이 ${userStore.discardedProducts.length}개 있습니다. 관리 페이지에서 확인해주세요.`;
+        this.notificationText = `폐기 대상 상품이 ${userStore.discardedProduct.length}개 있습니다. 관리 페이지에서 확인해주세요.`;
       }
     },
     hideNotification() {
