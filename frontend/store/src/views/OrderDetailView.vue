@@ -20,12 +20,13 @@
         <!-- 추가: 배송 전인 주문 수 -->
         <div class="col-xl-3 col-md-6">
           <div class="card bg-info text-white mb-4">
-            <div class="card-body">배송 전인 주문 수: {{ nonShippingOrders }}</div>
+            <div class="card-body">
+              배송 전인 주문 수: {{ nonShippingOrders }}
+            </div>
           </div>
         </div>
       </div>
       <div class="card mb-4">
-        
         <div class="card-body">
           <table class="table">
             <thead>
@@ -44,39 +45,66 @@
                 <td>{{ order.merchantUid }}</td>
                 <td>
                   <!-- 상품 정보 출력 -->
-                  <div>{{ order.productDtoRes.productName }} ({{ order.productDtoRes.productQuantity }}개)</div>
+                  <div>
+                    {{ order.productDtoRes.productName }} ({{
+                      order.productDtoRes.productQuantity
+                    }}개)
+                  </div>
                 </td>
                 <td>{{ order.totalPrice }}</td>
                 <!-- 배송 상태에 따라 다르게 표시 -->
                 <td v-if="order.deliveryStatus === '출고 처리'">
-                  <span class="card bg-success text-center">{{ order.deliveryStatus }}</span>
+                  <span class="card bg-success text-center">{{
+                    order.deliveryStatus
+                  }}</span>
                 </td>
                 <td v-if="order.deliveryStatus === '배송 완료'">
-                  <span class="card bg-success text-center">{{ order.deliveryStatus }}</span>
+                  <span class="card bg-success text-center">{{
+                    order.deliveryStatus
+                  }}</span>
                 </td>
                 <td v-if="order.deliveryStatus === '배송중'">
-                  <span class="card bg-success text-center">{{ order.deliveryStatus }}</span>
+                  <span class="card bg-success text-center">{{
+                    order.deliveryStatus
+                  }}</span>
                 </td>
                 <td v-else-if="order.deliveryStatus === '배송전'">
-                  <span class="card bg-info text-center">{{ order.deliveryStatus }}</span>
+                  <span class="card bg-info text-center">{{
+                    order.deliveryStatus
+                  }}</span>
                 </td>
               </tr>
             </tbody>
           </table>
           <nav aria-label="Order pagination">
-      <ul class="pagination justify-content-end">
-        <li class="page-item" :class="{ disabled: currentPage <= 1 }">
-          <button class="page-link" @click="prevPage" :disabled="currentPage <= 1">&laquo;</button>
-        </li>
-        <!-- 현재 페이지 표시, 선택적으로 다른 페이지 번호도 표시 가능 -->
-        <li class="page-item active" aria-current="page">
-          <span class="page-link">{{ currentPage }}</span>
-        </li>
-        <li class="page-item" :class="{ disabled: currentPage >= totalPages }">
-          <button class="page-link" @click="nextPage" :disabled="currentPage >= totalPages">&raquo;</button>
-        </li>
-      </ul>
-    </nav>
+            <ul class="pagination justify-content-end">
+              <li class="page-item" :class="{ disabled: currentPage <= 1 }">
+                <button
+                  class="page-link"
+                  @click="prevPage"
+                  :disabled="currentPage <= 1"
+                >
+                  &laquo;
+                </button>
+              </li>
+              <!-- 현재 페이지 표시, 선택적으로 다른 페이지 번호도 표시 가능 -->
+              <li class="page-item active" aria-current="page">
+                <span class="page-link">{{ currentPage }}</span>
+              </li>
+              <li
+                class="page-item"
+                :class="{ disabled: currentPage >= totalPages }"
+              >
+                <button
+                  class="page-link"
+                  @click="nextPage"
+                  :disabled="currentPage >= totalPages"
+                >
+                  &raquo;
+                </button>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>
@@ -106,16 +134,19 @@ export default {
     async fetchOrders() {
       try {
         const accessToken = sessionStorage.getItem("accessToken");
-        const response = await axios.get("http://121.140.125.34:11113/api/orders/list", {
-          params: {
-            page: this.currentPage,
-            size: this.pageSize,
-          },
-          headers: {
-            AccessToken: accessToken,
-          },
-        });
-        
+        const response = await axios.get(
+          "http://121.140.125.34:11113/api/orders/list",
+          {
+            params: {
+              page: this.currentPage,
+              size: this.pageSize,
+            },
+            headers: {
+              AccessToken: accessToken,
+            },
+          }
+        );
+
         // 여기서 전체 주문 수와 전체 페이지 수 계산 (예: response에서 전체 주문 수 받아오기)
         this.totalPages = Math.ceil(response.data.totalCount / this.pageSize); // totalCount는 예시입니다.
 
@@ -138,7 +169,19 @@ export default {
       }
     },
     calculateOrderStatistics() {
-      // 오늘 주문 수, 배송 중인 주문 수, 배송 전인 주문 수 계산하는 로직을 여기로 이동
+      // 오늘 날짜를 기준으로 필터링하여 오늘의 주문 수를 계산합니다.
+      const today = new Date().toISOString().slice(0, 10);
+      this.todayOrders = this.ordersDetailResult.filter(
+        (order) => order.createdDate.slice(0, 10) === today
+      ).length;
+
+      // 배송 상태를 기준으로 필터링하여 배송 중인 주문 수와 배송 전인 주문 수를 계산합니다.
+      this.shippingOrders = this.ordersDetailResult.filter(
+        (order) => order.deliveryStatus === "배송중"
+      ).length;
+      this.nonShippingOrders = this.ordersDetailResult.filter(
+        (order) => order.deliveryStatus === "배송전"
+      ).length;
     },
     nextPage() {
       if (this.currentPage < this.totalPages) {
@@ -155,7 +198,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 /* 필요한 스타일 추가 */
