@@ -14,6 +14,7 @@ import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import com.example.Surisuri_Masuri.store.Repository.StoreRepository;
 import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
+import com.example.Surisuri_Masuri.storeStock.Repository.StoreStockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -38,6 +39,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final StoreRepository storeRepository;
+
+    private final StoreStockRepository storeStockRepository;
 
     private final EmailService emailService;
 
@@ -133,7 +136,7 @@ public class UserService {
     }
 
     // 로그인 기능
-    public BaseResponse<LoginRes> UserLogin(LoginReq userLoginReq) {
+    public BaseResponse UserLogin(LoginReq userLoginReq) {
         LoginRes loginRes = null;
 
         discardedProduct2.clear();
@@ -156,51 +159,28 @@ public class UserService {
                 passwordEncoder.matches(userLoginReq.getPassword(), user.get().getPassword())
                 && user.get().getStatus().equals(true))
         {
-            Optional<Store> store = storeRepository.findByStoreName(user.get().getStore().getStoreName());
+            Optional <Store> store  = storeRepository.findByStoreName(user.get().getStore().getStoreName());
+            Long storeCount = storeStockRepository.countDiscardedStocksByStoreName(store.get().getStoreName());
 
             String RefreshToken = JwtUtils.generateRefreshToken(user.get(), secretKey, expiredTimeMs);
 
-            ValueOperations<String,String> vop = redisTemplate.opsForValue();
 
-            vop.set(user.get().getUserEmail(),RefreshToken);
-
-            if (!store.get().getStoreStocks().isEmpty()) {
-                List<StoreStock> storeStockList = store.get().getStoreStocks();
-
-                for (int i = 0; i < storeStockList.size(); i++) {
-                    StoreStock storeStock = storeStockList.get(i);
-
-                    if (storeStock.getIsDiscarded().equals(true)) {
-                        DiscardedProduct discardedProduct = DiscardedProduct
-                                .builder()
-                                .productName(storeStock.getProduct().getProductName())
-                                .expiredDate(storeStock.getExpiredAt())
-                                .build();
-
-                        discardedProduct2.add(discardedProduct);
-                    }
-                    if (discardedProduct2.size() > 0) {
-                        loginRes = LoginRes.builder()
-                                .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs/24))
-                                .refreshToken(RefreshToken)
-                                .discardedProduct(discardedProduct2)
-                                .build();
-                    } else {
-                        loginRes = LoginRes.builder()
-                                .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs/24))
-                                .refreshToken(RefreshToken)
-                                .build();
-                    }
-                }
-            } else {
+            if (storeCount > 0) {
+                loginRes = LoginRes.builder()
+                        .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs/24))
+                        .refreshToken(RefreshToken)
+                        .discardedProduct(storeCount)
+                        .build();
+                return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
+            } else if(storeCount == 0) {
                 loginRes = LoginRes.builder()
                         .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs/24))
                         .refreshToken(RefreshToken)
                         .build();
+                return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
             }
-            return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
         }
-        else throw new ManagerException(ErrorCode.UserLogin_004,
+        throw new ManagerException(ErrorCode.UserLogin_004,
                 String.format("이메일 인증이 필요합니다."));
     }
 
