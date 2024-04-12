@@ -138,6 +138,7 @@ public class StoreStockService {
 
                 storeStockReadRes = StoreStockReadRes
                         .builder()
+                        .storeStockIdx(storeStock.getIdx())
                         .storeStockDto(storeStockDto)
                         .build();
 
@@ -202,9 +203,9 @@ public class StoreStockService {
         if (user.isPresent()) {
 
             Optional<StoreStock> storeStockResult = storeStockRepository.findById(storeStockUpdateReq.getIdx());
-            StoreStock storeStock = storeStockResult.get();
 
             if (storeStockResult.isPresent()) {
+                StoreStock storeStock = storeStockResult.get();
                 storeStock.setStockQuantity(storeStockUpdateReq.getStockQuantity());
 
                 storeStockRepository.save(storeStock);
