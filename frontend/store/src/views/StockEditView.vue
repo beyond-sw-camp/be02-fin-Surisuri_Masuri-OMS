@@ -130,7 +130,7 @@
 
           this.stockList = response.data.result.map((product) => ({
             ...product,
-            productQuantity: product.productQuantity,
+            productQuantity: product.storeStockDto.productQuantity,
             idx: product.storeStockIdx,
           }));
           console.log("API 호출에 성공했습니다.");
@@ -163,14 +163,14 @@
           console.log("updateProductQuantity - 요청 데이터:", {
             // 요청 데이터 확인
             idx: product.storeStockIdx,
-            productQuantity: product.productQuantity,
+            stockQuantity: product.productQuantity,
           });
 
           const response = await axios.patch(
             "http://121.140.125.34:11113/api/stock/update",
             {
               idx: product.storeStockIdx,
-              productQuantity: product.productQuantity,
+              stockQuantity: product.productQuantity,
             },
             {
               headers: {
