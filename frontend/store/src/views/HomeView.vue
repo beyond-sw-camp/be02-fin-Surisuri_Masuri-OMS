@@ -116,19 +116,19 @@
 
     <!-- 우측 하단 알림 -->
     <div
-      class="fixed-bottom px-3 py-2 bg-dark text-light"
-      v-if="showNotification"
+        class="fixed-bottom px-3 py-3 bg-bright text-white"
+    v-if="showNotification"
     >
       <div class="container-fluid">
         <div class="row align-items-center">
           <div class="col">
-            <p class="mb-0">{{ notificationText }}</p>
+            <p class="mb-0 notification-text">{{ notificationText }}</p> <!-- 클래스 추가 -->
           </div>
           <div class="col-auto">
             <button
-              type="button"
-              class="btn-close btn-close-white"
-              @click="hideNotification"
+                type="button"
+                class="btn-close btn-close-white"
+                @click="hideNotification"
             ></button>
           </div>
         </div>
@@ -254,12 +254,11 @@ export default {
     checkDiscardedProducts() {
       const userStore = useUserStore(); // Pinia 스토어 사용
       if (
-        userStore.discardedProduct &&
-        userStore.discardedProduct.length > 0
+        userStore.discardedProduct > 0
       ) {
         // 폐기 대상 상품이 있으면 알림 표시
         this.showNotification = true;
-        this.notificationText = `폐기 대상 상품이 ${userStore.discardedProduct.length}개 있습니다. 관리 페이지에서 확인해주세요.`;
+        this.notificationText = `폐기 대상 상품이 ${userStore.discardedProduct}개 있습니다. 관리 페이지에서 확인해주세요.`;
       }
     },
     hideNotification() {
@@ -398,5 +397,17 @@ a {
 }
 .notice-title {
   border-color: #00704a; /* This will set the color of .notice-title to red */
+}
+.bg-bright {
+  background-color: #ff6347; /* 토마토색으로 변경 */
+}
+
+.text-white {
+  color: white; /* 텍스트 색상을 흰색으로 설정 */
+}
+
+.notification-text {
+  font-size: 1.5em; /* 폰트 크기 증가 */
+  font-weight: bold; /* 폰트 굵기 */
 }
 </style>
