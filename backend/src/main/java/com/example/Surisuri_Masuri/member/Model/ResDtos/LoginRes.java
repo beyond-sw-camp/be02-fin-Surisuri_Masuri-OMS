@@ -11,5 +11,5 @@ import java.util.List;
 public class LoginRes {
     private String accessToken;
     private String refreshToken;
-    private List<DiscardedProduct> discardedProduct;
+    private Long discardedProduct;
 }
