@@ -15,5 +15,4 @@ public interface StoreStockRepository extends JpaRepository<StoreStock,Long> , S
     Optional<StoreStock> findStoreStockByProduct_ProductNameAndStore_StoreUuid(String productName,String storeUuid);
     @Query("SELECT s FROM StoreStock s WHERE s.expiredAt = :expirationDate AND s.isDiscarded = false AND s.product.isItFood = true")
     List<StoreStock> findExpiredFoodProducts(LocalDate expirationDate);
-
 }
