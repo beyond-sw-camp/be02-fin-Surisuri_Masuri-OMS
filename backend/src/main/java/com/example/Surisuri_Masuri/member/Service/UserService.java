@@ -7,8 +7,6 @@ import com.example.Surisuri_Masuri.exception.EntityException.ManagerException;
 import com.example.Surisuri_Masuri.exception.EntityException.UserException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
-import com.example.Surisuri_Masuri.jwt.Model.RefreshToken;
-import com.example.Surisuri_Masuri.jwt.Repository.RefreshTokenRepository;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.*;
 import com.example.Surisuri_Masuri.member.Model.ResDtos.*;
@@ -18,6 +16,8 @@ import com.example.Surisuri_Masuri.store.Repository.StoreRepository;
 import com.example.Surisuri_Masuri.storeStock.Model.Entity.StoreStock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -39,7 +39,7 @@ public class UserService {
 
     private final EmailService emailService;
 
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
     List<User> compare1;
     Optional<User> compare2;
@@ -162,9 +162,9 @@ public class UserService {
 
             String RefreshToken = JwtUtils.generateRefreshToken(user.get(), secretKey, expiredTimeMs);
 
-            RefreshToken newToken = new RefreshToken(user.get().getUserEmail(),JwtUtils.generateRefreshToken(user.get(),secretKey,expiredTimeMs));
+            ValueOperations<String,String> vop = redisTemplate.opsForValue();
 
-            refreshTokenRepository.save(newToken);
+            vop.set(user.get().getUserEmail(),RefreshToken);
 
             if (!store.get().getStoreStocks().isEmpty()) {
                 List<StoreStock> storeStockList = store.get().getStoreStocks();
@@ -183,20 +183,20 @@ public class UserService {
                     }
                     if (discardedProduct2.size() > 0) {
                         loginRes = LoginRes.builder()
-                                .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10)))
+                                .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10)))
                                 .refreshToken(RefreshToken)
                                 .discardedProduct(discardedProduct2)
                                 .build();
                     } else {
                         loginRes = LoginRes.builder()
-                                .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10 )))
+                                .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10 )))
                                 .refreshToken(RefreshToken)
                                 .build();
                     }
                 }
             } else {
                 loginRes = LoginRes.builder()
-                        .jwtToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10)))
+                        .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, (expiredTimeMs/10)))
                         .refreshToken(RefreshToken)
                         .build();
             }
@@ -212,7 +212,7 @@ public class UserService {
         compare2 = userRepository.findByUserPhoneNo(userFindEmailReq.getUserPhoneNo());
 
         if (compare1.isEmpty() || compare2.isEmpty()) {
-            throw new ManagerException(ErrorCode.UserEmail_004,
+            throw new ManagerException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 회원입니다."));
         }
 
@@ -225,7 +225,7 @@ public class UserService {
                 return BaseResponse.successResponse("요청하신 회원 정보입니다.", userFindEmailRes);
             }
         }
-        throw new ManagerException(ErrorCode.UserEmail_004,
+        throw new ManagerException(ErrorCode.UNREGISTERD_USER_VALUE,
                 String.format("가입되지 않은 회원입니다."));
     }
 
@@ -292,7 +292,7 @@ public class UserService {
         Optional<User> userResult = userRepository.findByUserEmail(findUserPasswordReq.getUserEmail());
 
         if(userResults.isEmpty() || userResult.isEmpty()) {
-            throw new ManagerException(ErrorCode.UserEmail_004,
+            throw new ManagerException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 회원입니다."));
         }
 
@@ -320,8 +320,8 @@ public class UserService {
             }
 
         }
-        throw new ManagerException(ErrorCode.UserEmail_004,
-                String.format("가입되지 않은 이메일입니다."));
+        throw new ManagerException(ErrorCode.UNREGISTERD_USER_VALUE,
+                String.format("가입되지 않은 회원입니다."));
 
     }
 
@@ -345,7 +345,7 @@ public class UserService {
         }
 
         else
-            throw new ManagerException(ErrorCode.UserPassword_004,
+            throw new ManagerException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 회원입니다."));
 
     }

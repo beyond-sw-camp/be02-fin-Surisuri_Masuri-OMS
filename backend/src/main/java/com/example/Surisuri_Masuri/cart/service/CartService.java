@@ -10,8 +10,8 @@ import com.example.Surisuri_Masuri.cart.repository.CartRepository;
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.exception.EntityException.CartException;
 import com.example.Surisuri_Masuri.exception.EntityException.ManagerException;
-import com.example.Surisuri_Masuri.exception.EntityException.UserException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
+import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.member.Repository.UserRepository;
 import com.example.Surisuri_Masuri.product.model.Product;
@@ -19,13 +19,12 @@ import com.example.Surisuri_Masuri.product.repository.ProductRepository;
 import com.example.Surisuri_Masuri.store.Model.Entity.Store;
 import com.example.Surisuri_Masuri.store.Repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.swing.*;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,48 +38,83 @@ public class CartService {
     private final StoreRepository storeRepository;
     private final UserRepository userRepository;
 
-    public BaseResponse addCart(User user, CartCreateReq req) {
+    @Value("${jwt.secret-key}")
+    private String secretKey;
+
+    public BaseResponse addCart(String token, CartCreateReq req) {
+
+        token = JwtUtils.replaceToken(token);
+
+        String userId = JwtUtils.getUserEmail(token, secretKey);
+
+        Optional<User> user = userRepository.findByUserEmail(userId);
 
         Optional<Product> productResult = productRepository.findById(req.getProductIdx());
 
-        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
-        User foundUser = userResult.get();
-        Optional<Store> storeResult = storeRepository.findByStoreUuid(foundUser.getStore().getStoreUuid());
 
-        Store store = storeResult.get();
+        if (user.isPresent() && productResult.isPresent()) {
 
-        Product product = productResult.get();
+            User foundUser = user.get();
 
-        if (foundUser.getStore().getCartList().size() == 0) {
-            Cart newCart = cartRepository.save(Cart.builder()
-                    .store(store)
-                    .build());
+            Product product = productResult.get();
 
-            CartDetail cartDetail = cartDetailRepository.save(CartDetail.builder()
-                    .cart(newCart)
-                    .product(product)
-                    .productQuantity(req.getProductQuantity())
-                    .build());
+            Optional<Store> storeResult = storeRepository.findByStoreUuid(foundUser.getStore().getStoreUuid());
 
-            CartCreateRes cartCreateRes = CartCreateRes.builder()
-                    .idx(newCart.getIdx())
-                    .productName(product.getProductName())
-                    .price(product.getPrice())
-                    .productQuantity(cartDetail.getProductQuantity())
-                    .build();
+            if (storeResult.isPresent() && foundUser.getStore().getCartList().size() == 0) {
 
-            return BaseResponse.successResponse("요청 성공했습니다.", cartCreateRes);
-        } else {
-            Optional<Cart> cartResult = cartRepository.findById(foundUser.getStore().getCartList().get(0).getIdx());
-            Cart cart =  cartResult.get();
+                Store store = storeResult.get();
 
-            List<CartDetail> cartDetailResult = cartDetailRepository.findByCartIdx(cart.getIdx());
+                Cart newCart = cartRepository.save(Cart.builder()
+                        .store(store)
+                        .build());
 
-            if (!cartDetailResult.isEmpty()) {
-                for (CartDetail cartDetail : cartDetailResult) {
-                    if (cartDetail.getProduct().equals(product)) {
-                        cartDetail.setProductQuantity(req.getProductQuantity() + cartDetail.getProductQuantity());
-                        cartDetailRepository.save(cartDetail);
+                CartDetail cartDetail = cartDetailRepository.save(CartDetail.builder()
+                        .cart(newCart)
+                        .product(product)
+                        .productQuantity(req.getProductQuantity())
+                        .build());
+
+                CartCreateRes cartCreateRes = CartCreateRes.builder()
+                        .idx(newCart.getIdx())
+                        .productName(product.getProductName())
+                        .price(product.getPrice())
+                        .productQuantity(cartDetail.getProductQuantity())
+                        .build();
+
+                return BaseResponse.successResponse("요청 성공했습니다.", cartCreateRes);
+            } else if (storeResult == null) {
+                throw new CartException(ErrorCode.CartAdd_002,
+                        String.format("가맹점 정보를 찾을 수 없습니다."));
+            } else {
+
+                Optional<Cart> cartResult = cartRepository.findById(foundUser.getStore().getCartList().get(0).getIdx());
+
+                if (cartResult.isPresent()) {
+                    Cart cart = cartResult.get();
+                    List<CartDetail> cartDetailResult = cartDetailRepository.findByCartIdx(cart.getIdx());
+
+                    if (!cartDetailResult.isEmpty()) {
+                        for (CartDetail cartDetail : cartDetailResult) {
+                            if (cartDetail.getProduct().equals(product)) {
+                                cartDetail.setProductQuantity(req.getProductQuantity() + cartDetail.getProductQuantity());
+                                cartDetailRepository.save(cartDetail);
+
+                                CartCreateRes cartCreateRes = CartCreateRes.builder()
+                                        .idx(cart.getIdx())
+                                        .productName(product.getProductName())
+                                        .price(product.getPrice())
+                                        .productQuantity(cartDetail.getProductQuantity())
+                                        .build();
+
+                                return BaseResponse.successResponse("요청 성공했습니다.", cartCreateRes);
+                            }
+                        }
+                    } else {
+                        CartDetail cartDetail = cartDetailRepository.save(CartDetail.builder()
+                                .cart(cart)
+                                .product(product)
+                                .productQuantity(req.getProductQuantity())
+                                .build());
 
                         CartCreateRes cartCreateRes = CartCreateRes.builder()
                                 .idx(cart.getIdx())
@@ -93,32 +127,29 @@ public class CartService {
                     }
                 }
             }
-
-            CartDetail cartDetail = cartDetailRepository.save(CartDetail.builder()
-                    .cart(cart)
-                    .product(product)
-                    .productQuantity(req.getProductQuantity())
-                    .build());
-
-            CartCreateRes cartCreateRes = CartCreateRes.builder()
-                    .idx(cart.getIdx())
-                    .productName(product.getProductName())
-                    .price(product.getPrice())
-                    .productQuantity(cartDetail.getProductQuantity())
-                    .build();
-
-            return BaseResponse.successResponse("요청 성공했습니다.", cartCreateRes);
+        } else if (user == null){
+            throw new CartException(ErrorCode.CartAdd_001,
+                    String.format("회원 정보를 찾을 수 없습니다."));
         }
+        throw new CartException(ErrorCode.CartAdd_003,
+                String.format("상품 정보를 찾을 수 없습니다."));
     }
 
-    public BaseResponse list(User user, Integer page, Integer size) {
-        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
+    public BaseResponse list(String token, Integer page, Integer size) {
+
+        token = JwtUtils.replaceToken(token);
+
+        String userId = JwtUtils.getUserEmail(token, secretKey);
+
+        Optional<User> user = userRepository.findByUserEmail(userId);
+
+        Optional<User> userResult = userRepository.findByUserEmail(user.get().getUserEmail());
+
         if (userResult.isPresent()) {
-            user = userResult.get();
 
             Pageable pageable = PageRequest.of(page - 1, size);
 
-            Optional<Cart> cartResult = cartRepository.findById(user.getStore().getCartList().get(0).getIdx());
+            Optional<Cart> cartResult = cartRepository.findById(user.get().getStore().getCartList().get(0).getIdx());
 
             Cart cart = cartResult.get();
 
@@ -144,14 +175,20 @@ public class CartService {
     }
 
 
-    public BaseResponse delete(User user, Long cartIdx, String productName) {
-        Optional<User> userResult = userRepository.findByUserEmail(user.getUserEmail());
+    public BaseResponse delete(String token, Long cartIdx, String productName) {
+        token = JwtUtils.replaceToken(token);
+
+        String userId = JwtUtils.getUserEmail(token, secretKey);
+
+        Optional<User> user = userRepository.findByUserEmail(userId);
+
+        Optional<User> userResult = userRepository.findByUserEmail(user.get().getUserEmail());
         if (userResult.isPresent()) {
-            user = userResult.get();
+
             Optional<Cart> cartResult = cartRepository.findById(cartIdx);
             Cart cart = cartResult.get();
 
-            if (user.getStore().getIdx().equals(cart.getStore().getIdx())) {
+            if (user.get().getStore().getIdx().equals(cart.getStore().getIdx())) {
                 List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(cartIdx);
 
                 for (CartDetail cartDetail : cartDetailList) {

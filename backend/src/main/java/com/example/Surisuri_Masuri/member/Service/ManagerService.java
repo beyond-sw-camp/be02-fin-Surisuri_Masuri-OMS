@@ -5,9 +5,6 @@ import com.example.Surisuri_Masuri.exception.EntityException.ManagerException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.jwt.Model.Dto.TokenDto;
-import com.example.Surisuri_Masuri.jwt.Model.RefreshToken;
-import com.example.Surisuri_Masuri.jwt.Repository.RefreshTokenRepository;
-import com.example.Surisuri_Masuri.jwt.Service.AccessTokenService;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.ManagerLoginReq;
 import com.example.Surisuri_Masuri.member.Model.ReqDtos.ManagerSignUpReq;
@@ -15,6 +12,8 @@ import com.example.Surisuri_Masuri.member.Model.ResDtos.ManagerSignUpRes;
 import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +31,7 @@ public class ManagerService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -79,7 +78,7 @@ public class ManagerService {
             managerRepository.save(manager);
 
             // 3. AccessToken을 생성하고
-            String accessToken = JwtUtils.generateAccessToken(manager, secretKey, (expiredTimeMs/10));
+            String accessToken = JwtUtils.generateAccessToken(manager, secretKey, expiredTimeMs);
 
             // 4. 응답 Dto 생성을 위한 과정
             Optional<Manager> result = managerRepository.findByManagerId(manager.getManagerEmail());
@@ -111,14 +110,16 @@ public class ManagerService {
 
         if (manager.isPresent() && passwordEncoder.matches(managerLoginReq.getPassword(), manager.get().getPassword()))
         {
-            RefreshToken newToken = new RefreshToken(manager.get().getManagerId(),JwtUtils.generateRefreshTokenManager(manager.get(),secretKey,expiredTimeMs));
+            String newToken = JwtUtils.generateRefreshTokenManager(manager.get(),secretKey,expiredTimeMs);
 
              tokenDto= TokenDto.builder()
-                    .accessToken(JwtUtils.generateAccessToken(manager.get(),secretKey,(expiredTimeMs/10)))
-                    .refreshToken(newToken.getRefreshToken())
+                    .accessToken(JwtUtils.generateAccessToken(manager.get(),secretKey,expiredTimeMs))
+                    .refreshToken(newToken)
                     .build();
 
-             refreshTokenRepository.save(newToken);
+            ValueOperations<String,String> vop = redisTemplate.opsForValue();
+
+            vop.set(manager.get().getManagerId(),newToken);
 
             return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", tokenDto);
 

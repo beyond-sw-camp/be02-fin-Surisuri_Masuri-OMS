@@ -3,6 +3,7 @@ package com.example.Surisuri_Masuri.store.Service;
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
 import com.example.Surisuri_Masuri.exception.EntityException.StoreException;
+import com.example.Surisuri_Masuri.exception.EntityException.UserException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
@@ -78,7 +79,7 @@ public class StoreService {
             return BaseResponse.successResponse("요청 성공했습니다.", storeCreateRes);
         }
         else {
-            throw new StoreException(ErrorCode.StoreCreate_004,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
@@ -118,7 +119,7 @@ public class StoreService {
         return BaseResponse.successResponse("요청 성공했습니다.", storeSearchResList);
         }
         else {
-            throw new StoreException(ErrorCode.StoreList_005,
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
                     String.format("가입되지 않은 본사 관리자입니다."));
         }
     }
@@ -136,10 +137,9 @@ public class StoreService {
 
         if (manager.isPresent()) {
             Optional<Store> store = storeRepository.findByStoreName(storeSearchReq.getStoreName());
-            if(store.isPresent()){
+            if (store.isPresent()) {
                 Store store2 = store.get();
-                if(store2.getStorePhoneNo() == null)
-                {
+                if (store2.getStorePhoneNo() == null) {
                     throw new StoreException(ErrorCode.StoreSearch_004,
                             String.format("가맹점 정보가 등록되었으나 가맹점 관리자가 가입이 되지 않았습니다."));
                 }
@@ -151,11 +151,14 @@ public class StoreService {
                         .storeAddr(store2.getStoreAddr())
                         .storeUuid(store2.getStoreUuid())
                         .build();
-            }
-            if (store.isEmpty())
+            } else
                 throw new StoreException(ErrorCode.StoreSearch_003,
                         String.format("가맹점 검색 결과가 존재하지 않습니다"));
+
+            return BaseResponse.successResponse("요청 성공했습니다.", storeReadRes);
+        }  else {
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
+                    String.format("가입되지 않은 본사 관리자입니다."));
         }
-        return BaseResponse.successResponse("요청 성공했습니다.", storeReadRes);
     }
 }

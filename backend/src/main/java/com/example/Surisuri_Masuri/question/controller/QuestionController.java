@@ -1,8 +1,6 @@
 package com.example.Surisuri_Masuri.question.controller;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
-import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
-import com.example.Surisuri_Masuri.member.Model.Entity.User;
 import com.example.Surisuri_Masuri.question.model.request.QuestionAnswerReq;
 import com.example.Surisuri_Masuri.question.model.request.PatchUpdateQuestionReq;
 import com.example.Surisuri_Masuri.question.model.request.PostCreateQuestionReq;
@@ -22,32 +20,32 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
-    public ResponseEntity create(@AuthenticationPrincipal User user, @RequestBody PostCreateQuestionReq postCreateQuestionReq) {
-        BaseResponse baseResponse = questionService.create(user, postCreateQuestionReq);
+    public ResponseEntity create(@RequestHeader(value = "AccessToken") String token, @RequestBody PostCreateQuestionReq postCreateQuestionReq) {
+        BaseResponse baseResponse = questionService.create(token, postCreateQuestionReq);
         return ResponseEntity.ok().body(baseResponse);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/list")
-    public ResponseEntity list(Integer page, Integer size) {
-        BaseResponse baseResponse = questionService.list(page,size);
+    public ResponseEntity list(@RequestHeader(value = "AccessToken") String token,Integer page, Integer size) {
+        BaseResponse baseResponse = questionService.list(token,page,size);
         return ResponseEntity.ok().body(baseResponse);
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/update")
-    public ResponseEntity update(@AuthenticationPrincipal User user, @RequestBody PatchUpdateQuestionReq patchUpdateQuestionReq) {
-        BaseResponse baseResponse = questionService.update(user, patchUpdateQuestionReq);
+    public ResponseEntity update(@RequestHeader(value = "AccessToken") String token, @RequestBody PatchUpdateQuestionReq patchUpdateQuestionReq) {
+        BaseResponse baseResponse = questionService.update(token, patchUpdateQuestionReq);
         return ResponseEntity.ok().body(baseResponse);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/delete")
-    public ResponseEntity delete(@AuthenticationPrincipal User user, Integer idx) {
-        BaseResponse baseResponse = questionService.delete(user, idx);
+    public ResponseEntity delete(@RequestHeader(value = "AccessToken") String token, Integer idx) {
+        BaseResponse baseResponse = questionService.delete(token, idx);
         return ResponseEntity.ok().body(baseResponse);
     }
 
     // TODO: 2024-03-10 관리자가 답변을 작성하는 기능 추가해야함
     @RequestMapping(method = RequestMethod.POST, value = "/answer")
-    public ResponseEntity answer(@RequestHeader(value = "Authorization") String token, @RequestBody QuestionAnswerReq req) {
+    public ResponseEntity answer(@RequestHeader(value = "AccessToken") String token, @RequestBody QuestionAnswerReq req) {
 
         return ResponseEntity.ok().body(questionService.answer(token, req));
     }

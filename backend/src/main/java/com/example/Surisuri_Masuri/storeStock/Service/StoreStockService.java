@@ -2,6 +2,7 @@ package com.example.Surisuri_Masuri.storeStock.Service;
 
 import com.example.Surisuri_Masuri.common.BaseResponse;
 import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
+import com.example.Surisuri_Masuri.exception.EntityException.UserException;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
 import com.example.Surisuri_Masuri.jwt.JwtUtils;
 import com.example.Surisuri_Masuri.member.Model.Entity.User;
@@ -103,8 +104,8 @@ public class StoreStockService {
             return BaseResponse.successResponse("가맹점 재고 등록을 성공했습니다.", storeStockCreateRes);
         }
         else
-        throw new ContainerException(ErrorCode.StoreStock_001,
-                String.format("가맹점 재고 등록을 실패했습니다."));
+        throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
+                String.format("등록되지 않은 회원정보입니다."));
     }
 
     // 가맹점 재고 리스트 조회
@@ -148,8 +149,8 @@ public class StoreStockService {
             return BaseResponse.successResponse("가맹점 재고 목록을 조회했습니다.", storeSearchResList);
         }
         else
-        throw new ContainerException(ErrorCode.StoreStock_002,
-                String.format("가맹점 재고 목록을 조회를 실패했습니다."));
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
+                    String.format("등록되지 않은 회원정보입니다."));
     }
 
     // 가맹점 재고 단일 조회
@@ -188,8 +189,8 @@ public class StoreStockService {
             return BaseResponse.successResponse("가맹점 재고 단일 조회를 성공했습니다.", storeStockSearchRes);
         }
         else
-        throw new ContainerException(ErrorCode.StoreStock_003,
-                String.format("가맹점 재고 단일 조회를 실패했습니다."));
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
+                    String.format("등록되지 않은 회원정보입니다."));
     }
 
     // 가맹점 재고 수정
@@ -220,13 +221,11 @@ public class StoreStockService {
                 // DtoToRes
                 return BaseResponse.successResponse("가맹점 재고 수정을 성공했습니다.", storeStockUpdateRes);
             }
-
-            throw new ContainerException(ErrorCode.UserEmail_004,
-                    String.format("가입되지 않은 회원입니다."));
-        }
-
-        throw new ContainerException(ErrorCode.StoreStock_004,
-                String.format("가맹점 재고 수정을 실패했습니다."));
+            else throw new ContainerException(ErrorCode.StoreStock_004,
+                    String.format("가맹점 재고 수정을 실패했습니다."));
+        }   else
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
+                    String.format("등록되지 않은 회원정보입니다."));
     }
     // 가맹점 재고 삭제
     @Transactional
@@ -242,7 +241,7 @@ public class StoreStockService {
         if (user.isPresent()) {
 
             storeStockRepository.
-                    deleteStoreStockByProduct_IdxAndStore_StoreUuid(storeStockDeleteReq.getIdx(),store.get().getStoreUuid());
+                    deleteStoreStockByProductIdxAndStoreUuid(storeStockDeleteReq.getIdx(),store.get().getStoreUuid());
 
             StoreStockDeleteRes storeStockDeleteRes = StoreStockDeleteRes
                     .builder()
@@ -251,63 +250,9 @@ public class StoreStockService {
 
             // DtoToRes
             return BaseResponse.successResponse("가맹점 재고를 삭제를 성공했습니다.", storeStockDeleteRes);
-        }
-        else
-        throw new ContainerException(ErrorCode.StoreStock_005,
-                String.format("가맹점 재고 삭제를 실패했습니다."));
-    }
 
-    @Transactional
-    public BaseResponse<List<ExpiredFoodStockDto>> findExpiringFoodStocks(String token) {
-        token = JwtUtils.replaceToken(token);
-
-        String userEmail = JwtUtils.getUserEmail(token, secretKey);
-        String storeUuid = JwtUtils.getStoreUuid(token, secretKey);
-
-        Optional<User> optionalUser = userRepository.findByUserEmail(userEmail);
-        Optional<Store> optionalStore = storeRepository.findByStoreUuid(storeUuid);
-
-        if (optionalUser.isPresent() && optionalStore.isPresent()) {
-            // 현재 날짜
-            LocalDate currentDate = LocalDate.now();
-
-            // 1주일 후 날짜 계산
-            LocalDate weekFromNow = currentDate.plusWeeks(1);
-
-            // 유통기한이 1주일 남은 음식 재고들 조회
-            List<StoreStock> expiringInOneWeekFoodStocks = storeStockRepository.findStocksExpiringInOneWeek(weekFromNow, currentDate).stream()
-                    .filter(stock -> stock.getProduct().getIsItFood()) // 음식인 재고만 필터링
-                    .collect(Collectors.toList());
-
-            List<ExpiredFoodStockDto> expiredStocks = new ArrayList<>();
-            for (StoreStock storeStock : expiringInOneWeekFoodStocks) {
-                // 폐기처리를 위해 폐기여부 속성 추가 및 값 설정
-                storeStock.setIsDiscarded(true);
-                storeStock.setDiscardedAt(currentDate);
-
-                // 데이터베이스에 변경된 상태를 저장
-                storeStockRepository.save(storeStock);
-
-                // 폐기 처리된 재고를 응답에 추가
-                String productName = storeStock.getProduct().getProductName();
-
-                ExpiredFoodStockDto expiredFoodStockDto = ExpiredFoodStockDto
-                        .builder()
-                        .productName(productName)
-                        .expiredAt(storeStock.getExpiredAt())
-                        .stockQuantity(storeStock.getStockQuantitiy())
-                        .discarded(true)
-                        .discardedAt(currentDate)
-                        .build();
-
-                expiredStocks.add(expiredFoodStockDto);
-            }
-
-            return BaseResponse.successResponse("유통기한이 1주일 남은 음식 재고들을 폐기 처리했습니다.", expiredStocks);
-        } else {
-            throw new ContainerException(ErrorCode.StoreStock_006,
-                    String.format("폐기 처리 대상이 존재하지 않습니다."));
-        }
+        } else throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
+                    String.format("등록되지 않은 회원정보입니다."));
     }
 
 }

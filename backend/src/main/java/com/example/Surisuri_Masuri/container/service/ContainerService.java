@@ -11,13 +11,15 @@ import com.example.Surisuri_Masuri.container.model.response.GetSingleContainerSt
 import com.example.Surisuri_Masuri.container.model.response.PostCreateContainerRes;
 import com.example.Surisuri_Masuri.container.repository.ContainerRepository;
 import com.example.Surisuri_Masuri.container.repository.ContainerStockRepository;
-import com.example.Surisuri_Masuri.exception.EntityException.ContainerException;
-import com.example.Surisuri_Masuri.exception.EntityException.ContainerStockException;
-import com.example.Surisuri_Masuri.exception.EntityException.ProductException;
+import com.example.Surisuri_Masuri.exception.EntityException.*;
 import com.example.Surisuri_Masuri.exception.ErrorCode;
+import com.example.Surisuri_Masuri.jwt.JwtUtils;
+import com.example.Surisuri_Masuri.member.Model.Entity.Manager;
+import com.example.Surisuri_Masuri.member.Repository.ManagerRepository;
 import com.example.Surisuri_Masuri.product.model.Product;
 import com.example.Surisuri_Masuri.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,149 +41,144 @@ public class ContainerService {
     private final ContainerRepository containerRepository;
     private final ContainerStockRepository containerStockRepository;
     private final ProductRepository productRepository;
+    private final ManagerRepository managerRepository;
 
-    public BaseResponse create(PostCreateContainerReq postCreateContainerReq) {
+    @Value("${jwt.secret-key}")
+    private String secretKey;
+    public BaseResponse create(String token, PostCreateContainerReq postCreateContainerReq) {
 
-        Optional<Container> test1 = containerRepository.findContainerByContainerAddr(postCreateContainerReq.getContainerAddr());
-        Optional<Container> test2 = containerRepository.findContainerByContainerName(postCreateContainerReq.getContainerName());
+        Optional<Manager> manager = managerRepository.findByManagerId(JwtUtils.getManagerId(token,secretKey));
 
-        if(test1.isPresent())
-            throw new ContainerException(ErrorCode.ContainerCreate_003,String.format("창고 이름 [ %s ] 이/가 중복입니다.", postCreateContainerReq.getContainerAddr()));
+        if(manager.isPresent()) {
 
-        if(test2.isPresent())
-            throw new ContainerException(ErrorCode.ContainerCreate_004,String.format("창고 이름 [ %s ] 이/가 중복입니다.", postCreateContainerReq.getContainerName()));
+            Optional<Container> test1 = containerRepository.findContainerByContainerAddr(postCreateContainerReq.getContainerAddr());
+            Optional<Container> test2 = containerRepository.findContainerByContainerName(postCreateContainerReq.getContainerName());
 
+            if (test1.isPresent())
+                throw new ContainerException(ErrorCode.ContainerCreate_003, String.format("창고 이름 [ %s ] 이/가 중복입니다.", postCreateContainerReq.getContainerAddr()));
 
-        Container container = Container.builder()
-                .containerName(postCreateContainerReq.getContainerName())
-                .containerAddr(postCreateContainerReq.getContainerAddr())
-                .containerManager(postCreateContainerReq.getContainerManager())
-                .containerPhoneNo(postCreateContainerReq.getContainerPhoneNo())
-                .containerComplexity(postCreateContainerReq.getContainerComplexity())
-                .build();
-        containerRepository.save(container);
-
-        PostCreateContainerRes postCreateContainerRes = PostCreateContainerRes.builder()
-                .containerName(postCreateContainerReq.getContainerName())
-                .containerAddr(postCreateContainerReq.getContainerAddr())
-                .containerManager(postCreateContainerReq.getContainerManager())
-                .containerPhoneNo(postCreateContainerReq.getContainerPhoneNo())
-                .containerComplexity(postCreateContainerReq.getContainerComplexity())
-                .build();
-
-        return BaseResponse.successResponse("창고 등록 성공",postCreateContainerRes);
-    }
-
-    public BaseResponse createContainerProduct(ContainerCreateProductReq req) {
-
-        Optional<Container> test1 = containerRepository.findById(req.getContainerIdx());
-        Optional<Product> test2 = productRepository.findById(req.getProductIdx());
-
-        if(test1.isEmpty())
-            throw new ContainerException(ErrorCode.ContainerCreate_005,String.format("창고 Idx [ %s ] 이/가 존재하지 않습니다.", req.getContainerIdx()));
-
-        if(test2.isEmpty())
-            throw new ProductException(ErrorCode.ProductSearch_002,String.format("상품 Idx [ %s ] 이/가 존재하지 않습니다.", req.getProductIdx()));
+            if (test2.isPresent())
+                throw new ContainerException(ErrorCode.ContainerCreate_004, String.format("창고 이름 [ %s ] 이/가 중복입니다.", postCreateContainerReq.getContainerName()));
 
 
-        containerStockRepository.save(ContainerStock.builder()
-                .container(Container.builder().idx(req.getContainerIdx()).build())
-                .product(Product.builder().idx(req.getProductIdx()).build())
-                .productQuantity(req.getQuantity())
-                .expiredAt(req.getExpiredAt())
-                .isDiscarded(false)
-                .build());
+            Container container = Container.builder()
+                    .containerName(postCreateContainerReq.getContainerName())
+                    .containerAddr(postCreateContainerReq.getContainerAddr())
+                    .containerManager(postCreateContainerReq.getContainerManager())
+                    .containerPhoneNo(postCreateContainerReq.getContainerPhoneNo())
+                    .containerComplexity(postCreateContainerReq.getContainerComplexity())
+                    .build();
+            containerRepository.save(container);
 
-        return BaseResponse.successResponse("창고 상품 등록을 성공했습니다.", null);
-    }
-
-    public BaseResponse list(Integer page, Integer size) {
-
-        Pageable pageable = PageRequest.of(page - 1, size);
-
-        Page<Container> containerList = containerRepository.findList(pageable);
-
-        List<GetListContainerRes> getListContainerResList = new ArrayList<>();
-        for (Container container : containerList) {
-            GetListContainerRes getListContainernRes = GetListContainerRes.builder()
-                    .containerIdx(container.getIdx())
-                    .containerName(container.getContainerName())
-                    .containerAddr(container.getContainerAddr())
-                    .containerManager(container.getContainerManager())
-                    .containerPhoneNo(container.getContainerPhoneNo())
-                    .containerComplexity(container.getContainerComplexity())
+            PostCreateContainerRes postCreateContainerRes = PostCreateContainerRes.builder()
+                    .containerName(postCreateContainerReq.getContainerName())
+                    .containerAddr(postCreateContainerReq.getContainerAddr())
+                    .containerManager(postCreateContainerReq.getContainerManager())
+                    .containerPhoneNo(postCreateContainerReq.getContainerPhoneNo())
+                    .containerComplexity(postCreateContainerReq.getContainerComplexity())
                     .build();
 
-            getListContainerResList.add(getListContainernRes);
+
+            return BaseResponse.successResponse("창고 등록 성공", postCreateContainerRes);
         }
-
-        return BaseResponse.successResponse("창고 목록 조회를 성공했습니다.", getListContainerResList);
-
+        else {
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
+                    String.format("가입되지 않은 본사 관리자입니다."));
+        }
     }
+    public BaseResponse createContainerProduct(String token, ContainerCreateProductReq req) {
+
+        Optional<Manager> manager = managerRepository.findByManagerId(JwtUtils.getManagerId(token,secretKey));
+
+        if(manager.isPresent()) {
+
+            Optional<Container> test1 = containerRepository.findById(req.getContainerIdx());
+            Optional<Product> test2 = productRepository.findById(req.getProductIdx());
+
+            if (test1.isEmpty())
+                throw new ContainerException(ErrorCode.ContainerCreate_005, String.format("창고 Idx [ %s ] 이/가 존재하지 않습니다.", req.getContainerIdx()));
+
+            if (test2.isEmpty())
+                throw new ProductException(ErrorCode.ProductSearch_002, String.format("상품 Idx [ %s ] 이/가 존재하지 않습니다.", req.getProductIdx()));
 
 
-    public BaseResponse singleStockProduct(Integer containerIdx, Integer page, Integer size) {
+            containerStockRepository.save(ContainerStock.builder()
+                    .container(Container.builder().idx(req.getContainerIdx()).build())
+                    .product(Product.builder().idx(req.getProductIdx()).build())
+                    .productQuantity(req.getQuantity())
+                    .expiredAt(req.getExpiredAt())
+                    .isDiscarded(false)
+                    .build());
 
-        Pageable pageable = PageRequest.of(page - 1, size);
-        Page<ContainerStock> containerStockList = containerStockRepository.findList(containerIdx, pageable);
+            return BaseResponse.successResponse("창고 상품 등록을 성공했습니다.", null);
+        }
+        else {
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
+                    String.format("가입되지 않은 본사 관리자입니다."));
+        }
+    }
+    public BaseResponse list(String token, Integer page, Integer size) {
 
-        if(containerStockList.isEmpty())
-            throw new ContainerException(ErrorCode.ContainerCreate_005,
-                    String.format("창고 Idx [ %s ] 에 상품이 존재하지 않습니다.", containerIdx));
+        Optional<Manager> manager = managerRepository.findByManagerId(JwtUtils.getManagerId(token,secretKey));
 
-        List<GetSingleContainerStockRes> getSingleContainerStockResList = new ArrayList<>();
+        if(manager.isPresent()) {
+            Pageable pageable = PageRequest.of(page - 1, size);
 
-        for (ContainerStock containerStock : containerStockList) {
-            if (!containerStock.getIsDiscarded()) {
-                GetSingleContainerStockRes getSingleContainerStockRes = GetSingleContainerStockRes.builder()
-                        .containerName(containerStock.getContainer().getContainerName())
-                        .productName(containerStock.getProduct().getProductName())
-                        .productQuantity(containerStock.getProductQuantity())
-                        .expiredAt(containerStock.getExpiredAt())
+            Page<Container> containerList = containerRepository.findList(pageable);
+
+            List<GetListContainerRes> getListContainerResList = new ArrayList<>();
+            for (Container container : containerList) {
+                GetListContainerRes getListContainernRes = GetListContainerRes.builder()
+                        .containerIdx(container.getIdx())
+                        .containerName(container.getContainerName())
+                        .containerAddr(container.getContainerAddr())
+                        .containerManager(container.getContainerManager())
+                        .containerPhoneNo(container.getContainerPhoneNo())
+                        .containerComplexity(container.getContainerComplexity())
                         .build();
 
-                getSingleContainerStockResList.add(getSingleContainerStockRes);
+                getListContainerResList.add(getListContainernRes);
             }
-        }
 
-        return BaseResponse.successResponse("창고 정보 조회를 성공했습니다.", getSingleContainerStockResList);
+            return BaseResponse.successResponse("창고 목록 조회를 성공했습니다.", getListContainerResList);
+        }
+        else {
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
+                    String.format("가입되지 않은 본사 관리자입니다."));
+        }
     }
+    public BaseResponse singleStockProduct(String token, Integer containerIdx, Integer page, Integer size) {
 
-    public BaseResponse<List<ContainerStockDto>> discardExpiredFoodProducts() {
+        Optional<Manager> manager = managerRepository.findByManagerId(JwtUtils.getManagerId(token, secretKey));
 
-        // 현재 날짜를 기준으로 1주일 전의 날짜를 계산합니다.
-        LocalDate currentDate = LocalDate.now().plusDays(7);
+        if (manager.isPresent()) {
+            Pageable pageable = PageRequest.of(page - 1, size);
+            Page<ContainerStock> containerStockList = containerStockRepository.findList(containerIdx, pageable);
 
-        // 유통기한이 1주일 남은 식품 상품들을 조회합니다.
-        List<ContainerStock> expiredFoodProducts = containerStockRepository.findExpiredFoodProducts(currentDate);
+            if (containerStockList.isEmpty())
+                throw new ContainerException(ErrorCode.ContainerCreate_005,
+                        String.format("창고 Idx [ %s ] 에 상품이 존재하지 않습니다.", containerIdx));
 
-        if(expiredFoodProducts.isEmpty())
-        {
-            throw new ContainerStockException(ErrorCode.ContainerStock_002,("폐기할 상품이 존재하지 않습니다."));
+            List<GetSingleContainerStockRes> getSingleContainerStockResList = new ArrayList<>();
+
+            for (ContainerStock containerStock : containerStockList) {
+                if (!containerStock.getIsDiscarded()) {
+                    GetSingleContainerStockRes getSingleContainerStockRes = GetSingleContainerStockRes.builder()
+                            .containerName(containerStock.getContainer().getContainerName())
+                            .productName(containerStock.getProduct().getProductName())
+                            .productQuantity(containerStock.getProductQuantity())
+                            .expiredAt(containerStock.getExpiredAt())
+                            .build();
+
+                    getSingleContainerStockResList.add(getSingleContainerStockRes);
+                }
+            }
+
+            return BaseResponse.successResponse("창고 정보 조회를 성공했습니다.", getSingleContainerStockResList);
+        } else {
+            throw new UserException(ErrorCode.UNREGISTERD_USER_VALUE,
+                    String.format("가입되지 않은 본사 관리자입니다."));
         }
-
-        // 조회된 상품들을 폐기 처리합니다.
-        for (ContainerStock containerStock : expiredFoodProducts) {
-            containerStock.setIsDiscarded(true);
-            containerStock.setDiscardedAt(new Timestamp(System.currentTimeMillis()));
-            containerStockRepository.save(containerStock);
-        }
-
-        // 폐기 처리된 상품 정보를 DTO로 변환하여 반환합니다.
-        List<ContainerStockDto> discardedProductsDTO = new ArrayList<>();
-        for (ContainerStock containerStock : expiredFoodProducts) {
-            ContainerStockDto dto = ContainerStockDto.builder()
-                    .containerName(containerStock.getContainer().getContainerName())
-                    .productName(containerStock.getProduct().getProductName())
-                    .productQuantity(containerStock.getProductQuantity())
-                    .expiredAt(containerStock.getExpiredAt()) // 변경된 부분
-                    .build();
-            discardedProductsDTO.add(dto);
-        }
-
-        return BaseResponse.successResponse("유통기한이 1주일 남은 식품 상품들을 폐기 처리하였습니다.", discardedProductsDTO);
     }
-
-
 }
 
