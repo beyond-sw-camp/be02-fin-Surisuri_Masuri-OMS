@@ -34,9 +34,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
 
-    @Value("${jwt.token.expired-time-ms}")
-    private int expiredTimeMs;
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -119,7 +116,12 @@ public class JwtFilter extends OncePerRequestFilter {
                     } else {
                         // 토큰이 만료되었거나 유효하지 않은 경우
                         try {
-                            refreshTokenRepository.deleteByIdx(userIdx);
+                            Optional<RefreshToken> userEntity = refreshTokenRepository.findByUserId(email);
+                            RefreshToken deleteEntity = userEntity.get();
+                                    if(deleteEntity != null) {
+                                        refreshTokenRepository.delete(deleteEntity);
+                                        refreshTokenRepository.deleteByUserId(email);
+                                    }
                             throw new UserException(ErrorCode.INVALID_RefreshTOKEN, "로그아웃하세요");
                         } catch (UserException e) {
                             response.setHeader("Access-Control-Allow-Origin", "*"); // 실제 운영 환경에서는 구체적인 출처를 지정하는 것이 좋습니다.
@@ -139,7 +141,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     } else {
                         // 토큰이 만료되었거나 유효하지 않은 경우
                         try {
-                            refreshTokenRepository.deleteByIdx(userIdx);
+                            refreshTokenRepository.deleteByUserId(managerId);
                             throw new UserException(ErrorCode.INVALID_RefreshTOKEN, "로그아웃하세요");
                         } catch (UserException e) {
                             response.setHeader("Access-Control-Allow-Origin", "*"); // 실제 운영 환경에서는 구체적인 출처를 지정하는 것이 좋습니다.
