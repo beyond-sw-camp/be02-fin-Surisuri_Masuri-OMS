@@ -66,7 +66,34 @@
 
 <details>
 <summary style="font-size: 18px; font-weight: bold;">Kubernetes</summary>
-
+<h3>크론잡</h3>
+<img src = "../img/cronJob.png">
+<br>
+<h3>디플로이먼트</h3>
+<img src = "../img/deployment.png">
+<img src = "../img/deployment2.png">   
+<br>
+<h3>파드</h3>
+<img src = "../img/pod.png">
+<img src = "../img/pod2.png">
+<br>
+<h3>레플리카 셋</h3>
+<img src = "../img/replicaset.png">
+<img src = "../img/replicaset2.png">
+<br>
+<h3>서비스</h3>
+<img src = "../img/service.png">
+<img src = "../img/service2.png">    
+<br>    
+<h3>컨피그 맵</h3>
+<img src = "../img/configmap.png">
+<br>
+<h3>퍼시스턴스 볼륨 클레임</h3>
+<img src = "../img/">
+<br>
+<h3>퍼시스턴스 볼륨</h3>
+<img src = "../img/">
+<br>
 </details>
 
 <br>
@@ -74,7 +101,7 @@
 
 <details>
 <summary style="font-size: 18px; font-weight: bold;">Jenkins</summary>
-
+<img src = "../img/Jenkins.png">
 </details>
 
 <br>
@@ -84,8 +111,9 @@
 
 ---
 <details>
-<summary style="font-size: 18px; font-weight: bold;">CI: 지속적 통합</summary>
 
+<summary style="font-size: 18px; font-weight: bold;">CI: 지속적 통합</summary>
+<br>
 CI(Continuous Integration)는 개발자들이 코드를 변경할 때마다 자동으로 빌드되어 통합되는 프로세스를 의미한다. <br>이를 통해 여러 명의 개발자가 동시에 작업할 때 발생할 수 있는 통합 오류를 미리 발견하고 해결할 수 있다.
 
 ### 주요 특징:
@@ -100,7 +128,7 @@ CI(Continuous Integration)는 개발자들이 코드를 변경할 때마다 자�
 
 <details>
 <summary style="font-size: 18px; font-weight: bold;">CD: 지속적 배포</summary>
-
+<br>
 CD(Continuous Deployment/Delivery)는 CI에서 빌드된 소프트웨어를 자동으로 테스트, 패키징하여 프로덕션 환경에 자동으로 배포하는 프로세스를 의미한다.<br>이는 GitHub의 원격 저장소에 코드를 push할 때마다 자동으로 빌드 및 배포되어 사용자에게 신속한 업데이트를 제공한다.
 
 ### 주요 특징:
@@ -119,7 +147,7 @@ CD(Continuous Deployment/Delivery)는 CI에서 빌드된 소프트웨어를 자�
 ---
 <details>
 <summary style="font-size: 18px; font-weight: bold;">FrontEnd</summary>
-
+<br>
 GitHub 저장소에 최신 코드를 Push한다.
 
 GitHub 저장소는 WebHook을 사용하여 Jenkins에 최신 코드 Push 이벤트를 전달한다.
@@ -135,7 +163,7 @@ Jenkins 파이프라인은 다음과 같은 절차에 따라 작동한다
 7. K8S 마스터는 전송된 Deployment.yml 파일을 kubectl apply 명령어를 사용하여 적용한다.
 8. Jenkins 서버는 작성된 파이프라인의 각 단계별 실행 결과를 Slack에 전송한다.
 
-또한, 배포 방식은 Rolling Update를 사용하여 이전 버전과 새 버전의 파드를 점진적으로 교체하여 가용성을 유지한다.
+ 또한, 배포 방식은 Rolling Update를 사용하여 이전 버전과 새 버전의 파드를 점진적으로 교체하여 가용성을 유지한다.
 </details> 
 
 <br>
@@ -143,7 +171,7 @@ Jenkins 파이프라인은 다음과 같은 절차에 따라 작동한다
 
 <details>
 <summary style="font-size: 18px; font-weight: bold;">BackEnd</summary>
-
+<br>
 GitHub 저장소에 최신 코드를 Push한다.
 
 GitHub 저장소는 WebHook을 사용하여 Jenkins에 최신 코드 Push 이벤트를 전달한다.
