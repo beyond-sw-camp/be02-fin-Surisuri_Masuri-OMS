@@ -6,39 +6,71 @@
 
 <br>
 
-## 🛠️ Tech Stacks
+### 🛠 Tech Stacks
 
 ---
-<div style="margin: 0 auto; text-align: center;" align= "center">
-    <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=Figma&logoColor=white">
-    <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white">
-    <img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=Github&logoColor=white">
-    <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white">
-    <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=Java&logoColor=white">
-    <br>
-    <img src="https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=MariaDB&logoColor=white">
-    <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=Linux&logoColor=white">
-    <img src="https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=Jenkins&logoColor=white">
-    <img src="https://img.shields.io/badge/Javascript-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white">
-    <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
-    <br>
-    <img src="https://img.shields.io/badge/Selenium-43B02A?style=for-the-badge&logo=Selenium&logoColor=white">
-    <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=Slack&logoColor=white">
-    <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white">
-    <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=Vue.js&logoColor=white">
+
+#### &nbsp;　Frontend
+
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=HTML5&logoColor=white">
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=CSS3&logoColor=white&color=darkblue">
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=JavaScript&logoColor=black">
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Vue.js-4FC08D?style=flat&logo=Vue.js&logoColor=black&color=lightgreen">
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/nginx-%23009639.svg?style=flat&logo=nginx&logoColor=white"></a>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Pinia-0285C9?style=flat&color=dark"></a>
+
+#### &nbsp;　Backend
+
+&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=Spring%20Boot&logoColor=white&color=green"/>
+&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat&logo=Spring%20Security&logoColor=white&color=darkgreen"/>
+&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Amazon%20AWS-232F3E?style=flat&logo=Amazon%20AWS&logoColor=black&color=orange"/>
+&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Amazon%20EC2-232F3E?style=flat&logo=Amazon%20EC2&logoColor=black&color=orange"/>
+&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Amazon%20RDS-232F3E?style=flat&logo=Amazon%20RDS&logoColor=black&color=orange"/>
+
+
+#### &nbsp;　DB
+
+&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/MariaDB-003545?style=flat&logo=MariaDB&logoColor=white"/>
+&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Redis-DC382D?style=flat&logo=Redis&logoColor=white"/>
+
+
+#### &nbsp;　CI/CD
+
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=GitHub&logoColor=white&color=black"></a>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Git-F05032?style=flat&logo=Git&logoColor=white&color=ffa500"></a>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Jenkins-D24939?style=flat&logo=Jenkins&logoColor=white"/>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=Docker&logoColor=black&color=blue"/></a>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Kubernetes-326CE5?style=flat&logo=Kubernetes&logoColor=blue&color=skyblue"/></a>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Selenium-43B02A?style=flat&logo=Selenium&logoColor=white"/></a>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Jest-C21325?style=flat&logo=Jest&logoColor=black&color=orange"/></a>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/JUnit5-25A162?style=flat&logo=JUnit5&logoColor=green&color=red"/></a>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Slack-4A154B?style=flat&logo=Slack&logoColor=yellow&color=purple"/></a>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Prometheus-E6522C?style=flat&logo=Prometheus&logoColor=white"/>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Grafana-F46800?style=flat&logo=Grafana&logoColor=white"/>
+
+---
+
+<br>
+
+### 💻 팀원 소개
+---
+
+<div align="center">
+<table>
+<tr>
+<td align="center"><a href="https://github.com/your-github-hyeongyun"><img src="https://via.placeholder.com/150" width="100" height="100" alt="김현균"/><br /><sub><b>김현균</b></sub></a></td>
+<td align="center"><a href="https://github.com/your-github-hyeonbeom"><img src="https://via.placeholder.com/150" width="100" height="100" alt="박현범"/><br /><sub><b>박현범</b></sub></a></td>
+<td align="center"><a href="https://github.com/your-github-wonjun"><img src="https://via.placeholder.com/150" width="100" height="100" alt="정원준"/><br /><sub><b>정원준</b></sub></a></td>
+<td align="center"><a href="https://github.com/your-github-kyunghoon"><img src="https://via.placeholder.com/150" width="100" height="100" alt="한경훈"/><br /><sub><b>한경훈</b></sub></a></td>
+</tr>
+</table>
 </div>
 
-<br>
-
-## 팀원 소개
-
 ---
 
-  **💻 김현균** &nbsp;　&nbsp; **💻 박현범** &nbsp;　&nbsp; **💻 정원준** &nbsp;　&nbsp; **💻 한경훈** &nbsp;　&nbsp;
-
 <br>
 
-## 프로젝트 기본 소개
+### ✨ 프로젝트 기본 소개
 
 ---
 
@@ -49,7 +81,7 @@
 
 <br>
 
-## 프로젝트 목표
+### ✨ 프로젝트 목표
 
 ---
 
@@ -66,20 +98,23 @@
 
 <br>
 
-## 프로젝트 기획
+### 📌  프로젝트 기획
 
 ---
-[WBS](https://docs.google.com/spreadsheets/d/1VS6h_UvXCQAMcixQ1COoRRyjtkPPxUBTzK4tpFutFXQ/edit#gid=420001454)
-<br><br>
-[요구사항 정의서](https://docs.google.com/spreadsheets/d/1mO0hrGlxiyJS6M7duXKe6gTWfpthLB1u7dr9gcEcNyw/edit#gid=1526384192)
+
+### 🔗 [WBS 바로가기](https://docs.google.com/spreadsheets/d/1VS6h_UvXCQAMcixQ1COoRRyjtkPPxUBTzK4tpFutFXQ/edit#gid=420001454)
+
+### ✍ [요구사항 정의서 바로가기](https://docs.google.com/spreadsheets/d/1mO0hrGlxiyJS6M7duXKe6gTWfpthLB1u7dr9gcEcNyw/edit#gid=1526384192)
+
+---
 <br>
 
-## 프로젝트 설계
+### 📜 프로젝트 설계
 
 ---
 
 <details>
-<summary style="font-size: 14px; font-weight: bold;">[ERD]</summary>
+<summary style="font-size: 14px; font-weight: bold;">ERD</summary>
 <br>
 <img src="./img/final_erd.png">
 <br>
@@ -88,20 +123,22 @@
 <br>
 
 <details>
-<summary style="font-size: 14px; font-weight: bold;">[릴레이션 스키마]</summary>
+<summary style="font-size: 14px; font-weight: bold;">릴레이션 스키마</summary>
 <br>
 <img src="./img/final_relation.png">
 <br>
 </details>
 
 
-[[화면설계도(Figma)](https://www.figma.com/file/gibflCmudNsrlpFDWKvJxJ/Giga-Coffee?type=design&node-id=0-1&mode=design&t=EAiTX7alUngoUoYI-0)]
+### 🔗 [화면설계도 (Figma) 바로가기](https://www.figma.com/file/gibflCmudNsrlpFDWKvJxJ/Giga-Coffee?type=design&node-id=0-1&mode=design&t=EAiTX7alUngoUoYI-0)
+
+### 🔗 [API 명세서 바로가기](https://www.notion.so/API-3680b3a4d3b641108f2686515dfc2222)
+
+---
+
 <br>
 
-[[API 명세서](https://www.notion.so/API-3680b3a4d3b641108f2686515dfc2222)]
-<br>
-
-## 시스템 아키텍처
+### ⚙️ 시스템 아키텍처
 
 ---
 <details>
@@ -111,7 +148,12 @@
 <br>
 </details>
 
-### 프론트엔드 서버
+---
+<br>
+
+### 🌐 프론트엔드 서버
+
+---
 
 - Vue가 배포되어 있는 Nginx 서버로 클라이언트/관리자가 HTTP 요청을 보낸다.
 
@@ -124,9 +166,12 @@
 
 - 로그인, 회원가입 등을 제외한 서비스에 접근하기 위해서는 로그인하여 토큰을 발급 받아야 한다.
 
+---
 <br>
 
-### 백엔드 서버
+### 🏭 백엔드 서버
+
+---
 
 - 모놀리식 아키텍처 중 레이어드 아키텍처를 적용한 Spring Boot로 개발했다.
 
@@ -139,9 +184,12 @@
 
 - 주문 결제 처리를 위해 포트원(PortOne)의 api를 사용했다.
 
+---
 <br>
 
-### DB 서버(MariaDB)
+### 🛢 DB 서버(MariaDB)
+
+---
 
 - 부하 분산을 위해 Master/Slave의 이중화로 DB를 구성했다.
 
@@ -149,15 +197,22 @@
 - 쓰기 요청은 Master에 전달하고, 읽기 요청은 Slave에 전달한다.
 
 ---
-### CI/CD 적용 후 시스템 아키텍처
+<br>
+
+### 🚀 CI/CD 적용 후 시스템 아키텍처
+
+---
 
 <details>
 <summary style="font-size: 14px; font-weight: bold;">CI/CD Images</summary>
 <br>
 <img src="./img/systemArchitecture_CICD.png">
-<br><br>
-
+<br>
+<br>
+    
 #### CI/CD
+
+---
 
 - 개발자가 소스코드를 github에 push한다.
 
@@ -178,4 +233,7 @@
 
 </details>
 
+---
 <br>
+
+
