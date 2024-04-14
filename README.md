@@ -206,7 +206,7 @@
 <details>
 <summary style="font-size: 14px; font-weight: bold;">CI/CD Images</summary>
 <br>
-<img src="./img/systemArchitecture_CICD.png">
+<img src="./img/systemArchitecture.png">
 <br>
 <br>
     
@@ -226,10 +226,10 @@
 - 테스트 코드를 실행하여 성공하면 젠킨스 파이프라인의 다음 스테이지로 넘어가고, 실패하면 실행을 멈춘다.
 
 
-- 테스트 코드를 성공하면 소스코드를 build 하고, dockerhub에 push한다.
+- 테스트 코드를 성공하면 Source Code를 Build 하고, DockerHub에 Push한다.
 
 
-- 쿠버네티스 서버의 manifest 파일의 버전을 갱신하고 적용하여 배포한다.
+- K8S Server의 Manifest File의 Version을 갱신하고 적용하여 배포한다.
 
 </details>
 
@@ -243,8 +243,19 @@
 <details>
 <summary style="font-size: 14px; font-weight: bold;">Grafana & Prometheus</summary>
 <br>
-<img src="./img/systemArchitecture_CICD.png">
+<img src="./img/.png">
 <br>
 <br>
+</details>
+
+---
+
+<br>
+
+### 💥 위키(Wiki)
+
+---
+
+### 🔗 [위키 바로가기](https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/wiki)
 
 
