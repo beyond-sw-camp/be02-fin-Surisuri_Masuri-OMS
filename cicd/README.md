@@ -164,14 +164,11 @@ Jenkins BackEnd PipeLine은 다음과 같은 절차에 따라 작동한다
 
 ---
 <details>
-<summary style="font-size: 18px; font-weight: bold;">FrontEnd</summary>
+<summary style="font-size: 18px; font-weight: bold;">Sample</summary>
+<img src = "../img/cicd시연영상-1.gif">    
 </details>
-<br>
 <br>
 
-<details>
-<summary style="font-size: 18px; font-weight: bold;">BackEnd</summary>
-</details>
 
 
 
