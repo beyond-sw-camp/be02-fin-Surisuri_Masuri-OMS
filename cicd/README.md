@@ -160,13 +160,26 @@ Jenkins BackEnd PipeLine은 다음과 같은 절차에 따라 작동한다
 <br>
 <br>
 
-### 🎥 CI/CD 시연 영상
+### 🎥 CI/CD 시연 영상 및 Slack 알림 
 
 ---
 <details>
 <summary style="font-size: 18px; font-weight: bold;">Sample</summary>
-<img src = "../img/cicd시연영상-1.gif">    
+<img src = "../img/cicd시연영상-1.gif">
 </details>
+<br>
+<br>
+<details>
+<summary style="font-size: 18px; font-weight: bold;">Slack</summary>
+<h3>Step 성공시</h3>
+<img src = "../img/slackSuccess.png">
+<br>
+<br>
+<h3>Step 실패시</h3>
+<img src = "../img/slackFail.png">    
+</details>
+
+
 <br>
 
 
