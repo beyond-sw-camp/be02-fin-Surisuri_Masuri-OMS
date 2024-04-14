@@ -236,4 +236,15 @@
 ---
 <br>
 
+###  🌞 Monitoring System
+
+---
+
+<details>
+<summary style="font-size: 14px; font-weight: bold;">Grafana & Prometheus</summary>
+<br>
+<img src="./img/systemArchitecture_CICD.png">
+<br>
+<br>
+
 
