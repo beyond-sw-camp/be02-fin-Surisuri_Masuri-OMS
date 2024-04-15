@@ -36,7 +36,7 @@
   </div>
 </template>
 
-User
+
 <script>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -63,12 +63,15 @@ export default {
       if (result === true) {
         swal('로그인 성공', '', 'success'); // 로그인 성공 알림
         router.push("/home");
-      } else {
-        
-        const errorMessage = getErrorMessage(result); // 결과값이 에러 코드일 것임
-        swal(errorMessage); // 에러 메시지를 알림 창으로 표시
+      } else if (typeof result === "object" && result.errorCode === 900) {
+          // 오류 코드 900에 대한 서버 메시지 사용
+          swal("로그인 실패", result.errorMessage, "error");
+        } else {
+          // 다른 오류 코드의 경우, 표준 오류 메시지 사용
+          const errorMessage = getErrorMessage(result);
+          swal("로그인 실패", errorMessage, "error");
+        }
       }
-    };
 
     return { userEmail, userPassword, loginSubmit };
   },

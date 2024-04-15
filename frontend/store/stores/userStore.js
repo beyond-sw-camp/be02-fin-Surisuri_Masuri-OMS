@@ -40,12 +40,16 @@ export const useUserStore = defineStore({
           return response.data.code || "unknown_error";
         }
       } catch (error) {
-        console.error("회원가입 실패", error);
         if (error.response && error.response.data && error.response.data.code) {
-          // 서버로부터 받은 응답에서 에러 코드가 있을 경우
-          return error.response.data.code; // 에러 코드 반환
+          if (error.response.data.code === 900) {
+            return {
+              errorCode: error.response.data.code,
+              errorMessage: error.response.data.message
+            }; // 900번 에러 코드에 대한 특별 처리
+          }
+          return error.response.data.code; // 다른 에러 코드 반환
         }
-        return "unknown_error"; // 에러 코드가 없는 경우 기본 에러 코드 반환
+        return "unknown_error"; // 알 수 없는 에러 처리
       }
     },
 
@@ -66,15 +70,18 @@ export const useUserStore = defineStore({
           sessionStorage.setItem("refreshToken", this.refreshToken);
 
           return true; // 로그인 성공
-        } else {
-          // 서버 응답에 따라 에러 코드 반환
-          return data.errorCode; // 예를 들어, 서버 응답에서 제공하는 에러 코드
-        }
+        } if (data.errorCode === 900) {
+          return { errorCode: data.errorCode, errorMessage: data.errorMessage };
+        } return data.errorCode;
       } catch (error) {
-        if (error.response && error.response.data && error.response.data.code) {
-          return error.response.data.code; // 에러 코드 추출
+        if (error.response && error.response.data) {
+          // 오류 코드 900에 대한 특별 처리
+          if (error.response.data.code === 900) {
+            return { errorCode: error.response.data.code, errorMessage: error.response.data.message };
+          }
+          return error.response.data.code; // 서버로부터 오류 코드 추출
         }
-        return "unknown_error"; // 에러 코드가 없는 경우 기본 에러 코드 반환
+        return "unknown_error"; // 알 수 없는 오류 처리
       }
     },
     async refreshToken() {

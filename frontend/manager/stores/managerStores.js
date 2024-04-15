@@ -27,13 +27,19 @@ export const useManagerStore = defineStore({
           sessionStorage.setItem("refreshToken", this.refreshToken);
 
           return true;
-        } else {
-          console.error("로그인 실패:", data.message);
-          return false;
+        } if (data.errorCode === 900) {
+          return { errorCode: data.errorCode, errorMessage: data.errorMessage };
         }
+        return data.errorCode; // 기타 오류 코드 반환
       } catch (error) {
-        console.error("로그인 요청 중 오류 발생:", error);
-        return false;
+        if (error.response && error.response.data) {
+          // 오류 코드 900에 대한 특별 처리
+          if (error.response.data.code === 900) {
+            return { errorCode: error.response.data.code, errorMessage: error.response.data.message };
+          }
+          return error.response.data.code; // 서버로부터 오류 코드 추출
+        }
+        return "unknown_error"; // 알 수 없는 오류 처리
       }
     },
     async refreshToken() {

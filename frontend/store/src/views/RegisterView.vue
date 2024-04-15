@@ -148,10 +148,15 @@ export default {
       if (result === true) {
         swal("회원가입이 성공적으로 완료되었습니다. 이메일 인증을 완료해주세요");
         router.push('/');
-      } else {
-        const errorMessage = getErrorMessage(result); // 에러 코드를 이용해 에러 메시지를 얻음
-        swal(errorMessage); // 에러 메시지 표시
+      } else if (typeof result === "object" && result.errorCode === 900) {
+          // 오류 코드 900에 대한 서버 메시지 사용
+          swal("회원가입 실패", result.errorMessage, "error");
       }
+      else {
+          // 다른 오류 코드의 경우, 표준 오류 메시지 사용
+          const errorMessage = getErrorMessage(result);
+          swal("회원가입 실패", errorMessage, "error");
+        }
     };
 
     return {
