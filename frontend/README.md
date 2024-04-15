@@ -25,13 +25,13 @@
 
 <br><br>
 
-### 📄 frontend 요구사항 명세서[바로가기](https://docs.google.com/spreadsheets/d/1mO0hrGlxiyJS6M7duXKe6gTWfpthLB1u7dr9gcEcNyw/edit#gid=1526384192)
+### 🖥️ 화면설계도 [바로가기](https://www.figma.com/file/gibflCmudNsrlpFDWKvJxJ/Giga-Coffee?type=design&node-id=0-1&mode=design&t=EAiTX7alUngoUoYI-0)
 
 ---
 
 <br><br><br>
 
-### 🖥️ 화면설계도 [바로가기](https://www.figma.com/file/gibflCmudNsrlpFDWKvJxJ/Giga-Coffee?type=design&node-id=0-1&mode=design&t=EAiTX7alUngoUoYI-0)
+### 📄 Frontend 요구사항 명세서 [바로가기](https://docs.google.com/spreadsheets/d/1mO0hrGlxiyJS6M7duXKe6gTWfpthLB1u7dr9gcEcNyw/edit#gid=1526384192)
 ---
 <br><br><br>
 
