@@ -256,10 +256,17 @@
 
 <br>
 <details>
-    
 <summary style="font-size: 14px; font-weight: bold;">Jenkins PipeLine</summary>
 <br>
 <img src="./img/jenkinsPipeLine.png">
+<br>
+<br>
+</details>    
+<br>
+<details>
+<summary style="font-size: 14px; font-weight: bold;">CI/CD Video</summary>
+<br>
+<img src="./img/cicd시연영상-1.gif">
 <br>
 <br>
 </details>    
