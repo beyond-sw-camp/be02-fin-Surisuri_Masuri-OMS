@@ -78,7 +78,7 @@
 <br>
 <summary><b>회원가입</b></summary>
 ➡️ storeuuid를 받은 가맹점 관리자는 회원가입 할 수 있다.</br>
-➡️ 회원정보[]를 입력 한 후 가입이 가능하다.</br>
+➡️ 회원정보[성함, Email, 비밀번호, 핸드폰 번호, 가맹점 UUID, 가맹점 주소, 가맹점 전화번호]를 입력 한 후 가입이 가능하다.</br>
 <img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/988dd9de-8286-4635-8fd7-3f9773ed5037" width="600" height="250"><br>
 ➡️ 회원이 입력한 이메일로 온 인증메일을 통해 이메일 인증을 완료한 후 로그인이 가능하다.</br>
 <img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/936a489d-c996-4471-a583-6f54c203c537"  width="600" height="250">
@@ -102,7 +102,7 @@
 <br>
 <details>
 <summary><b>home</b></summary>
-➡️ 가맹점 관리자는 home화면에서 상품잔여재고, 많이팔린 상품, 매출 및 공지사항 확인이 가능하다.<br>
+➡️ 가맹점 관리자는 Home화면에서 상품잔여재고, 많이팔린 상품, 매출 및 공지사항 확인이 가능하다.<br>
 <img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/cda06c16-adc8-4bc5-8fef-112eacbac38c" width="600" height="250"">
 </details>
 
@@ -112,13 +112,13 @@
 <br>
 <details>
 <summary><b>상품 조회,검색</b></summary>
-➡️ 가맹점 관리자는 상품을 조회 및 검색 할 수 있다. 가맹점 관리자는 상품을 장바구니에 담을 수 있다. 장바구니 버튼을 눌러서 장바구니로 이동이 가능하다.<br>
+➡️ 가맹점 관리자는 상품발주페이지에서 상품을 조회 및 검색 할 수 있다.<br>
 <img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/5aa737a2-d080-422e-b3bf-c1f23f59943b" width="600" height="250">
 </details>
 <br>
 <details>
 <summary><b>장바구니 이동</b></summary>
-➡️ 장바구니 버튼을 눌러서 장바구니로 이동이 가능하다.<br>
+➡️ 가맹점 관리자는 상품발주페이지에서 장바구니 추가를 눌러 장바구니에 상품을 추가할 수 있고 장바구니 버튼을 눌러서 장바구니로 이동이 가능하다.<br>
 <img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/98a4f774-36b5-4dfc-8c76-32af9efffddd" width="600" height="250">
 </details>
 
@@ -144,7 +144,7 @@
 <details>
 <br>
 <summary><b>주문내역 확인</b></summary>
-➡️ 가맹점 관리자는 결제한 주문의 내역을 확인할 수 있다.<br>
+➡️ 가맹점 관리자는 주문내역 확인 페이지에서 결제한 주문의 내역을 확인할 수 있다.<br>
 <img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/eec69b50-0297-4298-bd66-bec2e987e1e2" width="600" height="250">
 </details>
 
@@ -174,25 +174,25 @@
 <details>
 <br>
 <summary><b>문의사항 조회</b></summary>
-➡️ 문의사항 조회가 가능하다.<br>
+➡️ 가맹점 관리자는 문의사항 페이지에서 문의사항 조회가 가능하다.<br>
 <img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/0ff2b349-8798-4136-ab70-2299d9da3a62" width="600" height="250">
 </details>
 <br>
 <details>
 <summary><b>문의사항 작성</b></summary>
-➡️ 가맹점 관리자는 문의사항 작성이 가능하다.<br>
+➡️ 가맹점 관리자는 문의사항 작성 페이지에서 문의사항 작성이 가능하다.<br>
 <img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/8b404c87-ef9a-4321-aa57-498c80ab6970" width="600" height="250">
 </details>
 <br>
 <details>
 <summary><b>문의사항 수정</b></summary>
-➡️ 가맹점 관리자는 자신이 작성한 문의사항의 수정이 가능하다.<br>
+➡️ 가맹점 관리자는 문의사항 상세페이지에서 자신이 작성한 문의사항의 수정이 가능하다.<br>
 <img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/2f9c611e-7b34-4a44-9c0d-47b79897cee4" width="600" height="250">
 </details>
 <br>
 <details>
 <summary><b>문의사항 삭제</b></summary>
-➡️ 가맹점 관리자는 자신이 작성한 문의사항의 삭제가 가능하다.<br>
+➡️ 가맹점 관리자는 문의사항 상세페이지에서 자신이 작성한 문의사항의 삭제가 가능하다.<br>
 <img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/af67d815-b1ea-403b-bd6c-ff1ad7499392" width="600" height="250">
 </details>
 <br>
@@ -211,7 +211,7 @@
 <br>
 <details>
 <summary><b>로그아웃</b></summary>
-➡️ 로그인한 본사관리자는 로그아웃 할 수 있다.<br>
+➡️ 로그인한 본사 관리자는 로그아웃 할 수 있다.<br>
 <img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/f45ea3fe-2fd6-45ac-baa0-571420bc820a" width="600" height="250">
 </details>
 
@@ -220,7 +220,7 @@
 **🏠 HOME**
 <details>
 <summary><b>home</b></summary>
-➡️ 본사관리자는 home화면에서 전국가맹점 매출, 창고재고 현황, 가맹점 별 발주액을 알 수 있다.<br>
+➡️ 본사 관리자는 home화면에서 전국가맹점 매출, 창고재고 현황, 가맹점 별 발주액을 알 수 있다.<br>
 <img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/60810cf5-9cf9-4acd-b20c-d8654cb5d267" width="600" height="250">
 </details>
 
@@ -230,7 +230,7 @@
 <br>
 <details>
 <summary><b>가맹점 조회 및 검색</b></summary>
-➡️ 가맹점 조회 및 검색이 가능하다.<br>
+➡️ 본사 관리자는 가맹점 조회 페이지에서 가맹점 조회 및 검색이 가능하다.<br>
 <img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/48920674-aa13-42c5-99ad-82f74079886e" width="600" height="250">
 </details>
 
@@ -239,7 +239,7 @@
 **📄 주문내역**<br>
 <details>
 <summary><b>주문내역 확인</b></summary>
-➡️ 본사관리자는 가맹점들의 주문내역을 확인할 수 있다.
+➡️ 본사 관리자는 가맹점들의 주문내역을 확인할 수 있다.
 <img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/30c31bf9-dea6-4108-a5e7-24737c82bcdb" width="600" height="250">
 </details>
 
