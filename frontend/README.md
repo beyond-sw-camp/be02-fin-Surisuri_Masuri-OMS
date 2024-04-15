@@ -25,52 +25,19 @@
 
 <br>
 
-### 팀원 소개
-
----
-
-<div align="center">
-
-| **김현균** | **박현범** | **정원준** | **한경훈** |
-| :------: |  :------: | :------: | :------: |
-|  |
-
-</div>
-
-
-### 프로젝트 기본 소개
-
----
-저희 프로젝트는 커피 프랜차이즈 기업의 공급망 관리를 위한 주문 관리 시스템을 개선하고자 합니다.
-
-기존 시스템의 한계를 극복하고, 비즈니스 운영 효율을 극대화하기 위해 자동화 및 모니터링 기능을 강화하고자 합니다.
 <br><br>
 
-### 프로젝트 배경
-
----
-내용
-<br><br>
-
-### System Architecture
-
-
+### 📄 frontend 요구사항 명세서[바로가기](https://docs.google.com/spreadsheets/d/1mO0hrGlxiyJS6M7duXKe6gTWfpthLB1u7dr9gcEcNyw/edit#gid=1526384192)
 
 <br><br>
 
-### Front End 요구사항 명세서
-[요구사항 정의서](https://docs.google.com/spreadsheets/d/1mO0hrGlxiyJS6M7duXKe6gTWfpthLB1u7dr9gcEcNyw/edit#gid=1526384192)
-
+### 🖥️ 화면설계도 [바로가기](https://www.figma.com/file/gibflCmudNsrlpFDWKvJxJ/Giga-Coffee?type=design&node-id=0-1&mode=design&t=EAiTX7alUngoUoYI-0)
 <br><br>
 
-###  화면설계도
-[[화면설계도(Figma)](https://www.figma.com/file/gibflCmudNsrlpFDWKvJxJ/Giga-Coffee?type=design&node-id=0-1&mode=design&t=EAiTX7alUngoUoYI-0)]
-<br><br>
-
-###  상세기능 명세서
+###  🎬 프로젝트 시연영상
 
 <details>
-<summary><b>🔑가맹점 관리자</b></summary>
+<summary><b>🔑가맹점 관리자🔑</b></summary>
 <br>
 
 **🙍‍♂️ 회원**
@@ -199,7 +166,7 @@
 </details>
 <br>
 <details>
-<summary><b>🔑 본사 관리자</b></summary>
+<summary><b>🏠 본사 관리자 🏠 </b></summary>
 
 **🙍‍♂️ 회원**
 <br>
