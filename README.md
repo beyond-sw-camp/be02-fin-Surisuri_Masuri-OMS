@@ -66,10 +66,10 @@
 <div align="center">
 <table>
 <tr>
-<td align="center"><a href="https://github.com/your-github-hyeongyun"><img src="https://via.placeholder.com/150" width="100" height="100" alt="김현균"/><br /><sub><b>김현균</b></sub></a></td>
-<td align="center"><a href="https://github.com/your-github-hyeonbeom"><img src="https://via.placeholder.com/150" width="100" height="100" alt="박현범"/><br /><sub><b>박현범</b></sub></a></td>
-<td align="center"><a href="https://github.com/your-github-wonjun"><img src="https://via.placeholder.com/150" width="100" height="100" alt="정원준"/><br /><sub><b>정원준</b></sub></a></td>
-<td align="center"><a href="https://github.com/your-github-kyunghoon"><img src="https://via.placeholder.com/150" width="100" height="100" alt="한경훈"/><br /><sub><b>한경훈</b></sub></a></td>
+<td align="center"><a href="https://github.com/Hyeon-kyun"><img src="https://via.placeholder.com/150" width="100" height="100" alt="김현균"/><br /><sub><b>김현균</b></sub></a></td>
+<td align="center"><a href="https://github.com/ParkHyeonBeom"><img src="https://via.placeholder.com/150" width="100" height="100" alt="박현범"/><br /><sub><b>박현범</b></sub></a></td>
+<td align="center"><a href="https://github.com/wonjunmar"><img src="https://via.placeholder.com/150" width="100" height="100" alt="정원준"/><br /><sub><b>정원준</b></sub></a></td>
+<td align="center"><a href="https://github.com/kyungqq"><img src="https://via.placeholder.com/150" width="100" height="100" alt="한경훈"/><br /><sub><b>한경훈</b></sub></a></td>
 </tr>
 </table>
 </div>
