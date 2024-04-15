@@ -164,19 +164,29 @@ public class UserService {
 
             String RefreshToken = JwtUtils.generateRefreshToken(user.get(), secretKey, expiredTimeMs);
 
-
             if (storeCount > 0) {
                 loginRes = LoginRes.builder()
                         .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs/24))
                         .refreshToken(RefreshToken)
                         .discardedProduct(storeCount)
                         .build();
+
+                ValueOperations<String,String> vop = redisTemplate.opsForValue();
+
+                vop.set(user.get().getUserEmail(),RefreshToken);
+
                 return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
             } else if(storeCount == 0) {
                 loginRes = LoginRes.builder()
                         .accessToken(JwtUtils.generateAccessToken(user.get(), secretKey, expiredTimeMs/24))
                         .refreshToken(RefreshToken)
                         .build();
+
+
+                ValueOperations<String,String> vop = redisTemplate.opsForValue();
+
+                vop.set(user.get().getUserEmail(),RefreshToken);
+
                 return BaseResponse.successResponse("정상적으로 로그인 되었습니다.", loginRes);
             }
         }
