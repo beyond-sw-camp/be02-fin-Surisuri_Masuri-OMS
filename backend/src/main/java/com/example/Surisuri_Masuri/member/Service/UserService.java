@@ -131,8 +131,9 @@ public class UserService {
                         .build();
 
             }
-        }
-        return BaseResponse.successResponse("이메일 인증이 완료되면 회원가입이 완료됩니다.", userSignUpRes);
+            return BaseResponse.successResponse("이메일 인증이 완료되면 회원가입이 완료됩니다.", userSignUpRes);
+        } throw new UserException(ErrorCode.UserRegister_008,
+                String.format("존재하지 않는 가맹점 UUID 입니다."));
     }
 
     // 로그인 기능
