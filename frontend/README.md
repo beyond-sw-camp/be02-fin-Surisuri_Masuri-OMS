@@ -49,7 +49,7 @@
 <summary><b>회원가입</b></summary>
 ➡️ storeuuid를 받은 가맹점 관리자는 회원가입 할 수 있다.</br>
 ➡️ 회원정보[성함, Email, 비밀번호, 핸드폰 번호, 가맹점 UUID, 가맹점 주소, 가맹점 전화번호]를 입력 한 후 가입이 가능하다.</br>
-<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/988dd9de-8286-4635-8fd7-3f9773ed5037" width="600" height="250"><br>
+<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/124c921c-090c-472c-86f2-0aeba34972d3" width="600" height="250"><br>
 ➡️ 회원이 입력한 이메일로 온 인증메일을 통해 이메일 인증을 완료한 후 로그인이 가능하다.</br>
 <img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/936a489d-c996-4471-a583-6f54c203c537"  width="600" height="250">
 </details>
@@ -73,7 +73,7 @@
 <details>
 <summary><b>home</b></summary>
 ➡️ 가맹점 관리자는 Home화면에서 상품잔여재고, 많이팔린 상품, 매출 및 공지사항 확인이 가능하다.<br>
-<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/cda06c16-adc8-4bc5-8fef-112eacbac38c" width="600" height="250"">
+<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/3605e839-09a7-4c1b-8050-b532ae8bf6ff" width="600" height="250"">
 </details>
 
 ---
