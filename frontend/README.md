@@ -187,13 +187,13 @@
 <details>
 <summary><b>문의사항 수정</b></summary>
 ➡️ 가맹점 관리자는 자신이 작성한 문의사항의 수정이 가능하다.<br>
-<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/2f9c611e-7b34-4a44-9c0d-47b79897cee4" width="400" height="250">
+<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/2f9c611e-7b34-4a44-9c0d-47b79897cee4" width="600" height="250">
 </details>
 <br>
 <details>
 <summary><b>문의사항 삭제</b></summary>
 ➡️ 가맹점 관리자는 자신이 작성한 문의사항의 삭제가 가능하다.<br>
-<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/af67d815-b1ea-403b-bd6c-ff1ad7499392" width="400" height="250">
+<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/af67d815-b1ea-403b-bd6c-ff1ad7499392" width="600" height="250">
 </details>
 <br>
 </details>
@@ -206,13 +206,13 @@
 <details>
 <summary><b>로그인</b></summary>
 ➡️ 본사관리자는 본사에서 제공 받은 아이디와 비밀번호로 로그인이 가능하다.<br>
-<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/3517da9d-b1b2-4020-a5d9-aed2f9117b25" width="400" height="250">
+<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/3517da9d-b1b2-4020-a5d9-aed2f9117b25" width="600" height="250">
 </details>
 <br>
 <details>
 <summary><b>로그아웃</b></summary>
 ➡️ 로그인한 본사관리자는 로그아웃 할 수 있다.<br>
-<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/f45ea3fe-2fd6-45ac-baa0-571420bc820a"width="400" height="250">
+<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/f45ea3fe-2fd6-45ac-baa0-571420bc820a" width="600" height="250">
 </details>
 
 ---
@@ -221,7 +221,7 @@
 <details>
 <summary><b>home</b></summary>
 ➡️ 본사관리자는 home화면에서 전국가맹점 매출, 창고재고 현황, 가맹점 별 발주액을 알 수 있다.<br>
-<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/60810cf5-9cf9-4acd-b20c-d8654cb5d267" width="400" height="250">
+<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/60810cf5-9cf9-4acd-b20c-d8654cb5d267" width="600" height="250">
 </details>
 
 ---
@@ -231,7 +231,7 @@
 <details>
 <summary><b>가맹점 조회 및 검색</b></summary>
 ➡️ 가맹점 조회 및 검색이 가능하다.<br>
-<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/48920674-aa13-42c5-99ad-82f74079886e" width="400" height="250">
+<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/48920674-aa13-42c5-99ad-82f74079886e" width="600" height="250">
 </details>
 
 ---
@@ -240,7 +240,7 @@
 <details>
 <summary><b>주문내역 확인</b></summary>
 ➡️ 본사관리자는 가맹점들의 주문내역을 확인할 수 있다.
-<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/30c31bf9-dea6-4108-a5e7-24737c82bcdb" width="400" height="250">
+<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/30c31bf9-dea6-4108-a5e7-24737c82bcdb" width="600" height="250">
 </details>
 
 ---
@@ -252,12 +252,12 @@
 <details>
 <summary><b>창고 조회 및 검색</b></summary>
 ➡️ 본사관리자는 창고 조회 및 검색이 가능하다.
-<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/219ca3db-cd62-4ae1-bc4d-24a1d4469496" width="400" height="250">
+<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/219ca3db-cd62-4ae1-bc4d-24a1d4469496" width="600" height="250">
 </details><br>
 <details>
 <summary><b>창고상세 현황</b></summary>
 ➡️ 창고상세페이지에서 창고별 재고현황이 확인 가능하다.
-<img src="(https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/c86642d7-88d0-4d25-bed9-e7c5020a4c88" width="400" height="250">
+<img src="(https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/c86642d7-88d0-4d25-bed9-e7c5020a4c88" width="600" height="250">
 </details><br>
 
 ---
@@ -267,24 +267,24 @@
 <details>
 <summary><b>공지사항 작성</b></summary>
 ➡️ 공지사항 작성이 가능하다.<br>
-<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/0dcf554b-126c-4a8b-b746-1aa589f4a7f4" width="400" height="250">
+<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/0dcf554b-126c-4a8b-b746-1aa589f4a7f4" width="600" height="250">
 </details>
 <br>
 <details>
 <summary><b>공지사항 수정</b></summary>
 ➡️ 공지사항 수정이 가능하다.<br>
-<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/e2b3f21b-12fc-4988-ad7c-2107db0f45d1" width="400" height="250">
+<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/e2b3f21b-12fc-4988-ad7c-2107db0f45d1" width="600" height="250">
 </details>
 <br>
 <details>
 <summary><b>공지사항 삭제</b></summary>
 ➡️ 공지사항 삭제가 가능하다.<br>
-<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/114a7ab3-30a2-4b4d-999d-e23dd4395bd9"width="400" height="250">
+<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/114a7ab3-30a2-4b4d-999d-e23dd4395bd9" width="600" height="250">
 </details><br>
 <details>
 <summary><b>공지사항 조회</b></summary>
 ➡️ 공지사항 조회가 가능하다.<br>
-<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/6ef85e37-6053-43d4-8483-502f88360c3b"width="400" height="250">
+<img src="https://github.com/beyond-sw-camp/be02-fin-Surisuri_Masuri-OMS/assets/150201990/6ef85e37-6053-43d4-8483-502f88360c3b" width="600" height="250">
 </details>
 
 ---
