@@ -229,7 +229,7 @@
 ---
 
 <details>
-<summary style="font-size: 14px; font-weight: bold;">CI/CD Images</summary>
+<summary style="font-size: 14px; font-weight: bold;"> System Architecture </summary>
 <br>
 <img src="./img/systemArchitecture.png">
 <br>
@@ -257,6 +257,16 @@
 - K8S Server의 Manifest File의 Version을 갱신하고 적용하여 배포한다.
 
 </details>
+
+<br>
+<details>
+    
+<summary style="font-size: 14px; font-weight: bold;"> PipeLine Image </summary>
+<br>
+<img src="./img/jenkinsPipeLine.png">
+<br>
+<br>
+</details>    
 
 ---
 <br>
