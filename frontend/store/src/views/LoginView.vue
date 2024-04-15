@@ -1,19 +1,22 @@
 <template>
   <div id="layoutAuthentication_content">
     <main>
+      <p class="text-center text-info" style="font-weight: bold; font-size: 16px;">아이디: test01@naver.com / 비밀번호: Qwer1234! 사용하여 로그인하세요.</p>
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-5">
             <div class="card shadow-lg border-0 rounded-lg mt-5">
-              <div class="card-header"><h3 class="text-center font-weight-light my-4">가맹점 관리자 로그인</h3></div>
+              <div class="card-header">
+                <h3 class="text-center font-weight-light my-4">가맹점 관리자 로그인</h3>
+              </div>
               <div class="card-body">
                 <form @submit.prevent="loginSubmit">
                   <div class="form-floating mb-3">
-                    <input v-model="userEmail" class="form-control" id="inputEmail" type="email" placeholder="" />
+                    <input v-model="userEmail" class="form-control" id="inputEmail" type="email" placeholder="Email" />
                     <label for="inputEmail">Email</label>
                   </div>
                   <div class="form-floating mb-3">
-                    <input v-model="userPassword" class="form-control" id="inputPassword" type="password" placeholder="" />
+                    <input v-model="userPassword" class="form-control" id="inputPassword" type="password" placeholder="비밀번호" />
                     <label for="inputPassword">비밀번호</label>
                   </div>
                   <div class="d-flex justify-content-between align-items-center mt-2">
@@ -36,7 +39,6 @@
   </div>
 </template>
 
-
 <script>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -48,9 +50,9 @@ export default {
   setup() {
     const router = useRouter();
     const userStore = useUserStore(); // Pinia 스토어 사용
-    const loadingStore = useLoadingStore(); 
-    const userEmail = ref("");
-    const userPassword = ref("");
+    const loadingStore = useLoadingStore();
+    const userEmail = ref("test01@naver.com"); // 기본값으로 설정
+    const userPassword = ref("Qwer1234!"); // 기본값으로 설정
 
     const loginSubmit = async () => {
 
@@ -64,14 +66,14 @@ export default {
         swal('로그인 성공', '', 'success'); // 로그인 성공 알림
         router.push("/home");
       } else if (typeof result === "object" && result.errorCode === 900) {
-          // 오류 코드 900에 대한 서버 메시지 사용
-          swal("로그인 실패", result.errorMessage, "error");
-        } else {
-          // 다른 오류 코드의 경우, 표준 오류 메시지 사용
-          const errorMessage = getErrorMessage(result);
-          swal("로그인 실패", errorMessage, "error");
-        }
+        // 오류 코드 900에 대한 서버 메시지 사용
+        swal("로그인 실패", result.errorMessage, "error");
+      } else {
+        // 다른 오류 코드의 경우, 표준 오류 메시지 사용
+        const errorMessage = getErrorMessage(result);
+        swal("로그인 실패", errorMessage, "error");
       }
+    }
 
     return { userEmail, userPassword, loginSubmit };
   },
@@ -85,5 +87,16 @@ export default {
   justify-content: center; /* 세로 방향 중앙 정렬 */
   min-height: 100vh;
   transform: translateY(-8%); /* 전체 뷰포트 높이 */
+}
+.card-header {
+  color: #007bff; /* 로고 또는 브랜드 색상에 맞추어 조정 가능 */
+  font-size: 18px; /* 제목 글씨 크기 조정 */
+}
+.text-center {
+  font-weight: bold; /* 강조를 위해 굵게 */
+  color: #495057; /* 적절한 대비를 위한 색상 조정 */
+}
+.text-info {
+  color: #17a2b8; /* 부트스트랩의 info 색상 코드를 사용 */
 }
 </style>
