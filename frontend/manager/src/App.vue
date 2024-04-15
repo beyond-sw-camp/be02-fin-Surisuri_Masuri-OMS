@@ -83,6 +83,7 @@ export default {
   display: flex;
   flex-direction: column; /* 콘텐츠를 세로로 정렬 */
   flex-grow: 1; /* 남은 공간을 모두 채우도록 설정 */
+  min-height: 100vh;
 }
 .content-view {
   flex-grow: 1; 
