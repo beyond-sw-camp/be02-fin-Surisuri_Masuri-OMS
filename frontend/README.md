@@ -2,7 +2,6 @@
 
 ![header](https://capsule-render.vercel.app/api?type=venom&height=300&color=FFDC00&text=GIGA%20COFFEE&textBg=false&animation=fadeIn&fontColor=452613&fontSize=80&reversal=false&desc=기억%20속,%20가장%20맛있었던%20한%20모금&descAlignY=80)
 
-> **[플레이 데이터] 한화시스템 BEYOND SW캠프 / Team : Surisuri_Masuri**
 
 <br>
 
@@ -23,18 +22,22 @@
     <img src="https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
 </div>
 
-<br>
 
 <br><br>
 
 ### 📄 frontend 요구사항 명세서[바로가기](https://docs.google.com/spreadsheets/d/1mO0hrGlxiyJS6M7duXKe6gTWfpthLB1u7dr9gcEcNyw/edit#gid=1526384192)
 
-<br><br>
+---
+
+<br><br><br>
 
 ### 🖥️ 화면설계도 [바로가기](https://www.figma.com/file/gibflCmudNsrlpFDWKvJxJ/Giga-Coffee?type=design&node-id=0-1&mode=design&t=EAiTX7alUngoUoYI-0)
-<br><br>
+---
+<br><br><br>
 
 ###  🎬 프로젝트 시연영상
+
+---
 
 <details>
 <summary><b>🔑가맹점 관리자🔑</b></summary>
