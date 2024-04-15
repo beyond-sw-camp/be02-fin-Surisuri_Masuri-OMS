@@ -93,16 +93,13 @@
 
 ---
 
-- 접근성 향상: 대시보드 형태의 웹을 개발하여 가맹점들이 편리하게 주문할 수 있도록 한다. <br> 또한, 사용자 인터페이스를 최적화하여 주문 프로세스를 간편화한다.
+- 
 
+- 
 
-- 부서 간 업무 처리 효율화: 본사 시스템의 접근 권한을 필요로 하는 부서의 직원들에게 적절한 권한을 부여하여 업무 처리 효율성을 향상시킨다. <br> 또한, 시스템 내부의 커뮤니케이션 및 협업 기능을 강화하여 업무 처리 프로세스를 원활하게 한다.
+- 
 
-
-- 실시간 재고 확인 및 배송 상태 확인 기능 추가: 상품의 재고와 배송 상태를 확인할 수 있는 기능을 시스템에 추가하여 가맹점과 본사 간의 투명성을 높힌다. <br> 대시보드를 통해 사용자들이 쉽게 상품의 재고와 배송 상태를 확인할 수 있도록 한다.
-
-
-- 유통기간 관리 기능 추가: 유통기한이 지나거나 유통기한이 임박한 상품에 대한 경고 및 알림 기능을 구현하여, 유통기간 관리를 효과적으로 지원한다. <br> 이를 통해 상품의 품질을 유지하고 재고 관리를 최적화한다.
+-
 
 <br>
 
@@ -229,7 +226,7 @@
 ---
 
 <details>
-<summary style="font-size: 14px; font-weight: bold;"> System Architecture </summary>
+<summary style="font-size: 14px; font-weight: bold;"> System Architecture </summary>
 <br>
 <img src="./img/systemArchitecture.png">
 <br>
@@ -261,7 +258,7 @@
 <br>
 <details>
     
-<summary style="font-size: 14px; font-weight: bold;"> PipeLine Image </summary>
+<summary style="font-size: 14px; font-weight: bold;">Jenkins PipeLine</summary>
 <br>
 <img src="./img/jenkinsPipeLine.png">
 <br>
