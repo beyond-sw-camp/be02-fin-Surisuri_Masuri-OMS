@@ -61,6 +61,7 @@
 <br>
 
 ### 💻 팀원 소개
+
 ---
 
 <div align="center">
@@ -100,6 +101,9 @@
 2. &nbsp; 가맹점  재고 관리
 - 가맹점의 창고 내 제품들의 유통기한이 임박한 경우, 자동으로 폐기 처리하고 해당 상품 정보를 알림으로 받을 수 있는 시스템을 구현했습니다.
 
+3. &nbsp; 배송 상태에 따른 재고 변경 
+- 주문한 상품이 배송 상태에 따라 창고 또는 가맹점의 재고를 변경시키는 시스템을 구현했습니다.
+
 <br>
 
 ### 📌  프로젝트 기획
@@ -120,7 +124,7 @@
 <details>
 <summary style="font-size: 14px; font-weight: bold;">ERD</summary>
 <br>
-<img src="./img/final_erd.png">
+<img src="./img/DBERDfinal.png">
 <br>
 </details>
 
@@ -129,7 +133,7 @@
 <details>
 <summary style="font-size: 14px; font-weight: bold;">Relation Schema</summary>
 <br>
-<img src="./img/final_relation.png">
+<img src="./img/릴레이션 스키마.png">
 <br>
 </details>
 
@@ -161,10 +165,8 @@
 <details>
 <summary style="font-size: 14px; font-weight: bold;">자세히 보기</summary>
 <br>
-<img src="./img/systemArchitecture.png">
+<img src="./img/시스템아키텍처_240415_1730.png">
 <br>
-
-    상세설명 작성
     
 </details>
 
@@ -233,41 +235,10 @@
 ---
 <br>
 
-### 🚀 CI/CD 적용 후 시스템 아키텍처
+### 🚀 CI/CD
 
 ---
 
-<details>
-<summary style="font-size: 14px; font-weight: bold;"> System Architecture </summary>
-<br>
-<img src="./img/systemArchitecture.png">
-<br>
-<br>
-    
-#### CI/CD
-
----
-
-- 개발자가 Source Code를 Github에 Push한다.
-
-
-- Push 이후, Github의 Jenkins에서 Webhook을 전달한다.
-
-
-- Jenkins에서 Github의 Source Code를 Clone하고 오류를 체크한다.
-
-
-- 테스트 코드를 실행하여 성공하면 젠킨스 파이프라인의 다음 스테이지로 넘어가고, 실패하면 실행을 멈춘다.
-
-
-- 테스트 코드를 성공하면 Source Code를 Build 하고, DockerHub에 Push한다.
-
-
-- K8S Server의 Manifest File의 Version을 갱신하고 적용하여 배포한다.
-
-</details>
-
-<br>
 <details>
 <summary style="font-size: 14px; font-weight: bold;">Jenkins PipeLine</summary>
 <br>
@@ -292,10 +263,14 @@
 ---
 
 <details>
-<summary style="font-size: 14px; font-weight: bold;">Grafana & Prometheus</summary>
+<summary style="font-size: 15px; font-weight: bold;">Grafana</summary>
+<img src="./img/SCDF_그라파나.png">
 <br>
-<img src="./img/.png">
+<img src="./img/SCDF_dashboard.png">
 <br>
+
+- 배치 처리 이후 해당 작업의 메트릭을 모니터링하기 위해 그라파나를 사용한다.
+
 <br>
 </details>
 
