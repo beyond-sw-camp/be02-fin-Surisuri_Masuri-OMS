@@ -3,25 +3,22 @@
     <!-- 흰색 카드로 감싸기 -->
     <div class="card">
       <div class="card-body">
+        
         <div class="mb-3">
-          <label class="form-label">문의 번호:</label>
-          <input type="text" class="form-control" v-model="questionIdx" :readonly="!editable" />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">문의 제목:</label>
+          <label class="form-label">문의 제목</label>
           <input type="text" class="form-control" v-model="questionTitle" :readonly="!editable" />
         </div>
         <div class="mb-3">
-          <label class="form-label">문의 내용:</label>
+          <label class="form-label">문의 내용</label>
           <textarea class="form-control" v-model="questionContent" rows="3" :readonly="!editable"></textarea>
         </div>
         <div class="mb-3">
-          <label class="form-label">카테고리:</label>
+          <label class="form-label">카테고리</label>
           <input type="text" class="form-control" v-model="questionCategory" :readonly="!editable" />
         </div>
         <!-- answerContent가 있을 때만 보이는 섹션 -->
         <div class="mb-3" v-if="answerContent">
-          <label class="form-label">답변 내용:</label>
+          <label class="form-label">답변 내용</label>
           <textarea class="form-control" v-model="answerContent" rows="3" readonly></textarea>
         </div>
         <div class="d-flex justify-content-between">
@@ -97,7 +94,7 @@ export default {
       try {
         await axios.delete(`http://121.140.125.34:11113/api/question/delete?idx=${this.questionIdx}`, {
           headers: {
-            'AcessToken': accessToken,
+            'AccessToken': accessToken,
           },
         });
         swal("문의사항이 성공적으로 삭제되었습니다.");

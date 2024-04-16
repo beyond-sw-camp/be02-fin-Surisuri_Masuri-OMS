@@ -2,22 +2,26 @@
   <div class="container mt-5">
     <h2 class="mb-3">문의 상세 정보</h2>
     <div class="mb-3">
-      <label class="form-label">문의 제목:</label>
+      <label class="form-label">문의 제목</label>
       <input type="text" class="form-control" v-model="questionTitle" readonly />
     </div>
     <div class="mb-3">
-      <label class="form-label">문의 내용:</label>
+      <label class="form-label">문의 내용</label>
       <textarea class="form-control" v-model="questionContent" rows="3" readonly></textarea>
     </div>
     <div class="mb-3">
-      <label class="form-label">카테고리:</label>
+      <label class="form-label">카테고리</label>
       <input type="text" class="form-control" v-model="questionCategory" readonly />
     </div>
 
-    <input type="text" v-model="answerContent" placeholder="답변을 입력하세요" class="form-control mb-3" />
-    <button @click="submitAnswer" class="btn btn-primary">답변 제출</button>
-
-    <router-link to="/question" class="btn btn-secondary mt-3">목록으로 돌아가기</router-link>
+    <div class="row justify-content-start">
+      <div class="col-auto pr-2">
+        <router-link to="/question" class="btn btn-secondary">목록으로 돌아가기</router-link>
+      </div>
+      <div class="col-auto pl-2">
+        <button @click="submitAnswer" class="btn btn-primary">답변 제출</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -88,3 +92,10 @@ export default {
   },
 };
 </script>
+
+
+<style scoped>
+.custom-width {
+  width: 150px; /* 사용자 정의 너비 설정 */
+}
+</style>

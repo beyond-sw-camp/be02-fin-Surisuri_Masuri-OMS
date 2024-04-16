@@ -1,8 +1,6 @@
 <template>
   <div class="container-fluid px-4">
-    <router-link to="/question/new" class="btn btn-primary mb-3"
-      >새 문의사항 작성</router-link
-    >
+    <router-link to="/question/new" class="btn btn-primary mb-3">새 문의사항 작성</router-link>
     <div class="row">
       <div class="col">
         <div class="card">
@@ -13,71 +11,45 @@
                   <th scope="col">번호</th>
                   <th scope="col">제목</th>
                   <th scope="col" class="text-center">카테고리</th>
-                  <th scope="col" class="text-center">상세 보기</th>
+                  <th scope="col" class="text-center">답변 상태</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="(question, index) in questions" :key="question.idx">
                   <th scope="row">{{ index + 1 }}</th>
-                  <td>{{ question.title }}</td>
-                  <!-- 카테고리 가운데 정렬 -->
+                  <td>
+                    <router-link :to="{
+                      name: 'QuestionDetail',
+                      query: {
+                        idx: question.questionIdx,
+                        title: question.title,
+                        content: question.content,
+                        category: question.category,
+                        status: question.status,
+                        answerContent: question.answerContent,
+                      }
+                    }">{{ question.title }}</router-link>
+                  </td>
                   <td class="text-center">{{ question.category }}</td>
-                  <!-- 상세 보기 버튼 가운데 정렬 -->
-                  <td class="text-center">
-                    <router-link
-                      :to="{
-                        name: 'QuestionDetail',
-                        query: {
-                          idx: question.questionIdx,
-                          title: question.title,
-                          content: question.content,
-                          category: question.category,
-                          status: question.status,
-                          answerContent: question.answerContent,
-                        },
-                      }"
-                      class="btn btn-primary btn-sm"
-                      >상세 보기</router-link
-                    >
+                  <td class="text-center"
+                      :class="{'text-danger': question.answerContent === null, 'text-success': question.answerContent !== null}">
+                    {{ question.answerContent === null ? '답변 대기중' : '답변 완료' }}
                   </td>
                 </tr>
               </tbody>
             </table>
             <nav aria-label="Page navigation" class="mt-4">
               <ul class="pagination justify-content-end">
-                <li
-                  class="page-item"
-                  :class="{ disabled: pagination.page === 1 }"
-                >
-                  <a
-                    class="page-link"
-                    href="#"
-                    aria-label="Previous"
-                    @click.prevent="navigatePage(pagination.page - 1)"
-                  >
+                <li class="page-item" :class="{ disabled: pagination.page === 1 }">
+                  <a class="page-link" href="#" aria-label="Previous" @click.prevent="navigatePage(pagination.page - 1)">
                     <span aria-hidden="true">&laquo;</span>
                   </a>
                 </li>
-                <li
-                  class="page-item"
-                  v-for="num in visiblePages"
-                  :class="{ active: num === pagination.page }"
-                  :key="num"
-                >
-                  <a
-                    class="page-link"
-                    href="#"
-                    @click.prevent="navigatePage(num)"
-                    >{{ num }}</a
-                  >
+                <li class="page-item" v-for="num in visiblePages" :class="{ active: num === pagination.page }" :key="num">
+                  <a class="page-link" href="#" @click.prevent="navigatePage(num)">{{ num }}</a>
                 </li>
                 <li class="page-item">
-                  <a
-                    class="page-link"
-                    href="#"
-                    aria-label="Next"
-                    @click.prevent="navigatePage(pagination.page + 1)"
-                  >
+                  <a class="page-link" href="#" aria-label="Next" @click.prevent="navigatePage(pagination.page + 1)">
                     <span aria-hidden="true">&raquo;</span>
                   </a>
                 </li>
@@ -165,6 +137,12 @@ export default {
 };
 </script>
 <style scoped>
-</style>
+.text-danger {
+  color: red;
+}
 
+.text-success {
+  color: green;
+}
+</style>
 
