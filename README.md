@@ -18,16 +18,21 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Vue.js-4FC08D?style=flat&logo=Vue.js&logoColor=black&color=lightgreen">
 &nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/nginx-%23009639.svg?style=flat&logo=nginx&logoColor=white"></a>
 &nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Pinia-0285C9?style=flat&color=dark"></a>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Bootstrap-7952B3?style=flat&logo=bootstrap&logoColor=white"></a>
+
 
 #### &nbsp;　Backend
 
 &nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=Spring%20Boot&logoColor=white&color=green"/>
 &nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Spring%20Security-6DB33F?style=flat&logo=Spring%20Security&logoColor=white&color=darkgreen"/>
+&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Spring_Data_JPA-6DB33F?style=flat&logo=spring&logoColor=white"/>
+&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Spring_Batch-6DB33F?style=flat&logo=spring&logoColor=white"/>
 &nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/JSON%20Web%20Token-000000?style=flat&logo=JSON%20Web%20Tokens&logoColor=white&color=black"/>
 &nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Amazon%20AWS-232F3E?style=flat&logo=Amazon%20AWS&logoColor=black&color=orange"/>
 &nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Amazon%20EC2-232F3E?style=flat&logo=Amazon%20EC2&logoColor=black&color=orange"/>
 &nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Amazon%20RDS-232F3E?style=flat&logo=Amazon%20RDS&logoColor=black&color=orange"/>
-
+&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/QueryDSL-E10098?style=flat&logo=QueryDSL&logoColor=white"/>
+&nbsp;&nbsp;&nbsp;<img src="https://img.shields.io/badge/Maven-C71A36?style=flat&logo=apache-maven&logoColor=white">
 
 #### &nbsp;　DB
 
