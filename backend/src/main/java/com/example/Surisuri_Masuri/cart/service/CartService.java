@@ -1,5 +1,4 @@
 package com.example.Surisuri_Masuri.cart.service;
-
 import com.example.Surisuri_Masuri.cart.model.Cart;
 import com.example.Surisuri_Masuri.cart.model.CartDetail;
 import com.example.Surisuri_Masuri.cart.model.dto.request.CartCreateReq;
@@ -24,11 +23,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class CartService {
@@ -37,10 +34,8 @@ public class CartService {
     private final ProductRepository productRepository;
     private final StoreRepository storeRepository;
     private final UserRepository userRepository;
-
     @Value("${jwt.secret-key}")
     private String secretKey;
-
     public BaseResponse addCart(String token, CartCreateReq req) {
 
         token = JwtUtils.replaceToken(token);
@@ -50,7 +45,6 @@ public class CartService {
         Optional<User> user = userRepository.findByUserEmail(userId);
 
         Optional<Product> productResult = productRepository.findById(req.getProductIdx());
-
 
         if (user.isPresent() && productResult.isPresent()) {
 
@@ -107,36 +101,24 @@ public class CartService {
                                         .build();
 
                                 return BaseResponse.successResponse("요청 성공했습니다.", cartCreateRes);
-                            } else {
-                                cartDetail.setProductQuantity(req.getProductQuantity());
-                                cartDetailRepository.save(cartDetail);
-
-                                CartCreateRes cartCreateRes = CartCreateRes.builder()
-                                        .idx(cart.getIdx())
-                                        .productName(product.getProductName())
-                                        .price(product.getPrice())
-                                        .productQuantity(cartDetail.getProductQuantity())
-                                        .build();
-
-                                return BaseResponse.successResponse("요청 성공했습니다.", cartCreateRes);
                             }
                         }
-                    } else {
-                        CartDetail cartDetail = cartDetailRepository.save(CartDetail.builder()
-                                .cart(cart)
-                                .product(product)
-                                .productQuantity(req.getProductQuantity())
-                                .build());
-
-                        CartCreateRes cartCreateRes = CartCreateRes.builder()
-                                .idx(cart.getIdx())
-                                .productName(product.getProductName())
-                                .price(product.getPrice())
-                                .productQuantity(cartDetail.getProductQuantity())
-                                .build();
-
-                        return BaseResponse.successResponse("요청 성공했습니다.", cartCreateRes);
                     }
+                    CartDetail cartDetail = cartDetailRepository.save(CartDetail.builder()
+                            .cart(cart)
+                            .product(product)
+                            .productQuantity(req.getProductQuantity())
+                            .build());
+
+                    CartCreateRes cartCreateRes = CartCreateRes.builder()
+                            .idx(cart.getIdx())
+                            .productName(product.getProductName())
+                            .price(product.getPrice())
+                            .productQuantity(cartDetail.getProductQuantity())
+                            .build();
+
+                    return BaseResponse.successResponse("요청 성공했습니다.", cartCreateRes);
+
                 }
             }
         } else if (user == null){
@@ -146,29 +128,17 @@ public class CartService {
         throw new CartException(ErrorCode.CartAdd_003,
                 String.format("상품 정보를 찾을 수 없습니다."));
     }
-
     public BaseResponse list(String token, Integer page, Integer size) {
-
         token = JwtUtils.replaceToken(token);
-
         String userId = JwtUtils.getUserEmail(token, secretKey);
-
         Optional<User> user = userRepository.findByUserEmail(userId);
-
         Optional<User> userResult = userRepository.findByUserEmail(user.get().getUserEmail());
-
         if (userResult.isPresent()) {
-
             Pageable pageable = PageRequest.of(page - 1, size);
-
             Optional<Cart> cartResult = cartRepository.findById(user.get().getStore().getCartList().get(0).getIdx());
-
             Cart cart = cartResult.get();
-
             Page<CartDetail> cartDetailList = cartDetailRepository.findList(cart.getIdx(), pageable);
-
             List<CartListRes> cartListResList = new ArrayList<>();
-
             for (CartDetail cartDetail : cartDetailList) {
                 CartListRes cartListRes = CartListRes.builder()
                         .cartIdx(cart.getIdx())
@@ -176,37 +146,26 @@ public class CartService {
                         .price(cartDetail.getProduct().getPrice())
                         .productQuantity(cartDetail.getProductQuantity())
                         .build();
-
                 cartListResList.add(cartListRes);
             }
-
             return BaseResponse.successResponse("카트 목록 조회를 성공했습니다.", cartListResList);
         }
         throw new ManagerException(ErrorCode.CartList_004,
                 String.format("카트 목록 조회에 실패했습니다."));
     }
-
-
     public BaseResponse delete(String token, Long cartIdx, String productName) {
         token = JwtUtils.replaceToken(token);
-
         String userId = JwtUtils.getUserEmail(token, secretKey);
-
         Optional<User> user = userRepository.findByUserEmail(userId);
-
         Optional<User> userResult = userRepository.findByUserEmail(user.get().getUserEmail());
         if (userResult.isPresent()) {
-
             Optional<Cart> cartResult = cartRepository.findById(cartIdx);
             Cart cart = cartResult.get();
-
             if (user.get().getStore().getIdx().equals(cart.getStore().getIdx())) {
                 List<CartDetail> cartDetailList = cartDetailRepository.findByCartIdx(cartIdx);
-
                 for (CartDetail cartDetail : cartDetailList) {
                     if (cartDetail.getProduct().getProductName().equals(productName)) {
                         cartDetailRepository.delete(cartDetail);
-
                         return BaseResponse.successResponse("카트에 담긴 상품을 삭제했습니다.", null);
                     }
                 }
