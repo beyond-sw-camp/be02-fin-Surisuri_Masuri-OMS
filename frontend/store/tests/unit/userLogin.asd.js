@@ -19,7 +19,7 @@ describe('LoginView', () => {
   // Pinia 초기화
   const pinia = createPinia();
 
-  it('로그인 폼이 올바른 초기 데이터와 함께 렌더링되는지 확인', async () => {
+  it('로그인 폼이 올바른 초기 데이터와 함께 렌더링 되는지 확인', async () => {
     const wrapper = shallowMount(LoginView, {
       global: {
         plugins: [router],
