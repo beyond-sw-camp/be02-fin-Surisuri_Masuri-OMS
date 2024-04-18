@@ -15,7 +15,7 @@ public class Test {
     @GetMapping("/test")
     public ResponseEntity test()
     {
-        return ResponseEntity.ok().body("v1");
+        return ResponseEntity.ok().body("v2");
     }
 
 }
