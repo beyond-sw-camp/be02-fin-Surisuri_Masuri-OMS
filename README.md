@@ -155,9 +155,9 @@
 
 ---
 
-### 🔗 [가맹점 홈페이지 바로가기](http://www.hyeonbeom.kro.kr)
+### 🔗 [가맹점 홈페이지 바로가기](http://www.surisurimasuri.kro.kr)
 
-### 🔗 [본사 홈페이지 바로가기](http://www.hyeonbeom2.kro.kr)
+### 🔗 [본사 홈페이지 바로가기](http://www.surisuriadmin.kro.kr)
 
 ---
 
